@@ -1,0 +1,17 @@
+/* Tailwind CSS 和 Flowbite 核心样式 */
+@import "tailwindcss";
+
+/* Flowbite 按需加载：只导入需要的主题样式 */
+/* 如果只需要基础样式，可以只导入部分组件样式 */
+@import "flowbite/src/themes/default";
+
+@plugin "flowbite/plugin";
+
+/* Flowbite 源码扫描（Tailwind 会自动 tree-shake 未使用的样式） */
+@source "../node_modules/flowbite";
+
+/* 导入功能样式模块 */
+@import "./moudles/base.css";
+@import "./moudles/theme.css";
+@import "./moudles/components.css";
+@import "./moudles/utilities.css";
