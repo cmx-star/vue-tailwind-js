@@ -50,6 +50,9 @@
     >
       <AppMain />
     </main>
+
+    <!-- 移动端悬浮菜单按钮 -->
+    <FloatingMenuButton />
   </div>
 </template>
 
@@ -60,6 +63,7 @@ import { useAppStore } from "@/stores/app";
 import Navbar from "./components/Navbar.vue";
 import Sidebar from "./components/Sidebar/index.vue";
 import AppMain from "./components/AppMain.vue";
+import FloatingMenuButton from "./components/FloatingMenuButton.vue";
 
 const route = useRoute();
 const appStore = useAppStore();

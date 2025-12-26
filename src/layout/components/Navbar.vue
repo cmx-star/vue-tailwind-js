@@ -42,13 +42,13 @@
         </h1>
       </div>
 
-      <!-- 侧边栏切换按钮（如果有左侧导航） -->
+      <!-- 侧边栏切换按钮（如果有左侧导航）- 移动端隐藏 -->
       <button
         v-if="isAside"
         @click="handleSidebarToggle"
-        class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-shrink-0 w-8 h-8 md:w-auto md:h-auto flex items-center justify-center"
+        class="hidden md:flex p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-shrink-0 w-8 h-8 md:w-auto md:h-auto items-center justify-center"
       >
-        <Bars3Icon class="w-4 h-4 md:w-5 md:h-5 text-gray-600 dark:text-gray-300" />
+        <Bars3Icon class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
       </button>
 
       <!-- 六个顶部导航选项 - 使用图标显示,移动端更紧凑 -->
@@ -58,8 +58,8 @@
           :key="nav.key"
           @click="handleTopNavClick(nav)"
           :class="[
-            'p-1.5 md:p-2 rounded-lg transition-colors relative group',
-            'w-8 h-8 md:w-auto md:h-auto flex items-center justify-center',
+            'p-2 md:p-2 rounded-lg transition-colors relative group',
+            'w-10 h-10 md:w-auto md:h-auto flex items-center justify-center',
             activeTopNav === nav.key
               ? 'bg-primary-600 text-white'
               : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700',
@@ -68,7 +68,7 @@
         >
           <component 
             :is="getNavIcon(nav.key)" 
-            class="w-4 h-4 md:w-5 md:h-5" 
+            class="w-6 h-6 md:w-5 md:h-5" 
           />
           <!-- 悬停提示 -->
           <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs whitespace-nowrap bg-gray-900 dark:bg-gray-700 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
