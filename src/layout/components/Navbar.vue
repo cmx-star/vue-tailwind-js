@@ -110,7 +110,7 @@
         </div>
       </div>
 
-      <!-- 主题切换（明暗模式 + 主题色） -->
+      <!-- 主题切换（明暗模式 + 六套主题样式） -->
       <div class="relative" ref="themeDropdownRef">
         <button
           @click="toggleThemeDropdown"
@@ -121,7 +121,7 @@
         </button>
         <div
           v-show="showThemeDropdown"
-          class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+          class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
         >
           <!-- 明暗模式切换 -->
           <button
@@ -134,25 +134,25 @@
           <!-- 分隔线 -->
           <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
           
-          <!-- 主题色切换 -->
+          <!-- 六套主题样式切换 -->
           <div class="px-2 py-1">
             <div class="text-xs text-gray-500 dark:text-gray-400 px-2 py-1 mb-1">
-              {{ $t('settings.themeColor') }}
+              主题样式
             </div>
-            <div class="flex items-center gap-2 px-2">
+            <div class="space-y-1">
               <button
-                v-for="color in themeColors"
-                :key="color.value"
-                @click="setThemeColor(color.value)"
+                v-for="style in themeStyles"
+                :key="style.value"
+                @click="setThemeStyle(style.value)"
                 :class="[
-                  'w-8 h-8 rounded-full border-2 transition-all',
-                  themeColor === color.value
-                    ? 'border-gray-900 dark:border-gray-100 scale-110'
-                    : 'border-gray-300 dark:border-gray-600 hover:scale-105',
+                  'w-full px-3 py-2 text-left text-sm rounded transition-colors',
+                  themeStyle === style.value
+                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300',
                 ]"
-                :style="{ backgroundColor: color.color }"
-                :title="color.label"
-              ></button>
+              >
+                {{ style.label }}
+              </button>
             </div>
           </div>
         </div>
@@ -203,7 +203,7 @@ const isAside = computed(() => {
 const isDark = computed(() => {
   return themeStore.isDark;
 });
-const themeColor = computed(() => themeStore.themeColor);
+const themeStyle = computed(() => themeStore.themeStyle);
 const currentLocale = computed(() => locale.value);
 
 // 顶部导航图标映射 (根据 topNav key: 0-5)
@@ -221,12 +221,14 @@ const getNavIcon = (navKey) => {
   return navIconMap[navKey] || HomeIcon;
 };
 
-// 主题色选项
-const themeColors = [
-  { value: "blue", label: "蓝色", color: "#2563eb" },
-  { value: "green", label: "绿色", color: "#16a34a" },
-  { value: "purple", label: "紫色", color: "#9333ea" },
-  { value: "orange", label: "橙色", color: "#ea580c" },
+// 六套主题样式选项
+const themeStyles = [
+  { value: "default", label: "默认" },
+  { value: "minimal", label: "极简" },
+  { value: "enterprise", label: "企业" },
+  { value: "playful", label: "活泼" },
+  { value: "mono", label: "单色" },
+  { value: "modern", label: "现代" },
 ];
 
 // Dropdown 状态
@@ -318,8 +320,8 @@ const toggleDark = () => {
   // 不关闭下拉菜单，方便继续切换主题色
 };
 
-const setThemeColor = (color) => {
-  themeStore.setThemeColor(color);
+const setThemeStyle = (style) => {
+  themeStore.setThemeStyle(style);
   // 不关闭下拉菜单，方便继续切换
 };
 

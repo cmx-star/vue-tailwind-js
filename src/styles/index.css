@@ -15,3 +15,6 @@
 @import "./moudles/theme.css";
 @import "./moudles/components.css";
 @import "./moudles/utilities.css";
+
+/* 导入主题文件 - 六套主题定义 */
+@import "./theme/themes.css";

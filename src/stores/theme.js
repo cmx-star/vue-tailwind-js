@@ -3,8 +3,8 @@ import { ref } from "vue";
 import { storage } from "@/utils/storage";
 
 export const useThemeStore = defineStore("theme", () => {
-  // 主题色 (blue, green, purple, orange)
-  const themeColor = ref(storage.get("themeColor", "blue"));
+  // 六套主题样式 (minimal, enterprise, playful, mono, default, modern)
+  const themeStyle = ref(storage.get("themeStyle", "default"));
 
   // 暗色模式 - 确保是布尔值
   const getIsDarkValue = () => {
@@ -26,11 +26,11 @@ export const useThemeStore = defineStore("theme", () => {
   const isDark = ref(getIsDarkValue());
 
   /**
-   * 设置主题色
+   * 设置主题样式
    */
-  const setThemeColor = (color) => {
-    themeColor.value = color;
-    storage.set("themeColor", color);
+  const setThemeStyle = (style) => {
+    themeStyle.value = style;
+    storage.set("themeStyle", style);
     applyTheme();
   };
 
@@ -65,8 +65,13 @@ export const useThemeStore = defineStore("theme", () => {
       html.classList.remove("dark");
     }
 
-    // 应用主题色
-    html.setAttribute("data-theme", themeColor.value);
+    // 应用主题样式（六套主题：minimal, enterprise, playful, mono, default, modern）
+    // default 主题使用全局默认值，不需要设置 data-theme 属性
+    if (themeStyle.value === "default") {
+      html.removeAttribute("data-theme");
+    } else {
+      html.setAttribute("data-theme", themeStyle.value);
+    }
   };
 
   /**
@@ -102,9 +107,9 @@ export const useThemeStore = defineStore("theme", () => {
   };
 
   return {
-    themeColor,
+    themeStyle,
     isDark,
-    setThemeColor,
+    setThemeStyle,
     toggleDark,
     setDark,
     initTheme,

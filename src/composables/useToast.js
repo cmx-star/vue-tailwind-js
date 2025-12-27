@@ -3,33 +3,40 @@ import { ref } from "vue";
 const toastInstance = ref(null);
 
 export function useToast() {
-  const success = (message, duration = 3000) => {
+  const success = (message, duration = 3000, title = null) => {
     if (toastInstance.value) {
-      toastInstance.value.success(message, duration);
+      toastInstance.value.success(message, duration, title);
     }
   };
 
-  const error = (message, duration = 3000) => {
+  const error = (message, duration = 3000, title = null) => {
     if (toastInstance.value) {
-      toastInstance.value.error(message, duration);
+      toastInstance.value.error(message, duration, title);
     }
   };
 
-  const warning = (message, duration = 3000) => {
+  const danger = (message, duration = 3000, title = null) => {
     if (toastInstance.value) {
-      toastInstance.value.warning(message, duration);
+      toastInstance.value.danger(message, duration, title);
     }
   };
 
-  const info = (message, duration = 3000) => {
+  const warning = (message, duration = 3000, title = null) => {
     if (toastInstance.value) {
-      toastInstance.value.info(message, duration);
+      toastInstance.value.warning(message, duration, title);
+    }
+  };
+
+  const info = (message, duration = 3000, title = null) => {
+    if (toastInstance.value) {
+      toastInstance.value.info(message, duration, title);
     }
   };
 
   return {
     success,
     error,
+    danger,
     warning,
     info,
   };

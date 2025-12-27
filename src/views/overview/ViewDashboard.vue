@@ -53,6 +53,35 @@
         </template>
       </DataTable>
     </div>
+    <div class="card p-6">
+            <!-- Toast 示例按钮 -->
+            <div class="flex flex-wrap gap-2">
+        <button 
+          @click="showToast('info', 'Info alert!', 'Change a few things up and try submitting again.')"
+          class="px-4 py-2 rounded-base bg-brand-softer border border-brand-subtle text-fg-brand-strong text-sm font-medium hover:bg-brand-soft transition-colors"
+        >
+          显示 Info Toast
+        </button>
+        <button 
+          @click="showToast('success', '', 'Change a few things up and try submitting again.')"
+          class="px-4 py-2 rounded-base bg-success-soft border border-success-subtle text-fg-success-strong text-sm font-medium hover:bg-success-medium transition-colors"
+        >
+          显示 Success Toast
+        </button>
+        <button 
+          @click="showToast('danger', 'Danger alert!', 'Change a few things up and try submitting again.')"
+          class="px-4 py-2 rounded-base bg-danger-soft border border-danger-subtle text-fg-danger-strong text-sm font-medium hover:bg-danger-medium transition-colors"
+        >
+          显示 Danger Toast
+        </button>
+        <button 
+          @click="showToast('warning', 'Warning alert!', 'Change a few things up and try submitting again.')"
+          class="px-4 py-2 rounded-base bg-warning-soft border border-warning-subtle text-fg-warning text-sm font-medium hover:bg-warning-medium transition-colors"
+        >
+          显示 Warning Toast
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -60,6 +89,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
+import { useToast } from '@/composables/useToast'
 import { formatDate } from '@/utils/dayjs'
 import DataTable from '@/components/CompDataTable/CompDataTable.vue'
 import {
@@ -71,7 +101,28 @@ import {
 
 const { t } = useI18n()
 const userStore = useUserStore()
+const toast = useToast()
 const userInfo = computed(() => userStore.userInfo)
+
+// Toast 显示函数
+const showToast = (type, title, message) => {
+  switch (type) {
+    case 'success':
+      toast.success(message, 3000, title)
+      break
+    case 'danger':
+    case 'error':
+      toast.danger(message, 3000, title)
+      break
+    case 'warning':
+      toast.warning(message, 3000, title)
+      break
+    case 'info':
+    default:
+      toast.info(message, 3000, title)
+      break
+  }
+}
 
 const currentTime = ref(formatDate(new Date()))
 const loading = ref(false)
