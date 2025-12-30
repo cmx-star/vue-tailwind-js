@@ -18,20 +18,25 @@
         <CompDatePicker
           v-model="dateValue"
           label="日期选择"
-          placeholder="请选择日期"
+          mode="date"
         />
         <CompDatePicker
           v-model="timeValue"
-          time-picker
+          mode="time"
           label="时间选择"
-          :is24="true"
-          :enable-seconds="true"
         />
         <CompDatePicker
           v-model="datetimeValue"
-          :enable-time-picker="true"
+          mode="dateTime"
           label="日期时间选择"
-          :is24="true"
+        />
+      </div>
+      <div class="mt-4">
+        <CompDatePicker
+          v-model="dateRangeValue"
+          label="日期范围选择"
+          mode="date"
+          range
         />
       </div>
       <div class="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
@@ -39,7 +44,8 @@
           <strong>当前值：</strong><br>
           日期: {{ dateValue || '未选择' }}<br>
           时间: {{ timeValue ? JSON.stringify(timeValue) : '未选择' }}<br>
-          日期时间: {{ datetimeValue || '未选择' }}
+          日期时间: {{ datetimeValue || '未选择' }}<br>
+          日期范围: {{ dateRangeValue && dateRangeValue.start && dateRangeValue.end ? `${formatDate(dateRangeValue.start, 'YYYY-MM-DD')} - ${formatDate(dateRangeValue.end, 'YYYY-MM-DD')}` : '未选择' }}
         </p>
       </div>
     </div>
@@ -138,11 +144,13 @@ import CompDatePicker from '@/components/CompDatePicker/CompDatePicker.vue';
 import CompSelect from '@/components/CompSelect/CompSelect.vue';
 import CompBaseInput from '@/components/CompBaseInput/CompBaseInput.vue';
 import CompBaseButton from '@/components/CompBaseButton/CompBaseButton.vue';
+import { formatDate } from '@/utils/dayjs';
 
 // 日期选择器数据
 const dateValue = ref(null);
 const timeValue = ref(null);
 const datetimeValue = ref(null);
+const dateRangeValue = ref(null);
 
 // Select 数据
 const selectValue = ref('');

@@ -65,7 +65,7 @@ export default defineConfig(({ mode }) => {
                 return "vue-core";
               }
               // 3. 较重的日期选择器独立分包，避免阻塞主包
-              if (id.includes("@vuepic/vue-datepicker")) {
+              if (id.includes("v-calendar")) {
                 return "datepicker-vendor";
               }
               // 4. UI 框架类

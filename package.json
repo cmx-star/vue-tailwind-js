@@ -12,7 +12,6 @@
   "dependencies": {
     "@floating-ui/vue": "^1.1.9",
     "@heroicons/vue": "^2.1.1",
-    "@vuepic/vue-datepicker": "^12.1.0",
     "@vueuse/core": "^14.1.0",
     "axios": "^1.6.7",
     "dayjs": "^1.11.10",
@@ -21,6 +20,7 @@
     "js-md5": "^0.8.3",
     "nprogress": "^0.2.0",
     "pinia": "^2.3.1",
+    "v-calendar": "^3.1.2",
     "vue": "^3.4.21",
     "vue-i18n": "^10.0.8",
     "vue-router": "^4.3.0"
