@@ -4,13 +4,18 @@ import tailwindcss from "@tailwindcss/vite";
 import { visualizer } from "rollup-plugin-visualizer";
 import { fileURLToPath, URL } from "node:url";
 
-// https://vitejs.dev/config/
+/**
+ * 核心优化目标：
+ * 1. 极致体积控制 (500KB以内)
+ * 2. 精致交互支持 (Floating-UI & VueUse 预构建)
+ * 3. 生产环境清理 (移除所有 Console & Debugger)
+ */
 export default defineConfig(({ mode }) => {
   return {
     plugins: [
       vue(),
-      tailwindcss(),
-      // 打包分析工具 (仅在 analyze 模式下启用)
+      tailwindcss(), // Tailwind v4 官方 Vite 插件
+      // 打包分析工具 (仅在 analyze 模式下启用: npm run build:report)
       mode === "analyze" &&
         visualizer({
           open: true,
@@ -22,6 +27,7 @@ export default defineConfig(({ mode }) => {
 
     resolve: {
       alias: {
+        // 快捷路径指向
         "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
     },
@@ -33,33 +39,40 @@ export default defineConfig(({ mode }) => {
     },
 
     build: {
-      target: "es2015",
+      target: "es2015", // 保证在旧版平板和手机上的兼容性
       outDir: "dist",
       assetsDir: "assets",
       sourcemap: false,
 
-      // 代码分割策略
+      /**
+       * 极致代码分割策略
+       * 目的：确保首屏 Index.js 最小，非核心组件按需加载
+       */
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            // // ECharts 单独打包
-            // if (id.includes("echarts")) {
-            //   return "echarts-vendor";
-            // }
-            // Vue 核心库
             if (id.includes("node_modules")) {
+              // ECharts
+              if (id.includes("echarts")) {
+                return "chart-vendor";
+              }
+              // 2. Vue 核心全家桶（不含图表库）
               if (
                 id.includes("vue") ||
                 id.includes("vue-router") ||
                 id.includes("pinia")
               ) {
-                return "vue-vendor";
+                return "vue-core";
               }
-              // UI 库
-              if (id.includes("flowbite")) {
+              // 3. 较重的日期选择器独立分包，避免阻塞主包
+              if (id.includes("@vuepic/vue-datepicker")) {
+                return "datepicker-vendor";
+              }
+              // 4. UI 框架类
+              if (id.includes("flowbite") || id.includes("@heroicons")) {
                 return "ui-vendor";
               }
-              // 工具库
+              // 5. 国际化与时间处理工具
               if (
                 id.includes("axios") ||
                 id.includes("dayjs") ||
@@ -67,60 +80,62 @@ export default defineConfig(({ mode }) => {
               ) {
                 return "utils-vendor";
               }
-              // 其他 node_modules
+              // 其他第三方依赖
               return "vendor";
             }
           },
-          // 资源文件命名
+          // 资源文件精细化分类命名
           chunkFileNames: "assets/js/[name]-[hash].js",
           entryFileNames: "assets/js/[name]-[hash].js",
           assetFileNames: "assets/[ext]/[name]-[hash].[ext]",
         },
       },
 
-      // 压缩配置
+      /**
+       * Terser 极致压缩配置
+       * 生产环境移除所有调试信息，减小体积并提升代码安全性
+       */
       minify: "terser",
       terserOptions: {
         compress: {
-          // 移除所有 console 语句
-          drop_console: true,
-          // 移除 debugger 语句
+          drop_console: true, // 移除所有 console.*
           drop_debugger: true,
-          // 移除指定的纯函数调用（额外的安全措施）
           pure_funcs: [
             "console.log",
             "console.info",
             "console.debug",
             "console.warn",
             "console.error",
-            "console.trace",
-            "console.table",
-            "console.group",
-            "console.groupEnd",
-            "console.time",
-            "console.timeEnd",
           ],
-          // 移除未使用的代码
           dead_code: true,
-          // 移除未使用的变量
           unused: true,
         },
         format: {
-          // 移除注释
-          comments: false,
+          comments: false, // 移除所有代码注释
         },
       },
 
-      // CSS 代码分割
+      // 开启 CSS 代码分割，提升样式加载效率
       cssCodeSplit: true,
-
-      // chunk 大小警告限制
+      // 500KB 警告限制
       chunkSizeWarningLimit: 500,
     },
 
-    // 优化依赖预构建
+    /**
+     * 依赖预构建配置
+     * 包含三端适配的核心库，提升开发环境响应速度
+     */
     optimizeDeps: {
-      include: ["vue", "vue-router", "pinia", "vue-i18n", "dayjs", "axios"],
+      include: [
+        "vue",
+        "vue-router",
+        "pinia",
+        "vue-i18n",
+        "dayjs",
+        "axios",
+        "@floating-ui/vue", // 碰撞检测核心
+        "@vueuse/core", // 三端监听核心
+      ],
     },
   };
 });

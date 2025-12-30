@@ -6,10 +6,11 @@
       </h1>
     </div>
 
+    <!-- 用户趋势 - 折线图 -->
     <div
       class="max-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 md:p-6"
     >
-      <div class="flex justify-between">
+      <div class="flex justify-between mb-4">
         <div>
           <h5 class="text-2xl font-semibold text-gray-900 dark:text-white">
             32.4k
@@ -39,15 +40,16 @@
           12%
         </div>
       </div>
-      <!-- <div ref="chartRef" class="w-full h-80"></div> -->
-      <div class="w-full h-80 flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
-        <div class="text-center">
-          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-          </svg>
-          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">图表功能已禁用</p>
-          <p class="text-xs text-gray-400 dark:text-gray-500">ECharts 已被注释</p>
-        </div>
+      <div class="w-full h-80">
+        <CompLineChart
+          :data="userData"
+          x-key="x"
+          x-label-key="date"
+          y-key="users"
+          :height="320"
+          color="#1C64F2"
+          :smooth="true"
+        />
       </div>
       <div
         class="grid grid-cols-1 items-center border-t border-gray-200 dark:border-gray-700 justify-between"
@@ -98,82 +100,117 @@
         </div>
       </div>
     </div>
+
+    <!-- 图表网格 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- 收入趋势 - 面积图 -->
+      <div
+        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 md:p-6"
+      >
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          收入趋势
+        </h3>
+        <div class="w-full h-64">
+          <CompAreaChart
+            :data="revenueData"
+            x-key="x"
+            x-label-key="month"
+            :y-key="['amount', 'cost', 'profit']"
+            :height="256"
+            :color="['#3B82F6', '#EF4444', '#10B981']"
+            :smooth="true"
+            :opacity="0.95"
+          />
+        </div>
+      </div>
+
+      <!-- 销售分类 - 饼图 -->
+      <div
+        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 md:p-6"
+      >
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          销售分类
+        </h3>
+        <div class="w-full h-64 flex items-center justify-center">
+          <CompPieChart
+            :data="salesData"
+            value-key="value"
+            label-key="category"
+            :height="256"
+            :inner-radius="0"
+            :colors="['#3B82F6', '#8B5CF6', '#10B981', '#F59E0B']"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- 月度统计 - 柱状图 -->
+    <div
+      class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm p-4 md:p-6"
+    >
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        月度订单统计
+      </h3>
+      <div class="w-full h-80">
+        <CompBarChart
+          :data="monthlyData"
+          x-key="x"
+          x-label-key="month"
+          :y-key="['orders', 'completed', 'cancelled']"
+          :height="320"
+          :color="['#8B5CF6', '#10B981', '#EF4444']"
+          :roundedCorners="4"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-// import { ref, onMounted, onUnmounted } from "vue";
-// import { initChart } from "@/utils/echarts";
+import { ref } from "vue";
+import {
+  CompLineChart,
+  CompAreaChart,
+  CompBarChart,
+  CompPieChart,
+} from "@/components/CompChart";
 
-// const chartRef = ref(null);
-// let chartInstance = null;
+// 用户数据 - 折线图
+const userData = ref([
+  { x: 0, date: "02-01", users: 6500 },
+  { x: 1, date: "02-02", users: 6418 },
+  { x: 2, date: "02-03", users: 6456 },
+  { x: 3, date: "02-04", users: 6526 },
+  { x: 4, date: "02-05", users: 6356 },
+  { x: 5, date: "02-06", users: 6456 },
+  { x: 6, date: "02-07", users: 6500 },
+]);
 
-// onMounted(() => {
-//   if (!chartRef.value) return;
+// 收入数据 - 面积图 (多组数据)
+const revenueData = ref([
+  { x: 0, month: "1月", amount: 12000, cost: 8000, profit: 4000 },
+  { x: 1, month: "2月", amount: 15000, cost: 9500, profit: 5500 },
+  { x: 2, month: "3月", amount: 18000, cost: 11000, profit: 7000 },
+  { x: 3, month: "4月", amount: 14000, cost: 9000, profit: 5000 },
+  { x: 4, month: "5月", amount: 21000, cost: 13000, profit: 8000 },
+  { x: 5, month: "6月", amount: 23000, cost: 14000, profit: 9000 },
+]);
 
-//   const option = {
-//     tooltip: {
-//       trigger: "axis",
-//       axisPointer: {
-//         type: "line",
-//       },
-//     },
-//     grid: {
-//       left: "0",
-//       right: "0",
-//       top: "20",
-//       bottom: "0",
-//       containLabel: false,
-//     },
-//     xAxis: {
-//       type: "category",
-//       data: ["02-01", "02-02", "02-03", "02-04", "02-05", "02-06", "02-07"],
-//       show: false,
-//     },
-//     yAxis: {
-//       type: "value",
-//       show: false,
-//     },
-//     series: [
-//       {
-//         name: "新用户",
-//         type: "line",
-//         smooth: true,
-//         symbol: "none",
-//         lineStyle: {
-//           color: "#1C64F2",
-//           width: 3,
-//         },
-//         areaStyle: {
-//           color: {
-//             type: "linear",
-//             x: 0,
-//             y: 0,
-//             x2: 0,
-//             y2: 1,
-//             colorStops: [
-//               { offset: 0, color: "rgba(28, 100, 242, 0.5)" },
-//               { offset: 1, color: "rgba(28, 100, 242, 0)" },
-//             ],
-//           },
-//         },
-//         data: [6500, 6418, 6456, 6526, 6356, 6456],
-//       },
-//     ],
-//   };
+// 销售分类数据 - 饼图
+const salesData = ref([
+  { category: "电子产品", value: 35 },
+  { category: "服装", value: 25 },
+  { category: "食品", value: 20 },
+  { category: "其他", value: 20 },
+]);
 
-//   chartInstance = initChart(chartRef.value, option);
-
-//   // 响应式调整
-//   window.addEventListener("resize", handleResize);
-// });
-
-// const handleResize = () => {
-//   chartInstance?.resize();
-// };
-
-// onUnmounted(() => {
-//   window.removeEventListener("resize", handleResize);
-//   chartInstance?.dispose();
-// });
+// 月度订单数据 - 柱状图 (多组数据)
+const monthlyData = ref([
+  { x: 0, month: "1月", orders: 120, completed: 110, cancelled: 10 },
+  { x: 1, month: "2月", orders: 150, completed: 140, cancelled: 10 },
+  { x: 2, month: "3月", orders: 180, completed: 165, cancelled: 15 },
+  { x: 3, month: "4月", orders: 140, completed: 130, cancelled: 10 },
+  { x: 4, month: "5月", orders: 210, completed: 195, cancelled: 15 },
+  { x: 5, month: "6月", orders: 230, completed: 215, cancelled: 15 },
+]);
 </script>
