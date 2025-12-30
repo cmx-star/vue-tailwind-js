@@ -52,11 +52,7 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: (id) => {
             if (id.includes("node_modules")) {
-              // ECharts
-              if (id.includes("echarts")) {
-                return "chart-vendor";
-              }
-              // 2. Vue 核心全家桶（不含图表库）
+              // 1. Vue 核心全家桶
               if (
                 id.includes("vue") ||
                 id.includes("vue-router") ||

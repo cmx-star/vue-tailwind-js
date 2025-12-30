@@ -1,7 +1,6 @@
 import axios from "axios";
 import { storage } from "@/utils/storage";
 import { useToast } from "@/composables/useToast";
-import md5 from "js-md5";
 import dayjs from "@/utils/dayjs";
 import mockApi from "@/api/mock/";
 
@@ -116,24 +115,6 @@ request.interceptors.request.use(
 // 响应拦截器
 request.interceptors.response.use(
   (response) => {
-    // 数据缓存处理
-    if (response.config && response.config.headers && response.config.headers.cacheKey) {
-      const res = response.data;
-      if (res && (res.code === 200 || res.code === 0 || res.status === 0)) {
-        localStorage.setItem(
-          response.config.headers.cacheKey,
-          JSON.stringify(res)
-        );
-        localStorage.setItem(
-          response.config.headers.cacheKey + ":Time",
-          dayjs().unix()
-        );
-      } else {
-        localStorage.removeItem(response.config.headers.cacheKey);
-        localStorage.removeItem(response.config.headers.cacheKey + ":Time");
-      }
-    }
-
     // 自定义响应拦截器
     if (
       response.config &&
@@ -225,40 +206,6 @@ request.interceptors.response.use(
 );
 
 /**
- * 带缓存的请求处理
- * @param {string} url - 请求地址
- * @param {object} options - 请求参数
- * @param {number} cacheTime - 缓存时间（秒）
- * @returns {Promise}
- */
-function getCachedData(url, options, cacheTime) {
-  const cacheKey = md5(url + JSON.stringify(options));
-  const cacheCreateTime = localStorage.getItem(cacheKey + ":Time");
-
-  if (
-    cacheCreateTime &&
-    parseInt(dayjs().unix()) - parseInt(cacheCreateTime) < cacheTime
-  ) {
-    const cacheData = localStorage.getItem(cacheKey);
-    if (cacheData) {
-      try {
-        return Promise.resolve(JSON.parse(cacheData));
-      } catch (e) {
-        // 缓存数据解析失败，清除缓存
-        localStorage.removeItem(cacheKey);
-        localStorage.removeItem(cacheKey + ":Time");
-      }
-    }
-  } else {
-    // 清除过期缓存
-    localStorage.removeItem(cacheKey);
-    localStorage.removeItem(cacheKey + ":Time");
-  }
-
-  return null;
-}
-
-/**
  * 封装请求方法，支持自定义配置
  */
 const httpRequest = {
@@ -287,7 +234,9 @@ const httpRequest = {
           },
         };
         // 手动调用响应拦截器
-        return request.interceptors.response.handlers[0].fulfilled(mockResponse);
+        return request.interceptors.response.handlers[0].fulfilled(
+          mockResponse
+        );
       }
     }
 
@@ -324,15 +273,9 @@ const httpRequest = {
           },
         };
         // 手动调用响应拦截器
-        return request.interceptors.response.handlers[0].fulfilled(mockResponse);
-      }
-    }
-
-    // 缓存处理
-    if (data._cacheTime) {
-      const cachedData = getCachedData(url, data, data._cacheTime);
-      if (cachedData) {
-        return Promise.resolve(cachedData);
+        return request.interceptors.response.handlers[0].fulfilled(
+          mockResponse
+        );
       }
     }
 
@@ -350,18 +293,6 @@ const httpRequest = {
       data,
       customConfig: config,
     };
-
-    // 设置缓存key
-    if (data._cacheTime) {
-      const cacheKey = md5(url + JSON.stringify(data));
-      axiosConfig.headers = {
-        ...axiosConfig.headers,
-        cacheKey,
-      };
-      // 移除缓存时间参数，避免发送到服务器
-      const { _cacheTime, ...requestData } = data;
-      axiosConfig.data = requestData;
-    }
 
     // 合并自定义的axiosConfig
     if (config.axiosConfig) {
