@@ -3,8 +3,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
-import { initChart } from '@/utils/echarts';
+import { ref, onMounted, onUnmounted, watch } from "vue";
+import { Chart } from "frappe-charts";
 
 const props = defineProps({
   data: {
@@ -14,11 +14,11 @@ const props = defineProps({
   },
   xKey: {
     type: String,
-    default: 'x',
+    default: "x",
   },
   yKey: {
     type: String,
-    default: 'y',
+    default: "y",
   },
   xLabelKey: {
     type: String,
@@ -30,7 +30,7 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: '#3B82F6',
+    default: "#3B82F6",
   },
   smooth: {
     type: Boolean,
@@ -41,117 +41,182 @@ const props = defineProps({
 const chartRef = ref(null);
 let chartInstance = null;
 
-// 计算图表配置
-const chartOption = computed(() => {
+const getChartData = () => {
   if (!props.data || props.data.length === 0) return null;
 
-  // 提取 X 轴标签
-  const xAxisData = props.data.map(item => 
+  const labels = props.data.map((item) =>
     props.xLabelKey ? item[props.xLabelKey] : item[props.xKey]
   );
-
-  // 提取 Y 轴数据
-  const seriesData = props.data.map(item => item[props.yKey]);
+  const values = props.data.map((item) => item[props.yKey]);
 
   return {
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      top: '10%',
-      containLabel: true,
-    },
-    tooltip: {
-      trigger: 'axis',
-      backgroundColor: 'rgba(50, 50, 50, 0.9)',
-      borderColor: '#333',
-      borderWidth: 0,
-      textStyle: {
-        color: '#fff',
-      },
-    },
-    xAxis: {
-      type: 'category',
-      data: xAxisData,
-      axisLine: {
-        lineStyle: {
-          color: '#4B5563',
-        },
-      },
-      axisLabel: {
-        color: '#9CA3AF',
-      },
-    },
-    yAxis: {
-      type: 'value',
-      axisLine: {
-        show: false,
-      },
-      axisTick: {
-        show: false,
-      },
-      axisLabel: {
-        color: '#9CA3AF',
-      },
-      splitLine: {
-        show: false,
-      },
-    },
-    series: [
+    labels,
+    datasets: [
       {
-        type: 'line',
-        data: seriesData,
-        smooth: props.smooth,
-        lineStyle: {
-          color: props.color,
-          width: 2,
-        },
-        itemStyle: {
-          color: props.color,
-        },
-        areaStyle: null,
+        name: props.yKey,
+        chartType: "line",
+        values: values,
       },
     ],
   };
-});
-
-// 初始化图表
-const initChartInstance = () => {
-  if (!chartRef.value || !chartOption.value) return;
-
-  if (!chartInstance) {
-    chartInstance = initChart(chartRef.value, chartOption.value);
-  } else {
-    chartInstance.setOption(chartOption.value);
-  }
-
-  // 响应式调整
-  window.addEventListener('resize', handleResize);
 };
 
-// 处理窗口大小变化
-const handleResize = () => {
-  chartInstance?.resize();
+const initChart = () => {
+  if (!chartRef.value) return;
+
+  const data = getChartData();
+  if (!data) return;
+
+  chartInstance = new Chart(chartRef.value, {
+    data: data,
+    type: "line",
+    height: props.height,
+    colors: [props.color],
+    lineOptions: {
+      regionFill: 0,
+      spline: props.smooth ? 1 : 0,
+    },
+    axisOptions: {
+      xIsSeries: 1,
+      xAxisMode: "tick",
+      yAxisMode: "tick",
+    },
+  });
+
+  // 添加完整的坐标轴线
+  addAxisLines();
 };
 
-// 监听数据变化
-watch(() => props.data, () => {
-  if (chartInstance && chartOption.value) {
-    chartInstance.setOption(chartOption.value);
-  }
-}, { deep: true });
+const addAxisLines = () => {
+  if (!chartRef.value) return;
+
+  // 等待图表渲染完成
+  setTimeout(() => {
+    const svg = chartRef.value.querySelector("svg.frappe-chart");
+    if (!svg) return;
+
+    const drawArea = svg.querySelector(".chart-draw-area");
+    if (!drawArea) return;
+
+    // 获取绘图区域的位置信息
+    const transform = drawArea.getAttribute("transform");
+    const translateMatch = transform?.match(/translate\((\d+),\s*(\d+)\)/);
+    if (!translateMatch) return;
+
+    const translateX = parseFloat(translateMatch[1]);
+    const translateY = parseFloat(translateMatch[2]);
+
+    // 获取y轴的位置和高度
+    const yAxis = drawArea.querySelector(".y.axis");
+    const xAxis = drawArea.querySelector(".x.axis");
+    if (!yAxis || !xAxis) return;
+
+    // 移除已存在的轴线（避免重复添加）
+    const existingXAxis = drawArea.querySelector(".axis-line-x");
+    const existingYAxis = drawArea.querySelector(".axis-line-y");
+    if (existingXAxis) existingXAxis.remove();
+    if (existingYAxis) existingYAxis.remove();
+
+    // 获取x轴的y位置（从第一个x轴刻度线的line元素获取y2值）
+    const firstXTickLine = xAxis.querySelector("line.line-vertical");
+    if (firstXTickLine) {
+      const xAxisY = parseFloat(firstXTickLine.getAttribute("y2") || "250");
+      // 获取最后一个x轴刻度线的x位置来确定x轴线的长度
+      const allXTickLines = xAxis.querySelectorAll("g");
+      const lastXTick = allXTickLines[allXTickLines.length - 1];
+      const lastTransform = lastXTick?.getAttribute("transform");
+      const lastXMatch = lastTransform?.match(/translate\(([\d.]+),\s*(\d+)\)/);
+      const xAxisLength = lastXMatch ? parseFloat(lastXMatch[1]) : 0;
+
+      // 添加x轴线
+      const xAxisLine = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "line"
+      );
+      xAxisLine.setAttribute("class", "axis-line-x");
+      xAxisLine.setAttribute("x1", "0");
+      xAxisLine.setAttribute("x2", xAxisLength.toString());
+      xAxisLine.setAttribute("y1", xAxisY.toString());
+      xAxisLine.setAttribute("y2", xAxisY.toString());
+      xAxisLine.setAttribute("stroke", "#dadada");
+      xAxisLine.setAttribute("stroke-width", "1");
+      drawArea.insertBefore(xAxisLine, drawArea.firstChild);
+    }
+
+    // 获取y轴的x位置和高度（从y轴刻度线的line元素获取）
+    const yAxisLines = yAxis.querySelectorAll("line.line-horizontal");
+    if (yAxisLines.length > 0) {
+      const firstYLine = yAxisLines[0];
+      const lastYLine = yAxisLines[yAxisLines.length - 1];
+      const yAxisX = parseFloat(firstYLine.getAttribute("x2") || "0");
+
+      // 获取y轴的起始和结束y位置
+      const firstYGroup = firstYLine.closest("g");
+      const lastYGroup = lastYLine.closest("g");
+      const firstYTransform = firstYGroup?.getAttribute("transform");
+      const lastYTransform = lastYGroup?.getAttribute("transform");
+      const firstYMatch = firstYTransform?.match(
+        /translate\([\d.]+,\s*([\d.]+)\)/
+      );
+      const lastYMatch = lastYTransform?.match(
+        /translate\([\d.]+,\s*([\d.]+)\)/
+      );
+
+      if (firstYMatch && lastYMatch) {
+        const yStart = parseFloat(firstYMatch[1]);
+        const yEnd = parseFloat(lastYMatch[1]);
+
+        // 添加y轴线
+        const yAxisLine = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "line"
+        );
+        yAxisLine.setAttribute("class", "axis-line-y");
+        yAxisLine.setAttribute("x1", yAxisX.toString());
+        yAxisLine.setAttribute("x2", yAxisX.toString());
+        yAxisLine.setAttribute("y1", Math.min(yStart, yEnd).toString());
+        yAxisLine.setAttribute("y2", Math.max(yStart, yEnd).toString());
+        yAxisLine.setAttribute("stroke", "#dadada");
+        yAxisLine.setAttribute("stroke-width", "1");
+        drawArea.insertBefore(yAxisLine, drawArea.firstChild);
+      }
+    }
+  }, 100);
+};
+
+watch(
+  () => props.data,
+  () => {
+    if (chartInstance) {
+      const data = getChartData();
+      if (data) {
+        chartInstance.update(data);
+        // 更新后重新添加轴线
+        addAxisLines();
+      }
+    }
+  },
+  { deep: true }
+);
 
 onMounted(() => {
-  initChartInstance();
+  initChart();
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-  chartInstance?.dispose();
   chartInstance = null;
 });
 </script>
 
 <style scoped>
-/* ECharts 容器样式 */
+/* Frappe Charts 样式 */
+:deep(.frappe-chart-container) {
+  width: 100% !important;
+}
+/* 隐藏网格线但保留轴线和刻度 */
+:deep(.grid-line),
+:deep(.horizontal-grid),
+:deep(.vertical-grid) {
+  display: none !important;
+}
 </style>

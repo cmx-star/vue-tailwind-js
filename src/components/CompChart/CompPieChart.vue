@@ -3,8 +3,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
-import { initChart } from '@/utils/echarts';
+import { ref, onMounted, onUnmounted, watch } from "vue";
+import { Chart } from "frappe-charts";
 
 const props = defineProps({
   data: {
@@ -14,11 +14,11 @@ const props = defineProps({
   },
   valueKey: {
     type: String,
-    default: 'value',
+    default: "value",
   },
   labelKey: {
     type: String,
-    default: 'label',
+    default: "label",
   },
   height: {
     type: Number,
@@ -27,112 +27,79 @@ const props = defineProps({
   colors: {
     type: Array,
     default: () => [
-      '#3B82F6',
-      '#8B5CF6',
-      '#10B981',
-      '#F59E0B',
-      '#EF4444',
-      '#06B6D4',
+      "#3B82F6",
+      "#8B5CF6",
+      "#10B981",
+      "#F59E0B",
+      "#EF4444",
+      "#06B6D4",
     ],
   },
   innerRadius: {
     type: Number,
-    default: 0, // 0 = 饼图, 50 = 环状图
+    default: 0, // 0 = 饼图, 50 = 环状图 (Frappe 不直接支持 innerRadius，但可以用 type: 'pie')
   },
 });
 
 const chartRef = ref(null);
 let chartInstance = null;
 
-// 计算图表配置
-const chartOption = computed(() => {
+const getChartData = () => {
   if (!props.data || props.data.length === 0) return null;
 
-  // 转换数据格式
-  const seriesData = props.data.map((item, index) => ({
-    name: item[props.labelKey],
-    value: item[props.valueKey],
-    itemStyle: {
-      color: props.colors[index % props.colors.length],
-    },
-  }));
+  const labels = props.data.map((item) => item[props.labelKey]);
+  const values = props.data.map((item) => item[props.valueKey]);
 
   return {
-    tooltip: {
-      trigger: 'item',
-      backgroundColor: 'rgba(50, 50, 50, 0.9)',
-      borderColor: '#333',
-      borderWidth: 0,
-      textStyle: {
-        color: '#fff',
-      },
-      formatter: '{b}: {c} ({d}%)',
-    },
-    legend: {
-      orient: 'vertical',
-      right: '10%',
-      top: 'center',
-      textStyle: {
-        color: '#9CA3AF',
-      },
-    },
-    series: [
+    labels,
+    datasets: [
       {
-        type: 'pie',
-        radius: props.innerRadius > 0 ? [`${props.innerRadius}%`, '70%'] : '70%',
-        center: ['35%', '50%'],
-        data: seriesData,
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)',
-          },
-        },
-        label: {
-          show: true,
-          formatter: '{b}: {d}%',
-          color: '#9CA3AF',
-        },
+        name: "Data",
+        values: values,
       },
     ],
   };
-});
-
-// 初始化图表
-const initChartInstance = () => {
-  if (!chartRef.value || !chartOption.value) return;
-
-  if (!chartInstance) {
-    chartInstance = initChart(chartRef.value, chartOption.value);
-  } else {
-    chartInstance.setOption(chartOption.value);
-  }
-
-  window.addEventListener('resize', handleResize);
 };
 
-const handleResize = () => {
-  chartInstance?.resize();
+const initChart = () => {
+  if (!chartRef.value) return;
+
+  const data = getChartData();
+  if (!data) return;
+
+  chartInstance = new Chart(chartRef.value, {
+    data: data,
+    type: "pie",
+    height: props.height,
+    colors: props.colors,
+  });
 };
 
-watch(() => props.data, () => {
-  if (chartInstance && chartOption.value) {
-    chartInstance.setOption(chartOption.value);
-  }
-}, { deep: true });
+watch(
+  () => props.data,
+  () => {
+    if (chartInstance) {
+      const data = getChartData();
+      if (data) {
+        chartInstance.update(data);
+      }
+    }
+  },
+  { deep: true }
+);
 
 onMounted(() => {
-  initChartInstance();
+  initChart();
 });
 
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-  chartInstance?.dispose();
   chartInstance = null;
 });
 </script>
 
 <style scoped>
-/* ECharts 容器样式 */
+/* Frappe Charts 样式 */
+:deep(.frappe-chart-container) {
+  width: 100% !important;
+}
 </style>
