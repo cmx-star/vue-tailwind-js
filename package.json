@@ -12,11 +12,12 @@
   "dependencies": {
     "@floating-ui/vue": "^1.1.9",
     "@heroicons/vue": "^2.1.1",
+    "@unovis/ts": "^1.6.2",
+    "@unovis/vue": "^1.6.2",
     "@vuepic/vue-datepicker": "^12.1.0",
     "@vueuse/core": "^14.1.0",
     "axios": "^1.6.7",
     "dayjs": "^1.11.10",
-    "echarts": "^6.0.0",
     "flowbite": "^4.0.1",
     "js-md5": "^0.8.3",
     "nprogress": "^0.2.0",

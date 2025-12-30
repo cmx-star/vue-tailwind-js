@@ -1,10 +1,20 @@
 <template>
-  <div ref="chartRef" class="w-full h-full"></div>
+  <div v-if="data && data.length > 0" class="w-full h-full">
+    <VisSingleContainer :data="data" v-bind="containerConfig">
+      <VisDonut :value="valueAccessor" :arcWidth="containerWidth" v-bind="pieConfig" :attributes="{ class: 'segment' }">
+        <VisTooltip :triggers="tooltipTriggers" />
+      </VisDonut>
+    </VisSingleContainer>
+  </div>
+  <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
+    暂无数据
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
-import { initChart } from '@/utils/echarts';
+import { computed } from "vue";
+import { VisSingleContainer, VisDonut, VisTooltip } from "@unovis/vue";
+import { Donut } from "@unovis/ts";
 
 const props = defineProps({
   data: {
@@ -14,11 +24,11 @@ const props = defineProps({
   },
   valueKey: {
     type: String,
-    default: 'value',
+    default: "value",
   },
   labelKey: {
     type: String,
-    default: 'label',
+    default: "label",
   },
   height: {
     type: Number,
@@ -27,112 +37,50 @@ const props = defineProps({
   colors: {
     type: Array,
     default: () => [
-      '#3B82F6',
-      '#8B5CF6',
-      '#10B981',
-      '#F59E0B',
-      '#EF4444',
-      '#06B6D4',
+      "#3B82F6",
+      "#8B5CF6",
+      "#10B981",
+      "#F59E0B",
+      "#EF4444",
+      "#06B6D4",
     ],
   },
   innerRadius: {
     type: Number,
-    default: 0, // 0 = 饼图, 50 = 环状图
+    default: 0,
   },
 });
 
-const chartRef = ref(null);
-let chartInstance = null;
+const containerConfig = computed(() => ({
+  width: props.height,
+  height: props.height,
+}));
 
-// 计算图表配置
-const chartOption = computed(() => {
-  if (!props.data || props.data.length === 0) return null;
+const pieConfig = computed(() => ({
+  color: (d, i) => props.colors[i % props.colors.length],
+  innerRadius: props.innerRadius,
+  padAngle: 0.01,
+  showLabels: true,
+}));
 
-  // 转换数据格式
-  const seriesData = props.data.map((item, index) => ({
-    name: item[props.labelKey],
-    value: item[props.valueKey],
-    itemStyle: {
-      color: props.colors[index % props.colors.length],
-    },
-  }));
+// arcWidth 设置为容器宽度一半,使其成为完整饼图
+const containerWidth = computed(() => props.height / 2);
 
-  return {
-    tooltip: {
-      trigger: 'item',
-      backgroundColor: 'rgba(50, 50, 50, 0.9)',
-      borderColor: '#333',
-      borderWidth: 0,
-      textStyle: {
-        color: '#fff',
-      },
-      formatter: '{b}: {c} ({d}%)',
-    },
-    legend: {
-      orient: 'vertical',
-      right: '10%',
-      top: 'center',
-      textStyle: {
-        color: '#9CA3AF',
-      },
-    },
-    series: [
-      {
-        type: 'pie',
-        radius: props.innerRadius > 0 ? [`${props.innerRadius}%`, '70%'] : '70%',
-        center: ['35%', '50%'],
-        data: seriesData,
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)',
-          },
-        },
-        label: {
-          show: true,
-          formatter: '{b}: {d}%',
-          color: '#9CA3AF',
-        },
-      },
-    ],
-  };
-});
+const valueAccessor = (d) => d[props.valueKey];
 
-// 初始化图表
-const initChartInstance = () => {
-  if (!chartRef.value || !chartOption.value) return;
-
-  if (!chartInstance) {
-    chartInstance = initChart(chartRef.value, chartOption.value);
-  } else {
-    chartInstance.setOption(chartOption.value);
-  }
-
-  window.addEventListener('resize', handleResize);
+// Tooltip 配置
+const tooltipTriggers = {
+  [Donut.selectors.segment]: (d) => {
+    const label = d?.[props.labelKey] || "未知";
+    const value = d?.[props.valueKey] || 0;
+    return `<strong>${label}</strong><br/>数值: ${value}`;
+  },
 };
-
-const handleResize = () => {
-  chartInstance?.resize();
-};
-
-watch(() => props.data, () => {
-  if (chartInstance && chartOption.value) {
-    chartInstance.setOption(chartOption.value);
-  }
-}, { deep: true });
-
-onMounted(() => {
-  initChartInstance();
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-  chartInstance?.dispose();
-  chartInstance = null;
-});
 </script>
 
 <style scoped>
-/* ECharts 容器样式 */
+:deep(.unovis-donut-chart) {
+  width: 100%;
+  height: 100%;
+}
 </style>

@@ -52,8 +52,8 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: (id) => {
             if (id.includes("node_modules")) {
-              // ECharts
-              if (id.includes("echarts")) {
+              // Unovis 图表库
+              if (id.includes("@unovis")) {
                 return "chart-vendor";
               }
               // 2. Vue 核心全家桶（不含图表库）

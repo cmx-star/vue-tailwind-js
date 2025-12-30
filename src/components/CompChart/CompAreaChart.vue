@@ -1,10 +1,25 @@
 <template>
-  <div ref="chartRef" class="w-full h-full"></div>
+  <div v-if="data && data.length > 0" class="w-full h-full">
+    <VisXYContainer :data="data" v-bind="containerConfig">
+      <VisArea :x="xAccessor" :y="yAccessor" v-bind="areaConfig" :attributes="{ class: 'area' }" />
+      <VisScatter :x="xAccessor" :y="yAccessor" v-bind="scatterConfig" :attributes="{ class: 'point' }" />
+      <VisAxis type="x" :tickFormat="xTickFormat" :gridLine="false" />
+      <VisAxis type="y" :gridLine="false" />
+      <VisTooltip :triggers="tooltipTriggers" />
+    </VisXYContainer>
+  </div>
+  <div
+    v-else
+    class="w-full h-full flex items-center justify-center text-gray-400"
+  >
+    暂无数据
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
-import { initChart } from '@/utils/echarts';
+import { computed } from "vue";
+import { VisXYContainer, VisArea, VisAxis, VisTooltip, VisScatter } from "@unovis/vue";
+import { Area, Scatter } from "@unovis/ts";
 
 const props = defineProps({
   data: {
@@ -14,11 +29,11 @@ const props = defineProps({
   },
   xKey: {
     type: String,
-    default: 'x',
+    default: "x",
   },
   yKey: {
     type: [String, Array],
-    default: 'y',
+    default: "y",
   },
   xLabelKey: {
     type: String,
@@ -30,7 +45,7 @@ const props = defineProps({
   },
   color: {
     type: [String, Array],
-    default: '#3B82F6',
+    default: "#3B82F6",
   },
   smooth: {
     type: Boolean,
@@ -38,135 +53,80 @@ const props = defineProps({
   },
   opacity: {
     type: Number,
-    default: 0.7,
+    default: 0.3,
   },
 });
 
-const chartRef = ref(null);
-let chartInstance = null;
+const containerConfig = computed(() => ({
+  height: props.height,
+}));
 
-// 计算图表配置
-const chartOption = computed(() => {
-  if (!props.data || props.data.length === 0) return null;
+// 处理多组数据
+const yAccessor = computed(() => {
+  if (Array.isArray(props.yKey)) {
+    return props.yKey.map((key) => (d) => d[key]);
+  }
+  const key = props.yKey;
+  return (d) => d[key];
+});
 
-  // 提取 X 轴标签
-  const xAxisData = props.data.map(item => 
-    props.xLabelKey ? item[props.xLabelKey] : item[props.xKey]
-  );
+const xAccessor = computed(() => {
+  const key = props.xKey;
+  return (d) => d[key];
+});
 
-  // 处理多组数据
-  const yKeys = Array.isArray(props.yKey) ? props.yKey : [props.yKey];
+const areaConfig = computed(() => {
+  const config = {
+    lineWidth: 2,
+    curveType: props.smooth ? "monotoneX" : "linear",
+    opacity: props.opacity,
+  };
+
+  if (Array.isArray(props.color)) {
+    config.color = (d, i) => props.color[i % props.color.length];
+  } else {
+    config.color = props.color;
+  }
+
+  return config;
+});
+
+const scatterConfig = computed(() => {
   const colors = Array.isArray(props.color) ? props.color : [props.color];
-
-  const series = yKeys.map((key, index) => ({
-    name: key,
-    type: 'line',
-    data: props.data.map(item => item[key]),
-    smooth: props.smooth,
-    stack: 'Total', // 堆叠面积图
-    lineStyle: {
-      width: 2,
-      color: colors[index % colors.length],
-    },
-    itemStyle: {
-      color: colors[index % colors.length],
-    },
-    areaStyle: {
-      color: colors[index % colors.length],
-      opacity: props.opacity,
-    },
-  }));
-
   return {
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      top: yKeys.length > 1 ? '15%' : '10%',
-      containLabel: true,
-    },
-    tooltip: {
-      trigger: 'axis',
-      backgroundColor: 'rgba(50, 50, 50, 0.9)',
-      borderColor: '#333',
-      borderWidth: 0,
-      textStyle: {
-        color: '#fff',
-      },
-    },
-    legend: yKeys.length > 1 ? {
-      data: yKeys,
-      top: '5%',
-      textStyle: {
-        color: '#9CA3AF',
-      },
-    } : undefined,
-    xAxis: {
-      type: 'category',
-      data: xAxisData,
-      boundaryGap: false,
-      axisLine: {
-        lineStyle: {
-          color: '#4B5563',
-        },
-      },
-      axisLabel: {
-        color: '#9CA3AF',
-      },
-    },
-    yAxis: {
-      type: 'value',
-      axisLine: {
-        show: false,
-      },
-      axisTick: {
-        show: false,
-      },
-      axisLabel: {
-        color: '#9CA3AF',
-      },
-      splitLine: {
-        show: false,
-      },
-    },
-    series,
+    color: (d, i) => colors[i % colors.length],
+    size: 6,
+    strokeColor: "#fff",
+    strokeWidth: 2,
   };
 });
 
-// 初始化图表
-const initChartInstance = () => {
-  if (!chartRef.value || !chartOption.value) return;
-
-  if (!chartInstance) {
-    chartInstance = initChart(chartRef.value, chartOption.value);
-  } else {
-    chartInstance.setOption(chartOption.value);
-  }
-
-  window.addEventListener('resize', handleResize);
+// X 轴标签格式化
+const xTickFormat = (d, i) => {
+  if (!props.xLabelKey) return String(d);
+  const item = props.data[i];
+  return item ? item[props.xLabelKey] : String(d);
 };
 
-const handleResize = () => {
-  chartInstance?.resize();
+// Tooltip 配置
+const tooltipTriggers = {
+  'point': (d) => {
+    const xLabel = props.xLabelKey && d ? d[props.xLabelKey] : d?.[props.xKey];
+    if (Array.isArray(props.yKey)) {
+      const values = props.yKey
+        .map((key) => `${key}: <strong>${d?.[key] || 0}</strong>`)
+        .join("<br/>");
+      return `<strong>${xLabel}</strong><br/>${values}`;
+    }
+    const yValue = d?.[props.yKey];
+    return `<strong>${xLabel}</strong><br/>${props.yKey}: ${yValue}`;
+  },
 };
-
-watch(() => props.data, () => {
-  if (chartInstance && chartOption.value) {
-    chartInstance.setOption(chartOption.value);
-  }
-}, { deep: true });
-
-onMounted(() => {
-  initChartInstance();
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
-  chartInstance?.dispose();
-  chartInstance = null;
-});
 </script>
 
 <style scoped>
-/* ECharts 容器样式 */
+:deep(.unovis-area-chart) {
+  width: 100%;
+  height: 100%;
+}
 </style>
