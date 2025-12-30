@@ -35,18 +35,12 @@
                 value="vpn.example.com"
               />
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                协议类型
-              </label>
-              <select
-                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              >
-                <option>OpenVPN</option>
-                <option>IPSec</option>
-                <option>PPTP</option>
-              </select>
-            </div>
+            <CompSelect
+              v-model="vpnConfig.protocol"
+              :options="protocolOptions"
+              label="协议类型"
+              placeholder="请选择协议类型"
+            />
             <div>
               <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 端口
@@ -120,5 +114,24 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import CompSelect from '@/components/CompSelect/CompSelect.vue';
+
+// VPN 配置数据
+const vpnConfig = ref({
+  name: '主 VPN 连接',
+  server: 'vpn.example.com',
+  protocol: 'openvpn',
+  port: 1194,
+  username: '',
+  password: ''
+});
+
+// 协议选项
+const protocolOptions = [
+  { label: 'OpenVPN', value: 'openvpn' },
+  { label: 'IPSec', value: 'ipsec' },
+  { label: 'PPTP', value: 'pptp' }
+];
 </script>
 

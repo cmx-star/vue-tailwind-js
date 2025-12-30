@@ -3,7 +3,7 @@
     <!-- 左侧：Logo、侧边栏切换按钮、六个导航选项 -->
     <div class="flex items-center gap-1 md:gap-4 flex-1">
       <!-- Logo 区域 - 宽度与侧边栏保持一致,移动端隐藏 -->
-      <div 
+      <div
         v-if="isAside"
         class="hidden md:flex items-center gap-3 flex-shrink-0 transition-all duration-300"
         :style="{
@@ -25,10 +25,7 @@
       </div>
 
       <!-- 无侧边栏时的 Logo,移动端隐藏 -->
-      <div 
-        v-else
-        class="hidden md:flex items-center gap-3 flex-shrink-0"
-      >
+      <div v-else class="hidden md:flex items-center gap-3 flex-shrink-0">
         <div
           class="w-10 h-10 flex items-center justify-center rounded-lg text-white text-lg font-bold"
           style="background-color: var(--color-primary-600)"
@@ -48,7 +45,9 @@
         @click="handleSidebarToggle"
         class="hidden md:flex p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-shrink-0 w-8 h-8 md:w-auto md:h-auto items-center justify-center"
       >
-        <Bars3Icon class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
+        <Bars3Icon
+          class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300"
+        />
       </button>
 
       <!-- 六个顶部导航选项 - 使用图标显示,移动端更紧凑 -->
@@ -66,12 +65,11 @@
           ]"
           :title="$t(nav.name)"
         >
-          <component 
-            :is="getNavIcon(nav.key)" 
-            class="w-6 h-6 md:w-5 md:h-5" 
-          />
+          <component :is="getNavIcon(nav.key)" class="w-6 h-6 md:w-5 md:h-5" />
           <!-- 悬停提示 -->
-          <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs whitespace-nowrap bg-gray-900 dark:bg-gray-700 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <span
+            class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs whitespace-nowrap bg-gray-900 dark:bg-gray-700 text-white rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+          >
             {{ $t(nav.name) }}
           </span>
         </button>
@@ -83,26 +81,32 @@
       <!-- 语言切换 -->
       <div class="relative" ref="langDropdownRef">
         <button
+          ref="langTriggerRef"
           @click="toggleLangDropdown"
-          class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors w-8 h-8 md:w-auto md:h-auto flex items-center justify-center md:gap-2"
+          class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors w-8 h-8 md:w-auto md:h-auto flex items-center justify-center md:gap-2 text-gray-700 dark:text-gray-300"
         >
-          <LanguageIcon class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
-          <span class="hidden md:inline text-sm">{{ currentLocale === "zh-CN" ? "中文" : "English" }}</span>
+          <LanguageIcon
+            class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300"
+          />
+          <span class="hidden md:inline text-sm text-gray-700 dark:text-gray-300">{{
+            currentLocale === "zh-CN" ? "中文" : "English"
+          }}</span>
         </button>
         <div
           v-show="showLangDropdown"
+          ref="langDropdownContentRef"
           class="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
         >
           <button
             @click="changeLanguage('zh-CN')"
-            class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+            class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-white"
             :class="currentLocale === 'zh-CN' ? 'active' : ''"
           >
             中文
           </button>
           <button
             @click="changeLanguage('en-US')"
-            class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+            class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-white"
             :class="currentLocale === 'en-US' ? 'active' : ''"
           >
             English
@@ -113,30 +117,40 @@
       <!-- 主题切换（明暗模式 + 六套主题样式） -->
       <div class="relative" ref="themeDropdownRef">
         <button
+          ref="themeTriggerRef"
           @click="toggleThemeDropdown"
           class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors w-8 h-8 md:w-auto md:h-auto flex items-center justify-center"
         >
-          <SunIcon v-if="!isDark" class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
-          <MoonIcon v-else class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
+          <SunIcon
+            v-if="!isDark"
+            class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300"
+          />
+          <MoonIcon
+            v-else
+            class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300"
+          />
         </button>
         <div
           v-show="showThemeDropdown"
+          ref="themeDropdownContentRef"
           class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
         >
           <!-- 明暗模式切换 -->
           <button
             @click="toggleDark"
-            class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
+            class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-white"
           >
             {{ isDark ? "☀️ 浅色模式" : "🌙 暗色模式" }}
           </button>
-          
+
           <!-- 分隔线 -->
           <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-          
+
           <!-- 六套主题样式切换 -->
           <div class="px-2 py-1">
-            <div class="text-xs text-gray-500 dark:text-gray-400 px-2 py-1 mb-1">
+            <div
+              class="text-xs text-gray-500 dark:text-gray-300 px-2 py-1 mb-1"
+            >
               主题样式
             </div>
             <div class="space-y-1">
@@ -147,8 +161,8 @@
                 :class="[
                   'w-full px-3 py-2 text-left text-sm rounded transition-colors',
                   themeStyle === style.value
-                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300',
+                    ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-white',
                 ]"
               >
                 {{ style.label }}
@@ -165,12 +179,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAppStore } from "@/stores/app";
 import { useMenuStore } from "@/stores/menu";
 import { useThemeStore } from "@/stores/theme";
 import { useI18n } from "vue-i18n";
+import { onClickOutside } from "@vueuse/core";
 import {
   Bars3Icon,
   LanguageIcon,
@@ -208,12 +223,12 @@ const currentLocale = computed(() => locale.value);
 
 // 顶部导航图标映射 (根据 topNav key: 0-5)
 const navIconMap = {
-  0: HomeIcon,        // 概览
-  1: GlobeAltIcon,    // 网络
+  0: HomeIcon, // 概览
+  1: GlobeAltIcon, // 网络
   2: ShieldCheckIcon, // VPN
-  3: CloudIcon,       // 边缘计算
-  4: CpuChipIcon,     // 向导
-  5: Cog6ToothIcon,   // 系统
+  3: CloudIcon, // 边缘计算
+  4: CpuChipIcon, // 向导
+  5: Cog6ToothIcon, // 系统
 };
 
 // 获取导航图标
@@ -236,6 +251,10 @@ const showLangDropdown = ref(false);
 const showThemeDropdown = ref(false);
 const langDropdownRef = ref(null);
 const themeDropdownRef = ref(null);
+const langTriggerRef = ref(null);
+const langDropdownContentRef = ref(null);
+const themeTriggerRef = ref(null);
+const themeDropdownContentRef = ref(null);
 
 const handleSidebarToggle = () => {
   appStore.toggleSidebar();
@@ -273,21 +292,31 @@ const handleTopNavClick = (nav) => {
     };
 
     const firstPath = findFirstPath(menus);
-    console.log("点击顶部导航:", nav, "找到的路径:", firstPath, "菜单列表:", menus);
-    
+    console.log(
+      "点击顶部导航:",
+      nav,
+      "找到的路径:",
+      firstPath,
+      "菜单列表:",
+      menus
+    );
+
     if (firstPath) {
       // 直接跳转，如果路由存在就会成功，不存在会跳转到 404
-      router.push(firstPath).then(() => {
-        console.log("路由跳转成功:", firstPath);
-      }).catch((err) => {
-        console.error("路由跳转失败:", firstPath, err);
-        // 如果路由不存在，尝试使用 nav.uri
-        if (nav.uri) {
-          router.push(nav.uri).catch((e) => {
-            console.error("使用 nav.uri 跳转也失败:", nav.uri, e);
-          });
-        }
-      });
+      router
+        .push(firstPath)
+        .then(() => {
+          console.log("路由跳转成功:", firstPath);
+        })
+        .catch((err) => {
+          console.error("路由跳转失败:", firstPath, err);
+          // 如果路由不存在，尝试使用 nav.uri
+          if (nav.uri) {
+            router.push(nav.uri).catch((e) => {
+              console.error("使用 nav.uri 跳转也失败:", nav.uri, e);
+            });
+          }
+        });
     } else if (nav.uri) {
       router.push(nav.uri).catch((err) => {
         console.error("使用 nav.uri 跳转失败:", nav.uri, err);
@@ -325,18 +354,26 @@ const setThemeStyle = (style) => {
   // 不关闭下拉菜单，方便继续切换
 };
 
-// 点击外部关闭 dropdown
-const handleClickOutside = (event) => {
-  if (langDropdownRef.value && !langDropdownRef.value.contains(event.target)) {
+// 使用 @vueuse/core 的 onClickOutside 优化点击外部关闭逻辑
+onClickOutside(
+  langDropdownContentRef,
+  () => {
     showLangDropdown.value = false;
+  },
+  {
+    ignore: [langTriggerRef],
   }
-  if (
-    themeDropdownRef.value &&
-    !themeDropdownRef.value.contains(event.target)
-  ) {
+);
+
+onClickOutside(
+  themeDropdownContentRef,
+  () => {
     showThemeDropdown.value = false;
+  },
+  {
+    ignore: [themeTriggerRef],
   }
-};
+);
 
 // 监听路由变化，更新激活的顶部导航
 const updateActiveTopNav = () => {
@@ -351,12 +388,7 @@ const updateActiveTopNav = () => {
 };
 
 onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
   updateActiveTopNav();
-});
-
-onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
 });
 </script>
 

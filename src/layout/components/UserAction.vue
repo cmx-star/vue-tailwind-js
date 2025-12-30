@@ -1,6 +1,7 @@
 <template>
   <div class="relative" ref="userDropdownRef">
     <button
+      ref="triggerRef"
       @click="toggleUserDropdown"
       class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors w-8 h-8 md:w-auto md:h-auto flex items-center justify-center"
     >
@@ -12,6 +13,7 @@
     </button>
     <div
       v-show="showUserDropdown"
+      ref="dropdownRef"
       class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
     >
       <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
@@ -33,9 +35,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import { onClickOutside } from "@vueuse/core";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -43,6 +46,8 @@ const userStore = useUserStore();
 const userInfo = computed(() => userStore.userInfo);
 const showUserDropdown = ref(false);
 const userDropdownRef = ref(null);
+const triggerRef = ref(null);
+const dropdownRef = ref(null);
 
 const toggleUserDropdown = () => {
   showUserDropdown.value = !showUserDropdown.value;
@@ -53,21 +58,14 @@ const handleLogout = () => {
   router.push("/login");
 };
 
-// 点击外部关闭 dropdown
-const handleClickOutside = (event) => {
-  if (
-    userDropdownRef.value &&
-    !userDropdownRef.value.contains(event.target)
-  ) {
+// 使用 @vueuse/core 的 onClickOutside 优化点击外部关闭逻辑
+onClickOutside(
+  dropdownRef,
+  () => {
     showUserDropdown.value = false;
+  },
+  {
+    ignore: [triggerRef],
   }
-};
-
-onMounted(() => {
-  document.addEventListener("click", handleClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
-});
+);
 </script>

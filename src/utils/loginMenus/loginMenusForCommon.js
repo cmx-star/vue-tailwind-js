@@ -72,9 +72,16 @@ function getFlatRoutes(menus, parentPath = "", parentAside = 1, parentTopNav = 0
       routes.push(...getFlatRoutes(menu.subMenu, nestedParentPath, currentAside, currentTopNav));
     } else {
       // 如果是叶子节点，生成路由配置
-      // Vue Router 的子路由路径应该是相对于父路由的，直接使用 currentPath
+      // Vue Router 的子路由路径应该是相对于父路由的
+      // 如果 parentPath 存在，需要拼接完整路径，但不要以 / 开头（Vue Router 会将其视为绝对路径）
+      let routePath;
+      if (parentPath) {
+        routePath = `${parentPath}/${currentPath}`;
+      } else {
+        routePath = currentPath;
+      }
       routes.push({
-        path: currentPath,
+        path: routePath,
         name: menu.permissionValue,
         component: loadRoutes(menu.permissionValue),
         meta: {

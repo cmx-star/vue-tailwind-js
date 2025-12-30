@@ -24,51 +24,55 @@
     <!-- 日志筛选 -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">日志级别</label>
-          <select
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            <option>全部</option>
-            <option>错误</option>
-            <option>警告</option>
-            <option>信息</option>
-            <option>调试</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">时间范围</label>
-          <select
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            <option>今天</option>
-            <option>最近7天</option>
-            <option>最近30天</option>
-            <option>自定义</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">模块</label>
-          <select
-            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            <option>全部模块</option>
-            <option>用户管理</option>
-            <option>系统配置</option>
-            <option>网络管理</option>
-            <option>VPN</option>
-          </select>
-        </div>
+        <CompSelect
+          v-model="filters.level"
+          :options="levelOptions"
+          label="日志级别"
+          placeholder="全部"
+          @change="handleFilterChange"
+        />
+        <CompSelect
+          v-model="filters.timeRange"
+          :options="timeRangeOptions"
+          label="时间范围"
+          placeholder="请选择时间范围"
+          @change="handleTimeRangeChange"
+        />
+        <CompSelect
+          v-model="filters.module"
+          :options="moduleOptions"
+          label="模块"
+          placeholder="全部模块"
+          searchable
+          @change="handleFilterChange"
+        />
         <div class="flex items-end">
           <button
             class="w-full px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors"
             style="background-color: var(--color-primary-600);"
             onmouseover="this.style.backgroundColor='var(--color-primary-700)'"
             onmouseout="this.style.backgroundColor='var(--color-primary-600)'"
+            @click="handleSearch"
           >
             搜索
           </button>
         </div>
+      </div>
+      
+      <!-- 自定义时间范围选择器 -->
+      <div v-if="filters.timeRange === 'custom'" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <CompDatePicker
+          v-model="filters.startDate"
+          label="开始日期"
+          placeholder="请选择开始日期"
+          @update:model-value="handleFilterChange"
+        />
+        <CompDatePicker
+          v-model="filters.endDate"
+          label="结束日期"
+          placeholder="请选择结束日期"
+          @update:model-value="handleFilterChange"
+        />
       </div>
     </div>
 
@@ -115,6 +119,64 @@
 
 <script setup>
 import { ref } from 'vue';
+import CompSelect from '@/components/CompSelect/CompSelect.vue';
+import CompDatePicker from '@/components/CompDatePicker/CompDatePicker.vue';
+
+// 筛选条件
+const filters = ref({
+  level: '',
+  timeRange: '',
+  module: '',
+  startDate: null,
+  endDate: null
+});
+
+// 日志级别选项
+const levelOptions = [
+  { label: '全部', value: '' },
+  { label: '错误', value: 'error' },
+  { label: '警告', value: 'warning' },
+  { label: '信息', value: 'info' },
+  { label: '调试', value: 'debug' }
+];
+
+// 时间范围选项
+const timeRangeOptions = [
+  { label: '今天', value: 'today' },
+  { label: '最近7天', value: '7days' },
+  { label: '最近30天', value: '30days' },
+  { label: '自定义', value: 'custom' }
+];
+
+// 模块选项
+const moduleOptions = [
+  { label: '全部模块', value: '' },
+  { label: '用户管理', value: 'user' },
+  { label: '系统配置', value: 'system' },
+  { label: '网络管理', value: 'network' },
+  { label: 'VPN', value: 'vpn' }
+];
+
+// 处理筛选变化
+const handleFilterChange = () => {
+  console.log('筛选条件变化:', filters.value);
+  // 这里可以添加实际的筛选逻辑
+};
+
+// 处理时间范围变化
+const handleTimeRangeChange = (value) => {
+  if (value !== 'custom') {
+    filters.value.startDate = null;
+    filters.value.endDate = null;
+  }
+  handleFilterChange();
+};
+
+// 处理搜索
+const handleSearch = () => {
+  console.log('执行搜索，筛选条件:', filters.value);
+  // 这里可以添加实际的搜索逻辑
+};
 
 const logs = ref([
   {
