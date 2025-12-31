@@ -66,7 +66,7 @@ export default defineConfig({
         },
         manualChunks(id) {
           if (id.includes("node_modules")) {
-            if (id.includes("frappe-charts")) {
+            if (id.includes("uplot")) {
               return "vendor-charts";
             }
             if (id.includes("flatpickr")) {
@@ -97,7 +97,7 @@ export default defineConfig({
       "vue-i18n",
       "dayjs",
       "@floating-ui/vue",
-      "frappe-charts",
+      "uplot",
     ],
   },
 });

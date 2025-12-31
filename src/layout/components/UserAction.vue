@@ -9,8 +9,10 @@
         alt="Avatar"
         class="w-6 h-6 rounded-full"
       />
-      <span class="text-sm font-medium text-gray-700 dark:text-gray-200 hidden md:block">管理员</span>
-      <i class="fas fa-chevron-down text-xs text-gray-400"></i>
+      <span
+        class="text-sm font-medium text-gray-700 dark:text-gray-200 hidden md:block"
+        >管理员</span
+      >
     </button>
     <div
       v-show="showUserDropdown"
@@ -18,7 +20,9 @@
     >
       <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
         <p class="text-sm font-medium text-gray-900 dark:text-white">Admin</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400">admin@example.com</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+          admin@example.com
+        </p>
       </div>
       <button
         @click="handleLogout"
@@ -58,7 +62,7 @@ export default {
   directives: {
     "click-outside": {
       bind(el, binding) {
-        el.clickOutsideEvent = function(event) {
+        el.clickOutsideEvent = function (event) {
           if (!(el === event.target || el.contains(event.target))) {
             binding.value(event);
           }

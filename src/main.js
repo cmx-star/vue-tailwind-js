@@ -6,6 +6,7 @@ import router from "./router";
 import store from "./store";
 import i18n from "./i18n";
 import "./styles/index.css";
+import "uplot/dist/uPlot.min.css";
 
 // 使用插件
 Vue.use(VueRouter);

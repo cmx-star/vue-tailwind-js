@@ -2,7 +2,7 @@
   <nav class="h-full px-4 flex items-center justify-between">
     <!-- 左侧：Logo 和 汉堡按钮 -->
     <div class="flex items-center gap-4">
-      <Logo />
+      <Logo class="hidden md:block" />
       <button
         @click="toggleSidebar"
         class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-400"
@@ -11,13 +11,13 @@
       </button>
     </div>
 
-    <!-- 中间：顶部主菜单 (仅在大屏幕显示) -->
-    <div class="hidden lg:flex items-center gap-1 flex-1 justify-center max-w-3xl px-8">
+    <!-- 中间：顶部主菜单 (所有设备显示，小屏幕可横向滚动) -->
+    <div class="flex items-center gap-1 flex-1 justify-center max-w-3xl px-2 sm:px-4 lg:px-8 overflow-x-auto scrollbar-hide">
       <button
         v-for="nav in topNavList"
         :key="nav.key"
         @click="handleTopNavClick(nav)"
-        class="flex flex-col items-center justify-center px-4 py-1.5 rounded-xl transition-all duration-300 relative group overflow-hidden"
+        class="flex flex-col items-center justify-center px-2 sm:px-3 lg:px-4 py-1.5 rounded-xl transition-all duration-300 relative group overflow-hidden flex-shrink-0"
         :class="
           activeTopNav === nav.key
             ? 'text-blue-600 dark:text-blue-400 font-bold'
@@ -28,15 +28,15 @@
         <div v-if="activeTopNav === nav.key" class="absolute inset-0 bg-blue-50 dark:bg-blue-900/10 -z-10"></div>
         <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" :class="{ 'scale-x-100': activeTopNav === nav.key }"></div>
         
-        <i :class="['fas', `fa-${nav.icon}`, 'text-lg', 'mb-0.5']"></i>
-        <span class="text-[10px] tracking-wider uppercase font-semibold">{{ nav.label }}</span>
+        <i :class="['fas', `fa-${nav.icon}`, 'text-base sm:text-lg', 'mb-0.5']"></i>
+        <span class="text-[9px] sm:text-[10px] tracking-wider uppercase font-semibold whitespace-nowrap">{{ nav.label }}</span>
       </button>
     </div>
 
     <!-- 右侧：全局操作 -->
     <div class="flex items-center gap-2">
-      <LanguageSwitcher />
-      <ThemeSwitcher />
+      <LanguageSwitcher class="hidden md:block" />
+      <ThemeSwitcher class="hidden md:block" />
       <div class="w-px h-6 bg-gray-200 dark:border-gray-700 mx-2 hidden sm:block"></div>
       <UserAction />
     </div>
@@ -99,3 +99,14 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* 隐藏滚动条但保持滚动功能 */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+</style>

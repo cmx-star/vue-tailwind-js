@@ -1,9 +1,10 @@
 <template>
-  <div :key="reRenderKey" ref="chartContainer" class="w-full"></div>
+  <div ref="chartContainer" class="w-full"></div>
 </template>
 
 <script>
-import { Chart } from 'frappe-charts';
+import uPlot from 'uplot';
+import { createTooltipPlugin } from '../tooltipPlugin.js';
 
 export default {
   name: 'CompBarChart',
@@ -24,12 +25,8 @@ export default {
   },
   data() {
     return {
-      initTimer: null,
-      reRenderKey: 0
+      chart: null
     };
-  },
-  created() {
-    this.chart = null;
   },
   computed: {
     isDark() {
@@ -37,36 +34,212 @@ export default {
     },
     chartColors() {
       return this.isDark 
-        ? ['#60a5fa', '#34d399', '#fbbf24']
+        ? ['#60a5fa', '#34d399', '#fbbf24', '#f87171', '#a78bfa']
         : this.colors;
     },
     chartData() {
+      // 转换数据格式为 uPlot 格式
+      // 对于多系列并排显示，需要为每个系列创建独立的 x 轴数据
       if (this.data && typeof this.data === 'object' && this.data.labels) {
-        return {
-          labels: [...this.data.labels],
-          datasets: this.data.datasets.map(ds => ({
-            ...ds,
-            values: ds.values.map(v => Number(v))
-          }))
-        };
+        const labels = this.data.labels || [];
+        const datasets = this.data.datasets || [];
+        
+        if (labels.length === 0 || datasets.length === 0) {
+          return null;
+        }
+        
+        // 多系列时，需要为每个系列创建偏移的 x 轴数据以实现并排显示
+        if (datasets.length > 1) {
+          const numSeries = datasets.length;
+          const barWidth = 0.8 / numSeries; // 每个柱子的宽度
+          const gap = 0.2 / (numSeries + 1); // 柱子之间的间距
+          
+          // 为每个系列创建独立的 x 轴数据，并添加偏移量
+          const seriesData = datasets.map((ds, seriesIdx) => {
+            const values = (ds.values || []).map((v, idx) => {
+              if (v === null || v === undefined || v === '') return null;
+              const num = Number(v);
+              return (typeof num === 'number' && isFinite(num) && !isNaN(num)) ? num : null;
+            });
+            
+            while (values.length < labels.length) {
+              values.push(null);
+            }
+            
+            // 为每个数据点创建 x 坐标，添加偏移量以实现并排
+            const xData = labels.map((_, idx) => {
+              const baseX = idx;
+              const offset = (seriesIdx - (numSeries - 1) / 2) * (barWidth + gap);
+              return baseX + offset;
+            });
+            
+            return { xData, values: values.slice(0, labels.length) };
+          });
+          
+          // 使用 uPlot.join 来合并数据，格式: [[x1, y1], [x2, y2], ...]
+          // 每个系列的数据格式: [x轴数据数组, y轴数据数组]
+          return uPlot.join(seriesData.map(s => [s.xData, s.values]));
+        } else {
+          // 单系列时使用原来的方式
+          const xData = labels.map((_, i) => i);
+          const values = (datasets[0].values || []).map(v => {
+            if (v === null || v === undefined || v === '') return null;
+            const num = Number(v);
+            return (typeof num === 'number' && isFinite(num) && !isNaN(num)) ? num : null;
+          });
+          
+          while (values.length < labels.length) {
+            values.push(null);
+          }
+          
+          return [xData, values.slice(0, labels.length)];
+        }
       }
       
       if (Array.isArray(this.data) && this.data.length > 0) {
-        const labels = this.data.map(item => item.x);
-        const values = this.data.map(item => Number(item.y));
+        const xData = this.data.map((_, i) => i);
+        const yData = this.data.map(item => {
+          if (item.y === null || item.y === undefined || item.y === '') return null;
+          const num = Number(item.y);
+          return (typeof num === 'number' && isFinite(num) && !isNaN(num)) ? num : null;
+        });
         
-        return {
-          labels: labels,
-          datasets: [
-            {
-              name: '数据',
-              values: values
-            }
-          ]
-        };
+        return [xData, yData];
       }
       
       return null;
+    },
+    chartOptions() {
+      if (!this.chartData) return null;
+      
+      const datasets = this.data && typeof this.data === 'object' && this.data.datasets 
+        ? this.data.datasets 
+        : [{ name: '数据' }];
+      
+      const labels = this.data && typeof this.data === 'object' && this.data.labels
+        ? this.data.labels
+        : (Array.isArray(this.data) ? this.data.map(item => item.x || '') : []);
+      
+      // 计算柱状图宽度（多系列并排显示时，每个柱子更窄）
+      const numSeries = datasets.length;
+      const barSize = numSeries > 1 
+        ? [0.8 / numSeries, 100] // 多系列时，每个柱子占 0.8/系列数 的宽度
+        : [0.6, 100]; // 单系列时使用 0.6
+      
+      return {
+        width: this.$refs.chartContainer?.offsetWidth || 800,
+        height: this.height,
+        series: [
+          {
+            label: 'X',
+            value: (u, val) => {
+              const idx = Math.round(val);
+              return idx >= 0 && idx < labels.length ? labels[idx] : '';
+            }
+          },
+          ...datasets.map((ds, idx) => ({
+            label: ds.name || `系列 ${idx + 1}`,
+            stroke: this.chartColors[idx % this.chartColors.length],
+            width: 1,
+            fill: this.chartColors[idx % this.chartColors.length], // 使用纯色，不透明
+            // 使用 uPlot 的柱状图路径，并排显示
+            paths: uPlot.paths.bars({ 
+              size: barSize,
+              align: 0 // 居中对齐
+            }),
+            points: {
+              show: false
+            }
+          }))
+        ],
+        axes: [
+          {
+            show: true,
+            stroke: this.isDark ? '#6b7280' : '#9ca3af',
+            space: 40,
+            border: {
+              show: true,
+              stroke: this.isDark ? '#6b7280' : '#9ca3af',
+              width: 1
+            },
+            grid: {
+              show: false
+            },
+            ticks: {
+              show: true,
+              stroke: this.isDark ? '#6b7280' : '#9ca3af',
+              width: 1
+            },
+            values: (u, splits) => {
+              // 只显示整数位置的标签，避免重复
+              return splits.map(v => {
+                const idx = Math.round(v);
+                // 只有当值是整数且在有效范围内时才显示标签
+                if (Math.abs(v - idx) < 0.1 && idx >= 0 && idx < labels.length) {
+                  return labels[idx];
+                }
+                return '';
+              });
+            }
+          },
+          {
+            show: true,
+            stroke: this.isDark ? '#6b7280' : '#9ca3af',
+            space: 50,
+            border: {
+              show: true,
+              stroke: this.isDark ? '#6b7280' : '#9ca3af',
+              width: 1
+            },
+            grid: {
+              show: false
+            },
+            ticks: {
+              show: true,
+              stroke: this.isDark ? '#6b7280' : '#9ca3af',
+              width: 1
+            }
+          }
+        ],
+        scales: {
+          x: {
+            time: false,
+            // 扩展 x 轴范围以容纳并排的柱子
+            range: (u, dataMin, dataMax) => {
+              const datasets = this.data && typeof this.data === 'object' && this.data.datasets 
+                ? this.data.datasets 
+                : [{ name: '数据' }];
+              const numSeries = datasets.length;
+              
+              if (numSeries > 1) {
+                // 多系列时，需要扩展范围以显示所有并排的柱子
+                const barWidth = 0.8 / numSeries;
+                const gap = 0.2 / (numSeries + 1);
+                const maxOffset = (numSeries - 1) / 2 * (barWidth + gap);
+                
+                // 扩展范围，确保最左边和最右边的柱子都能完整显示
+                return [dataMin - maxOffset - 0.1, dataMax + maxOffset + 0.1];
+              }
+              
+              // 单系列时使用默认范围
+              return [dataMin - 0.5, dataMax + 0.5];
+            }
+          }
+        },
+        legend: {
+          show: datasets.length > 1,
+          live: true
+        },
+        cursor: {
+          show: true,
+          focus: {
+            prox: 16
+          }
+        },
+        plugins: [
+          createTooltipPlugin(labels, this.isDark)
+        ]
+      };
     }
   },
   watch: {
@@ -78,173 +251,72 @@ export default {
     },
     isDark() {
       this.initChart();
+    },
+    height() {
+      this.updateChart();
     }
   },
   mounted() {
-    this.initChart();
+    this.$nextTick(() => {
+      this.initChart();
+    });
   },
   beforeDestroy() {
-    if (this.initTimer) {
-      clearTimeout(this.initTimer);
-      this.initTimer = null;
-    }
-    
     if (this.chart) {
-      try {
-        if (typeof this.chart.destroy === 'function') {
-          this.chart.destroy();
-        }
-      } catch (e) {
-        // 忽略销毁错误，避免在组件卸载时抛出异常
-      }
+      this.chart.destroy();
       this.chart = null;
     }
   },
   methods: {
     initChart() {
-      if (this.initTimer) {
-        clearTimeout(this.initTimer);
-        this.initTimer = null;
+      if (!this.$refs.chartContainer || !this.chartData || !this.chartOptions) {
+        return;
       }
-
-      // 1. 先销毁旧实例
+      
       if (this.chart) {
-        try {
-          // 先调用 destroy
-          if (typeof this.chart.destroy === 'function') {
-            try {
-              this.chart.destroy();
-            } catch (e) {
-              // 忽略销毁错误
-            }
-          }
-          
-          // 然后清空容器内容
-          const container = this.$refs.chartContainer;
-          if (container) {
-            try {
-              container.innerHTML = '';
-            } catch (e) {
-              // 忽略错误
-            }
-          }
-        } catch (e) {
-          // 忽略销毁错误
-        }
+        this.chart.destroy();
         this.chart = null;
       }
-
-      // 2. 更新 Key 触发 DOM 替换
-      this.reRenderKey++;
-
-      if (!this.$refs.chartContainer) return;
-
-      // 3. 延时初始化 (移除 innerHTML 手动清理)
-      this.initTimer = setTimeout(() => {
-        if (!this.$refs.chartContainer) return;
-
-        this.chart = new Chart(this.$refs.chartContainer, {
-          data: this.chartData,
-          type: 'bar',
-          height: this.height,
-          colors: this.chartColors,
-          barOptions: {
-            spaceRatio: 0.5,
-            stacked: 0
-          },
-          axisOptions: {
-            xIsSeries: 0,
-            xAxisMode: 'tick',
-            yAxisMode: 'tick'
-          }
-        });
-
-        this.addAxisLines();
-      }, 50);
-    },
-    updateChart() {
-      if (this.chart && this.chartData) {
-        this.chart.update(this.chartData);
-        this.addAxisLines();
-      } else {
-        this.initChart();
+      
+      try {
+        const options = {
+          ...this.chartOptions,
+          width: this.$refs.chartContainer.offsetWidth || 800
+        };
+        
+        this.chart = new uPlot(options, this.chartData, this.$refs.chartContainer);
+      } catch (e) {
+        console.error('[BarChart] Failed to initialize chart:', e);
       }
     },
-    addAxisLines() {
-      if (!this.$refs.chartContainer) return;
-
-      setTimeout(() => {
-        const svg = this.$refs.chartContainer.querySelector('svg.frappe-chart');
-        if (!svg) return;
-
-        const drawArea = svg.querySelector('.chart-draw-area');
-        if (!drawArea) return;
-
-        const yAxis = drawArea.querySelector('.y.axis');
-        const xAxis = drawArea.querySelector('.x.axis');
-        if (!yAxis || !xAxis) return;
-
-        const existingXAxis = drawArea.querySelector('.axis-line-x');
-        const existingYAxis = drawArea.querySelector('.axis-line-y');
-        if (existingXAxis) existingXAxis.remove();
-        if (existingYAxis) existingYAxis.remove();
-
-        const firstXTickLine = xAxis.querySelector('line.line-vertical');
-        if (firstXTickLine) {
-          const xAxisY = parseFloat(firstXTickLine.getAttribute('y2') || '250');
-          const allXTickLines = xAxis.querySelectorAll('g');
-          const lastXTick = allXTickLines[allXTickLines.length - 1];
-          const lastTransform = lastXTick?.getAttribute('transform');
-          const lastXMatch = lastTransform?.match(/translate\(([\d.]+),\s*(\d+)\)/);
-          const xAxisLength = lastXMatch ? parseFloat(lastXMatch[1]) : 0;
-
-          const xAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          xAxisLine.setAttribute('class', 'axis-line-x');
-          xAxisLine.setAttribute('x1', '0');
-          xAxisLine.setAttribute('x2', xAxisLength.toString());
-          xAxisLine.setAttribute('y1', xAxisY.toString());
-          xAxisLine.setAttribute('y2', xAxisY.toString());
-          xAxisLine.setAttribute('stroke', this.isDark ? '#4b5563' : '#dadada');
-          xAxisLine.setAttribute('stroke-width', '1');
-          drawArea.insertBefore(xAxisLine, drawArea.firstChild);
+    updateChart() {
+      if (!this.chart || !this.chartData || !this.chartOptions) {
+        this.initChart();
+        return;
+      }
+      
+      try {
+        this.chart.setData(this.chartData);
+        
+        const newWidth = this.$refs.chartContainer?.offsetWidth || 800;
+        if (this.chart.width !== newWidth) {
+          this.chart.setSize({ width: newWidth, height: this.height });
         }
-
-        const yAxisLines = yAxis.querySelectorAll('line.line-horizontal');
-        if (yAxisLines.length > 0) {
-          const firstYLine = yAxisLines[0];
-          const lastYLine = yAxisLines[yAxisLines.length - 1];
-          const yAxisX = parseFloat(firstYLine.getAttribute('x2') || '0');
-
-          const firstYGroup = firstYLine.closest('g');
-          const lastYGroup = lastYLine.closest('g');
-          const firstYTransform = firstYGroup?.getAttribute('transform');
-          const lastYTransform = lastYGroup?.getAttribute('transform');
-          const firstYMatch = firstYTransform?.match(/translate\([\d.]+,\s*([\d.]+)\)/);
-          const lastYMatch = lastYTransform?.match(/translate\([\d.]+,\s*([\d.]+)\)/);
-
-          if (firstYMatch && lastYMatch) {
-            const yStart = parseFloat(firstYMatch[1]);
-            const yEnd = parseFloat(lastYMatch[1]);
-
-            const yAxisLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            yAxisLine.setAttribute('class', 'axis-line-y');
-            yAxisLine.setAttribute('x1', yAxisX.toString());
-            yAxisLine.setAttribute('x2', yAxisX.toString());
-            yAxisLine.setAttribute('y1', Math.min(yStart, yEnd).toString());
-            yAxisLine.setAttribute('y2', Math.max(yStart, yEnd).toString());
-            yAxisLine.setAttribute('stroke', this.isDark ? '#4b5563' : '#dadada');
-            yAxisLine.setAttribute('stroke-width', '1');
-            drawArea.insertBefore(yAxisLine, drawArea.firstChild);
-          }
-        }
-      }, 100);
+      } catch (e) {
+        console.warn('[BarChart] Update failed, reinitializing:', e);
+        this.initChart();
+      }
     }
   }
 };
 </script>
 
 <style scoped>
-:deep(.frappe-chart-container) {
-  width: 100% !important;
+:deep(.uplot) {
+  font-family: inherit;
+}
+
+:deep(.u-legend) {
+  font-size: 12px;
 }
 </style>

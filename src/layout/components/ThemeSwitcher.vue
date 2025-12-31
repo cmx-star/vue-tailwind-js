@@ -1,5 +1,5 @@
 <template>
-  <div class="relative" v-click-outside="closeDropdown">
+  <div class="relative" :class="$attrs.class" v-click-outside="closeDropdown">
     <button
       @click="toggleDropdown"
       class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
