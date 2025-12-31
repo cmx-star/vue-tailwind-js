@@ -11,6 +11,9 @@ importers:
       '@floating-ui/dom':
         specifier: ^1.7.4
         version: 1.7.4
+      async-validator:
+        specifier: ^4.2.5
+        version: 4.2.5
       axios:
         specifier: ^1.13.2
         version: 1.13.2
@@ -29,9 +32,6 @@ importers:
       uplot:
         specifier: ^1.6.32
         version: 1.6.32
-      vee-validate:
-        specifier: 2.2.15
-        version: 2.2.15
       vue:
         specifier: ^2.7.14
         version: 2.7.16
@@ -749,6 +749,9 @@ packages:
   ansi-styles@4.3.0:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
     engines: {node: '>=8'}
+
+  async-validator@4.2.5:
+    resolution: {integrity: sha512-7HhHjtERjqlNbZtqNqy2rckN/SpOOlmDliet+lP7k+eKZEjPk3DgyeU9lIXLdeLz0uBbbVp+9Qdow9wJWgwwfg==}
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
@@ -1625,9 +1628,6 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
-  vee-validate@2.2.15:
-    resolution: {integrity: sha512-4TOsI8XwVkKVLkg8Nhmy+jyoJrR6XcTRDyxBarzcCvYzU61zamipS1WsB6FlDze8eJQpgglS4NXAS6o4NDPs1g==}
-
   vite-plugin-vue2@2.0.3:
     resolution: {integrity: sha512-t3Tu93GWsMHbpeIv66MTO5e/rRAo8/+/eWoUtFYuAdKDMyEnn1dqsrXh+CfG+SJAlxJvcTP8U0eXkzhLjKNyMg==}
     peerDependencies:
@@ -2417,6 +2417,8 @@ snapshots:
     dependencies:
       color-convert: 2.0.1
 
+  async-validator@4.2.5: {}
+
   asynckit@0.4.0: {}
 
   autoprefixer@10.4.23(postcss@8.5.6):
@@ -2922,8 +2924,6 @@ snapshots:
   uplot@1.6.32: {}
 
   util-deprecate@1.0.2: {}
-
-  vee-validate@2.2.15: {}
 
   vite-plugin-vue2@2.0.3(lodash@4.17.21)(vite@5.4.21(lightningcss@1.30.2)(terser@5.44.1))(vue-template-compiler@2.7.16)(vue@2.7.16):
     dependencies:

@@ -27,47 +27,47 @@
           <div class="grid gap-6 md:grid-cols-2">
             <CompFormInput
               v-model="formData.firstName"
-              v-validate="'required'"
-              data-vv-name="firstName"
               label="First Name"
               placeholder="John"
-              :state="errors.has('firstName') ? 'error' : 'default'"
-              :helper-text="errors.first('firstName')"
+              :state="errors.firstName ? 'error' : 'default'"
+              :helper-text="errors.firstName"
               required
+              @blur="validateField('firstName')"
+              @input="validateField('firstName')"
             />
             <CompFormInput
               v-model="formData.lastName"
-              v-validate="'required'"
-              data-vv-name="lastName"
               label="Last Name"
               placeholder="Doe"
-              :state="errors.has('lastName') ? 'error' : 'default'"
-              :helper-text="errors.first('lastName')"
+              :state="errors.lastName ? 'error' : 'default'"
+              :helper-text="errors.lastName"
               required
+              @blur="validateField('lastName')"
+              @input="validateField('lastName')"
             />
           </div>
 
           <CompFormInput
             v-model="formData.email"
-            v-validate="'required|email'"
-            data-vv-name="email"
             type="email"
             label="Email Address"
             placeholder="john.doe@example.com"
-            :state="errors.has('email') ? 'error' : 'default'"
-            :helper-text="errors.first('email')"
+            :state="errors.email ? 'error' : 'default'"
+            :helper-text="errors.email"
             required
+            @blur="validateField('email')"
+            @input="validateField('email')"
           />
 
           <CompFormInput
             v-model="formData.phone"
-            v-validate="''"
-            data-vv-name="phone"
             type="tel"
             label="Phone Number"
             placeholder="123-456-7890"
-            :state="errors.has('phone') ? 'error' : 'default'"
-            :helper-text="errors.first('phone')"
+            :state="errors.phone ? 'error' : 'default'"
+            :helper-text="errors.phone"
+            @blur="validateField('phone')"
+            @input="validateField('phone')"
           />
         </div>
 
@@ -79,37 +79,37 @@
 
           <CompFormInput
             v-model="formData.username"
-            v-validate="'required|min:3'"
-            data-vv-name="username"
             label="Username"
             placeholder="johndoe"
-            :state="errors.has('username') ? 'error' : 'default'"
-            :helper-text="errors.first('username')"
+            :state="errors.username ? 'error' : 'default'"
+            :helper-text="errors.username"
             required
+            @blur="validateField('username')"
+            @input="validateField('username')"
           />
 
           <CompFormInput
             v-model="formData.password"
-            v-validate="'required|min:6'"
-            data-vv-name="password"
             type="password"
             label="Password"
             placeholder="••••••••"
-            :state="errors.has('password') ? 'error' : 'default'"
-            :helper-text="errors.first('password')"
+            :state="errors.password ? 'error' : 'default'"
+            :helper-text="errors.password"
             required
+            @blur="validateField('password')"
+            @input="validateField('password')"
           />
 
           <CompFormInput
             v-model="formData.confirmPassword"
-            v-validate="{ required: true, is: formData.password }"
-            data-vv-name="confirmPassword"
             type="password"
             label="Confirm Password"
             placeholder="••••••••"
-            :state="errors.has('confirmPassword') ? 'error' : 'default'"
-            :helper-text="errors.first('confirmPassword')"
+            :state="errors.confirmPassword ? 'error' : 'default'"
+            :helper-text="errors.confirmPassword"
             required
+            @blur="validateField('confirmPassword')"
+            @input="validateField('confirmPassword')"
           />
 
           <div class="space-y-4">
@@ -275,6 +275,12 @@ import CompTextarea from "@/components/Form/CompTextarea.vue";
 import CompCheckbox from "@/components/Form/CompCheckbox.vue";
 import CompRadio from "@/components/Form/CompRadio.vue";
 import CompToggle from "@/components/Form/CompToggle.vue";
+import {
+  validateStep,
+  validateField as validateFieldUtil,
+  createRules,
+} from "@/utils/validator.js";
+import Schema from "async-validator";
 
 export default {
   name: "ViewQuickSetup",
@@ -313,33 +319,64 @@ export default {
         twoFactor: false,
         bio: "",
       },
+      errors: {},
     };
   },
   methods: {
-    async handleNext() {
+    validateField(fieldName) {
+      // 清除当前字段的错误
+      this.$set(this.errors, fieldName, "");
+
       // 只验证当前步骤的字段
-      const fieldsToValidate = this.getFieldsForStep(this.currentStep);
-
-      const isValid = await this.$validator.validateAll(fieldsToValidate);
-
-      if (!isValid) {
+      if (
+        this.currentStep === 0 &&
+        !["firstName", "lastName", "email", "phone"].includes(fieldName)
+      ) {
+        return;
+      }
+      if (
+        this.currentStep === 1 &&
+        !["username", "password", "confirmPassword"].includes(fieldName)
+      ) {
         return;
       }
 
-      if (this.currentStep === this.steps.length - 1) {
-        this.handleSubmit();
-      } else {
-        this.currentStep++;
+      const rules = createRules(this.currentStep, this.formData);
+      if (!rules[fieldName]) {
+        return;
       }
+
+      const validator = new Schema({ [fieldName]: rules[fieldName] });
+      validator.validate(
+        { [fieldName]: this.formData[fieldName] },
+        (errors) => {
+          if (errors && errors.length > 0) {
+            this.$set(this.errors, fieldName, errors[0].message);
+          } else {
+            this.$set(this.errors, fieldName, "");
+          }
+        }
+      );
     },
-    getFieldsForStep(step) {
-      const fieldMap = {
-        0: ["firstName", "lastName", "email", "phone"],
-        1: ["username", "password", "confirmPassword"],
-        2: [],
-        3: [],
-      };
-      return fieldMap[step] || [];
+    async handleNext() {
+      try {
+        await validateStep(this.currentStep, this.formData);
+        // 验证成功，清除错误
+        this.errors = {};
+
+        if (this.currentStep === this.steps.length - 1) {
+          this.handleSubmit();
+        } else {
+          this.currentStep++;
+        }
+      } catch (errors) {
+        // 验证失败，显示错误
+        const newErrors = {};
+        errors.forEach((error) => {
+          newErrors[error.field] = error.message;
+        });
+        this.errors = { ...this.errors, ...newErrors };
+      }
     },
     handlePrevious() {
       if (this.currentStep > 0) {
@@ -356,6 +393,25 @@ export default {
       // 重置表单
       setTimeout(() => {
         this.currentStep = 0;
+        this.formData = {
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          username: "",
+          password: "",
+          confirmPassword: "",
+          role: "user",
+          notifications: {
+            email: true,
+            sms: false,
+            push: true,
+          },
+          darkMode: false,
+          twoFactor: false,
+          bio: "",
+        };
+        this.errors = {};
       }, 1500);
     },
     getRoleLabel(role) {
