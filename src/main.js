@@ -5,12 +5,16 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import i18n from "./i18n";
+import Toast from "./components/Toast/toast.js";
 import "./styles/index.css";
 import "uplot/dist/uPlot.min.css";
 
 // 使用插件
 Vue.use(VueRouter);
 Vue.use(Vuex);
+
+// 注册 Toast 到 Vue 原型
+Vue.prototype.$toast = Toast;
 
 // 创建 Vue 实例
 new Vue({
