@@ -10,9 +10,10 @@
       <!-- 侧边栏 (根据 isAside 判断是否显示) -->
       <aside
         v-if="isAside"
-        class="fixed lg:static inset-y-0 left-0 z-40 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 transform"
+        class="fixed lg:static left-0 z-40 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 transform"
         :class="[
           sidebarCollapsed ? 'w-16' : 'w-64',
+          isMobile ? 'top-16 bottom-0' : 'inset-y-0',
           isMobile && !sidebarCollapsed ? 'translate-x-0' : (isMobile ? '-translate-x-full' : 'translate-x-0')
         ]"
       >
