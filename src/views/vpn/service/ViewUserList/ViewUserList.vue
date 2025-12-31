@@ -265,6 +265,13 @@
           <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">当前评分: {{ userRating }} 星</p>
         </div>
       </section>
+
+      <!-- Stepper 步骤条 -->
+      <section class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Stepper 步骤条示例</h1>
+        
+        <CompStepper :steps="steps" :current-step="1" layout="vertical" />
+      </section>
     </div>
   </div>
 </template>
@@ -276,6 +283,7 @@ import CompPagination from '@/components/Pagination/CompPagination.vue';
 import CompPaginationCompact from '@/components/Pagination/CompPaginationCompact.vue';
 import CompProgress from '@/components/Progress/CompProgress.vue';
 import CompRating from '@/components/Rating/CompRating.vue';
+import CompStepper from '@/components/Stepper/CompStepper.vue';
 
 export default {
   name: 'ViewUserList',
@@ -285,7 +293,8 @@ export default {
     CompPagination,
     CompPaginationCompact,
     CompProgress,
-    CompRating
+    CompRating,
+    CompStepper
   },
   data() {
     return {
@@ -296,7 +305,12 @@ export default {
       page5: 3,
       page6: 1,
       pageSize: 10,
-      userRating: 3
+      userRating: 3,
+      steps: [
+        { title: 'User info', description: 'Step details here' },
+        { title: 'Company info', description: 'Step details here' },
+        { title: 'Payment info', description: 'Step details here' }
+      ]
     };
   },
   methods: {
