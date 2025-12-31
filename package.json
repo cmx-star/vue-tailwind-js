@@ -17,6 +17,7 @@
     "flowbite": "^4.0.1",
     "nprogress": "^0.2.0",
     "uplot": "^1.6.32",
+    "vee-validate": "2.2.15",
     "vue": "^2.7.14",
     "vue-i18n": "^8.28.2",
     "vue-router": "^3.6.5",

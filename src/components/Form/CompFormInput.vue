@@ -23,6 +23,7 @@
         :required="required"
         :pattern="pattern"
         :class="inputClasses"
+        v-bind="$attrs"
         @input="$emit('input', $event.target.value)"
         @blur="$emit('blur', $event)"
         @focus="$emit('focus', $event)"
@@ -39,6 +40,7 @@
 <script>
 export default {
   name: 'CompFormInput',
+  inheritAttrs: false,
   props: {
     value: {
       type: [String, Number],

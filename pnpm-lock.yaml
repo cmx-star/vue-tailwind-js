@@ -29,6 +29,9 @@ importers:
       uplot:
         specifier: ^1.6.32
         version: 1.6.32
+      vee-validate:
+        specifier: 2.2.15
+        version: 2.2.15
       vue:
         specifier: ^2.7.14
         version: 2.7.16
@@ -1622,6 +1625,9 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
+  vee-validate@2.2.15:
+    resolution: {integrity: sha512-4TOsI8XwVkKVLkg8Nhmy+jyoJrR6XcTRDyxBarzcCvYzU61zamipS1WsB6FlDze8eJQpgglS4NXAS6o4NDPs1g==}
+
   vite-plugin-vue2@2.0.3:
     resolution: {integrity: sha512-t3Tu93GWsMHbpeIv66MTO5e/rRAo8/+/eWoUtFYuAdKDMyEnn1dqsrXh+CfG+SJAlxJvcTP8U0eXkzhLjKNyMg==}
     peerDependencies:
@@ -2916,6 +2922,8 @@ snapshots:
   uplot@1.6.32: {}
 
   util-deprecate@1.0.2: {}
+
+  vee-validate@2.2.15: {}
 
   vite-plugin-vue2@2.0.3(lodash@4.17.21)(vite@5.4.21(lightningcss@1.30.2)(terser@5.44.1))(vue-template-compiler@2.7.16)(vue@2.7.16):
     dependencies:
