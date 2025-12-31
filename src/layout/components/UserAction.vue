@@ -4,10 +4,11 @@
       @click="toggleUserDropdown"
       class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
     >
-      <img
-        :src="'https://ui-avatars.com/api/?name=Admin&background=0D8ABC&color=fff'"
-        alt="Avatar"
-        class="w-6 h-6 rounded-full"
+      <Avatar
+        name="Admin"
+        :size="24"
+        backgroundColor="#0D8ABC"
+        textColor="#ffffff"
       />
       <span
         class="text-sm font-medium text-gray-700 dark:text-gray-200 hidden md:block"
@@ -28,7 +29,7 @@
         @click="handleLogout"
         class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 dark:text-red-400 flex items-center gap-2"
       >
-        <i class="fas fa-sign-out-alt"></i>
+        <Icon name="sign-out-alt" :size="16" class="w-4 h-4" />
         退出登录
       </button>
     </div>
@@ -38,9 +39,15 @@
 <script>
 import { removeToken } from "@/utils/auth";
 import { resetRouter } from "@/router";
+import Avatar from "@/components/Avatar/Avatar.vue";
+import Icon from "@/components/Icon/Icon.vue";
 
 export default {
   name: "UserAction",
+  components: {
+    Avatar,
+    Icon,
+  },
   data() {
     return {
       showUserDropdown: false,

@@ -13,7 +13,7 @@
       <!-- 外观设置 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <i class="fas fa-palette text-blue-600 dark:text-blue-400"></i>
+          <Icon name="palette" :size="20" class="text-blue-600 dark:text-blue-400" />
           外观设置
         </h2>
 
@@ -70,7 +70,7 @@
       <!-- 语言设置 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <i class="fas fa-language text-blue-600 dark:text-blue-400"></i>
+          <Icon name="language" :size="20" class="text-blue-600 dark:text-blue-400" />
           语言设置
         </h2>
 
@@ -94,7 +94,7 @@
               "
             >
               <div class="flex items-center gap-2">
-                <i class="fas fa-check-circle" v-if="currentLocale === lang.value"></i>
+                <Icon name="check-circle" :size="16" v-if="currentLocale === lang.value" />
                 <span>{{ lang.label }}</span>
               </div>
             </button>
@@ -105,7 +105,7 @@
       <!-- 常规配置 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <i class="fas fa-cog text-blue-600 dark:text-blue-400"></i>
+          <Icon name="cog" :size="20" class="text-blue-600 dark:text-blue-400" />
           常规配置
         </h2>
         <p class="text-gray-600 dark:text-gray-400">
@@ -116,7 +116,7 @@
       <!-- 安全选项 -->
       <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <i class="fas fa-shield-halved text-blue-600 dark:text-blue-400"></i>
+          <Icon name="shield-halved" :size="20" class="text-blue-600 dark:text-blue-400" />
           安全选项
         </h2>
         <p class="text-gray-600 dark:text-gray-400">
@@ -130,9 +130,13 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { storage } from "@/utils/storage";
+import Icon from "@/components/Icon/Icon.vue";
 
 export default {
   name: "ViewSystemSettings",
+  components: {
+    Icon,
+  },
   data() {
     return {
       themes: [

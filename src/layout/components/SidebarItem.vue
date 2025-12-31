@@ -11,13 +11,19 @@
         ]"
       >
         <div v-if="level === 0" class="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-          <i v-if="item.icon" :class="['fas', `fa-${item.icon}`]"></i>
-          <i v-else class="fas fa-circle text-[4px] opacity-20"></i>
+          <Icon v-if="item.icon" :name="item.icon" :size="16" />
+          <Icon v-else name="circle" :size="4" class="opacity-20" />
         </div>
         
         <template v-if="!collapsed">
           <span :class="['truncate flex-1 text-left', level === 0 ? 'ml-3' : '']">{{ $t(item.name) }}</span>
-          <i v-if="item.subMenu && item.subMenu.length > 0" class="fas fa-chevron-right text-[10px] transition-transform duration-200" :class="{ 'rotate-90': isExpanded }"></i>
+          <Icon
+            v-if="item.subMenu && item.subMenu.length > 0"
+            name="chevron-right"
+            :size="10"
+            class="transition-transform duration-200"
+            :class="{ 'rotate-90': isExpanded }"
+          />
         </template>
       </button>
 
@@ -56,8 +62,8 @@
       <div v-if="isActive && level === 0" class="absolute left-0 top-2 bottom-2 w-1 bg-blue-600 rounded-r-full"></div>
       
       <div v-if="level === 0" class="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-        <i v-if="item.icon" :class="['fas', `fa-${item.icon}`]"></i>
-        <i v-else class="fas fa-circle text-[4px] opacity-20"></i>
+        <Icon v-if="item.icon" :name="item.icon" :size="16" />
+        <Icon v-else name="circle" :size="4" class="opacity-20" />
       </div>
       
       <span v-if="!collapsed" :class="['truncate flex-1 text-left', level === 0 ? 'ml-3' : '']">{{ $t(item.name) }}</span>
@@ -66,8 +72,13 @@
 </template>
 
 <script>
+import Icon from "@/components/Icon/Icon.vue";
+
 export default {
   name: "SidebarItem",
+  components: {
+    Icon,
+  },
   props: {
     item: { type: Object, required: true },
     collapsed: { type: Boolean, default: false },
