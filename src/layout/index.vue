@@ -1,136 +1,101 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- 顶部导航栏 -->
-    <header
-      class="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-50 shadow-sm"
-    >
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 overflow-x-hidden">
+    <!-- 顶部固定的导航栏 -->
+    <header class="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-50 shadow-sm transition-colors duration-300">
       <Navbar />
     </header>
 
-    <!-- 侧边栏 -->
-    <aside
-      v-if="isAside"
-      class="fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-40 transition-all duration-300 overflow-hidden"
-      :class="[
-        isMobile ? 'hidden' : '',
-        appStore.sidebarCollapse ? 'w-16' : 'w-64',
-      ]"
-    >
-      <Sidebar />
-    </aside>
+    <!-- 主布局容器 -->
+    <div class="flex pt-16 h-screen overflow-hidden">
+      <!-- 侧边栏 (根据 isAside 判断是否显示) -->
+      <aside
+        v-if="isAside"
+        class="fixed lg:static inset-y-0 left-0 z-40 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 transform"
+        :class="[
+          sidebarCollapsed ? 'w-16' : 'w-64',
+          isMobile && !sidebarCollapsed ? 'translate-x-0' : (isMobile ? '-translate-x-full' : 'translate-x-0')
+        ]"
+      >
+        <Sidebar :collapsed="sidebarCollapsed" />
+      </aside>
 
-    <!-- 移动端遮罩 -->
-    <div
-      v-if="isMobile && isAside && mobileSidebarOpen"
-      class="fixed inset-0 bg-black bg-opacity-50 z-30"
-      @click="appStore.toggleMobileSidebar"
-    ></div>
+      <!-- 移动端遮罩层 -->
+      <div
+        v-if="isMobile && isAside && !sidebarCollapsed"
+        class="fixed inset-0 bg-black/50 z-30 transition-opacity"
+        @click="closeSidebar"
+      ></div>
 
-    <!-- 移动端侧边栏 -->
-    <aside
-      v-if="isMobile && isAside"
-      class="fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-40 transform transition-transform duration-300"
-      :class="mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-    >
-      <Sidebar />
-    </aside>
-
-    <!-- 主内容区 -->
-    <main
-      class="pt-16 min-h-screen"
-      :style="{
-        marginLeft:
-          isMobile || !isAside
-            ? '0'
-            : appStore.sidebarCollapse
-            ? '4rem'
-            : '16rem',
-        transition: 'margin-left 0.3s ease',
-      }"
-    >
-      <AppMain />
-    </main>
-
-    <!-- 移动端悬浮菜单按钮 -->
-    <FloatingMenuButton />
+      <!-- 内容主体区域 -->
+      <main 
+        class="flex-1 overflow-y-auto custom-scrollbar transition-all duration-300 relative"
+      >
+        <AppMain />
+      </main>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
-import { useRoute } from "vue-router";
-import { useAppStore } from "@/stores/app";
+<script>
 import Navbar from "./components/Navbar.vue";
-import Sidebar from "./components/Sidebar/index.vue";
+import Sidebar from "./components/Sidebar.vue";
 import AppMain from "./components/AppMain.vue";
-import FloatingMenuButton from "./components/FloatingMenuButton.vue";
+import { mapState } from "vuex";
 
-const route = useRoute();
-const appStore = useAppStore();
-const isMobile = ref(false);
-
-const mobileSidebarOpen = computed(() => appStore.mobileSidebarOpen);
-
-// 根据路由 meta.aside 判断是否显示侧边栏，如果没有设置则默认显示
-const isAside = computed(() => {
-  if (route.meta && route.meta.aside !== undefined) {
-    return route.meta.aside === "1" || route.meta.aside === 1;
-  }
-  // 默认显示侧边栏（除了登录和404页）
-  return route.path !== "/login" && route.path !== "/404";
-});
-
-const MOBILE_BREAKPOINT = 768;
-
-const checkMobile = () => {
-  const width = window.innerWidth;
-  const wasMobile = isMobile.value;
-  isMobile.value = width < MOBILE_BREAKPOINT;
-
-  if (isMobile.value) {
-    appStore.setSidebarCollapse(true);
-  } else {
-    if (wasMobile) {
-      appStore.setSidebarCollapse(false);
+export default {
+  name: "Layout",
+  components: {
+    Navbar,
+    Sidebar,
+    AppMain,
+  },
+  data() {
+    return {
+      isMobile: false,
+    };
+  },
+  computed: {
+    ...mapState("app", ["sidebarCollapsed"]),
+    isAside() {
+      // 检查当前路由元信息，是否需要侧边栏
+      // 同时如果当前顶层导航没有子树，也可以选择隐藏
+      if (this.$route.meta && this.$route.meta.aside !== undefined) {
+        return !!this.$route.meta.aside;
+      }
+      return true;
+    },
+  },
+  methods: {
+    checkMobile() {
+      this.isMobile = window.innerWidth < 1024;
+      if (this.isMobile) {
+        this.$store.commit("app/SET_SIDEBAR_COLLAPSE", true);
+      }
+    },
+    closeSidebar() {
+      this.$store.commit("app/SET_SIDEBAR_COLLAPSE", true);
     }
-  }
+  },
+  mounted() {
+    this.checkMobile();
+    window.addEventListener("resize", this.checkMobile);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.checkMobile);
+  },
 };
-
-let resizeTimer = null;
-
-const handleResize = () => {
-  if (resizeTimer) {
-    clearTimeout(resizeTimer);
-  }
-  resizeTimer = setTimeout(() => {
-    checkMobile();
-  }, 150);
-};
-
-watch(
-  () => appStore.sidebarCollapse,
-  (collapse) => {
-    if (isMobile.value) {
-      appStore.setMobileSidebarOpen(!collapse);
-    }
-  }
-);
-
-watch(mobileSidebarOpen, (visible) => {
-  if (!visible && isMobile.value) {
-    appStore.setSidebarCollapse(true);
-  }
-});
-
-onMounted(() => {
-  checkMobile();
-  window.addEventListener("resize", handleResize);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", handleResize);
-  if (resizeTimer) {
-    clearTimeout(resizeTimer);
-  }
-});
 </script>
+
+<style scoped>
+@reference "@/styles/index.css";
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-200 dark:bg-gray-700 rounded-full;
+}
+</style>

@@ -1,0 +1,48 @@
+{
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "reset": "Reset",
+    "submit": "Submit",
+    "back": "Back"
+  },
+  "login": {
+    "title": "Login",
+    "subtitle": "Welcome back",
+    "username": "Username",
+    "password": "Password",
+    "usernamePlaceholder": "Enter username",
+    "passwordPlaceholder": "Enter password",
+    "remember": "Remember me",
+    "forgot": "Forgot password?",
+    "login": "Login"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to Admin System"
+  },
+  "theme": {
+    "title": "Theme Settings",
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "auto": "Follow System",
+    "themes": {
+      "default": "Default",
+      "minimal": "Minimal",
+      "enterprise": "Enterprise",
+      "playful": "Playful",
+      "mono": "Mono"
+    }
+  },
+  "language": {
+    "title": "Language Settings",
+    "zh-CN": "中文",
+    "en-US": "English"
+  }
+}
+

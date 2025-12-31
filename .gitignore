@@ -29,22 +29,27 @@ dist-ssr
 .env.local
 .env.*.local
 
-# Build output
-dist/
-build/
+# Build outputs
+build
+out
 
 # Cache
 .cache
-.temp
+.parcel-cache
+.eslintcache
+.stylelintcache
+
+# Temporary files
+*.tmp
+*.temp
 .tmp
+.temp
 
-# OS
+# OS files
 Thumbs.db
+desktop.ini
 
-# Testing
-coverage/
-.nyc_output/
-
-# Misc
-*.tsbuildinfo
-.spec-workflow/
+# Package manager lock files (optional - uncomment if needed)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml

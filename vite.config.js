@@ -1,137 +1,103 @@
 import { defineConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
+import { createVuePlugin } from "vite-plugin-vue2";
 import tailwindcss from "@tailwindcss/vite";
 import { visualizer } from "rollup-plugin-visualizer";
 import { fileURLToPath, URL } from "node:url";
 
-/**
- * 核心优化目标：
- * 1. 极致体积控制 (500KB以内)
- * 2. 精致交互支持 (Floating-UI & VueUse 预构建)
- * 3. 生产环境清理 (移除所有 Console & Debugger)
- */
-export default defineConfig(({ mode }) => {
-  return {
-    plugins: [
-      vue(),
-      tailwindcss(), // Tailwind v4 官方 Vite 插件
-      // 打包分析工具 (仅在 analyze 模式下启用: npm run build:report)
-      mode === "analyze" &&
-        visualizer({
-          open: true,
-          gzipSize: true,
-          brotliSize: true,
-          filename: "dist/stats.html",
-        }),
-    ].filter(Boolean),
+export default defineConfig({
+  plugins: [
+    createVuePlugin(),
+    tailwindcss(),
+    process.env.ANALYZE === "true" &&
+      visualizer({
+        open: true,
+        filename: "dist/stats.html",
+        gzipSize: true,
+        brotliSize: true,
+      }),
+  ].filter(Boolean),
 
-    resolve: {
-      alias: {
-        // 快捷路径指向
-        "@": fileURLToPath(new URL("./src", import.meta.url)),
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
+
+  server: {
+    port: 3001,
+    host: true,
+    open: true,
+  },
+
+  build: {
+    target: "es2015",
+    outDir: "dist",
+    assetsDir: "assets",
+    sourcemap: false,
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
       },
     },
-
-    server: {
-      port: 3001,
-      host: true,
-      open: true,
-    },
-
-    build: {
-      target: "es2015", // 保证在旧版平板和手机上的兼容性
-      outDir: "dist",
-      assetsDir: "assets",
-      sourcemap: false,
-
-      /**
-       * 极致代码分割策略
-       * 目的：确保首屏 Index.js 最小，非核心组件按需加载
-       */
-      rollupOptions: {
-        output: {
-          manualChunks: (id) => {
-            if (id.includes("node_modules")) {
-              // 1. Vue 核心全家桶
-              if (
-                id.includes("vue") ||
-                id.includes("vue-router") ||
-                id.includes("pinia")
-              ) {
-                return "vue-core";
-              }
-              // 3. 较重的日期选择器独立分包，避免阻塞主包
-              if (id.includes("v-calendar")) {
-                return "datepicker-vendor";
-              }
-              // 4. UI 框架类
-              if (id.includes("flowbite") || id.includes("@heroicons")) {
-                return "ui-vendor";
-              }
-              // 5. 国际化与时间处理工具
-              if (
-                id.includes("axios") ||
-                id.includes("dayjs") ||
-                id.includes("vue-i18n")
-              ) {
-                return "utils-vendor";
-              }
-              // 其他第三方依赖
-              return "vendor";
+    rollupOptions: {
+      output: {
+        chunkFileNames: "assets/js/[name]-[hash].js",
+        entryFileNames: "assets/js/[name]-[hash].js",
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split(".");
+          const ext = info[info.length - 1].toLowerCase();
+          if (
+            /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)
+          ) {
+            return `assets/media/[name]-[hash].[ext]`;
+          }
+          if (/\.(png|jpe?g|gif|svg|ico|webp)(\?.*)?$/i.test(assetInfo.name)) {
+            return `assets/images/[name]-[hash].[ext]`;
+          }
+          if (/\.(woff2?|eot|ttf|otf)(\?.*)?$/i.test(assetInfo.name)) {
+            return `assets/font/[name]-[hash].[ext]`;
+          }
+          if (ext === "css") {
+            return `assets/css/[name]-[hash].[ext]`;
+          }
+          return `assets/[name]-[hash].[ext]`;
+        },
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("frappe-charts")) {
+              return "vendor-charts";
             }
-          },
-          // 资源文件精细化分类命名
-          chunkFileNames: "assets/js/[name]-[hash].js",
-          entryFileNames: "assets/js/[name]-[hash].js",
-          assetFileNames: "assets/[ext]/[name]-[hash].[ext]",
+            if (id.includes("flatpickr")) {
+              return "vendor-calendar";
+            }
+            if (
+              id.includes("vue") ||
+              id.includes("vue-router") ||
+              id.includes("vuex") ||
+              id.includes("vue-i18n") ||
+              id.includes("dayjs")
+            ) {
+              return "vendor-core";
+            }
+            return "vendor";
+          }
         },
       },
-
-      /**
-       * Terser 极致压缩配置
-       * 生产环境移除所有调试信息，减小体积并提升代码安全性
-       */
-      minify: "terser",
-      terserOptions: {
-        compress: {
-          drop_console: true, // 移除所有 console.*
-          drop_debugger: true,
-          pure_funcs: [
-            "console.log",
-            "console.info",
-            "console.debug",
-            "console.warn",
-            "console.error",
-          ],
-          dead_code: true,
-          unused: true,
-        },
-        format: {
-          comments: false, // 移除所有代码注释
-        },
-      },
-
-      // 开启 CSS 代码分割，提升样式加载效率
-      cssCodeSplit: true,
-      // 500KB 警告限制
-      chunkSizeWarningLimit: 500,
     },
+    chunkSizeWarningLimit: 1000,
+  },
 
-    /**
-     * 依赖预构建配置
-     * 包含三端适配的核心库，提升开发环境响应速度
-     */
-    optimizeDeps: {
-      include: [
-        "vue",
-        "vue-router",
-        "pinia",
-        "vue-i18n",
-        "dayjs",
-        "axios",
-        "@floating-ui/vue", // 碰撞检测核心
-        "@vueuse/core", // 三端监听核心
-      ],
-    },
-  };
+  optimizeDeps: {
+    include: [
+      "vue",
+      "vue-router",
+      "vuex",
+      "vue-i18n",
+      "dayjs",
+      "@floating-ui/vue",
+      "frappe-charts",
+    ],
+  },
 });

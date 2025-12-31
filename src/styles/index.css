@@ -1,20 +1,170 @@
-/* Tailwind CSS 和 Flowbite 核心样式 */
+/* Tailwind CSS 核心样式 */
 @import "tailwindcss";
 
-/* Flowbite 按需加载：只导入需要的主题样式 */
-/* 如果只需要基础样式，可以只导入部分组件样式 */
-@import "flowbite/src/themes/default";
+/* 配置暗色模式为 selector 模式 */
+@variant dark (&:where(.dark, .dark *));
 
+/* Flowbite 插件 - 仅添加组件类，不导入完整 CSS */
 @plugin "flowbite/plugin";
 
-/* Flowbite 源码扫描（Tailwind 会自动 tree-shake 未使用的样式） */
+/* Flowbite 源码扫描 */
 @source "../node_modules/flowbite";
 
-/* 导入功能样式模块 */
-@import "./moudles/base.css";
-@import "./moudles/theme.css";
-@import "./moudles/components.css";
-@import "./moudles/utilities.css";
+/* 主题变量定义 - 必须放在最后 */
+@import "./modules/theme.css";
 
-/* 导入主题文件 - 六套主题定义 */
-@import "./theme/themes.css";
+
+/* Flatpickr 深度适配 - CSS 变量方案 */
+:root {
+  --fp-bg: #ffffff;
+  --fp-color: #374151; /* gray-700 */
+  --fp-border: #e5e7eb; /* gray-200 */
+  --fp-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --fp-day-hover: #f3f4f6;
+  --fp-accent: #2563eb; /* blue-600 */
+  --fp-in-range: #eff6ff;
+}
+
+.dark {
+  --fp-bg: #1f2937; /* gray-800 */
+  --fp-color: #f3f4f6; /* gray-100 */
+  --fp-border: #374151; /* gray-700 */
+  --fp-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  --fp-day-hover: #374151;
+  --fp-accent: #3b82f6; /* blue-500 */
+  --fp-in-range: rgba(59, 130, 246, 0.2); /* 蓝色透明叠加 */
+}
+
+.flatpickr-calendar {
+  background: var(--fp-bg) !important;
+  border-color: var(--fp-border) !important;
+  box-shadow: var(--fp-shadow) !important;
+  color: var(--fp-color) !important;
+  border-radius: 0.75rem !important;
+}
+
+.flatpickr-day {
+  color: var(--fp-color) !important;
+  border-radius: 0.5rem !important;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.flatpickr-day:hover,
+.flatpickr-day.prevMonthDay:hover,
+.flatpickr-day.nextMonthDay:hover,
+.flatpickr-day.today:hover {
+  background: var(--fp-day-hover) !important;
+  border-color: var(--fp-day-hover) !important;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background: var(--fp-accent) !important;
+  border-color: var(--fp-accent) !important;
+  color: #fff !important;
+}
+
+/* 范围中间区域适配 */
+.flatpickr-day.inRange,
+.flatpickr-day.prevMonthDay.inRange,
+.flatpickr-day.nextMonthDay.inRange,
+.flatpickr-day.today.inRange,
+.flatpickr-day.onAfterTransition {
+  background: var(--fp-in-range) !important;
+  border-color: transparent !important;
+  box-shadow: -5px 0 0 var(--fp-in-range), 5px 0 0 var(--fp-in-range) !important;
+}
+
+.flatpickr-day.inRange:hover {
+  background: var(--fp-day-hover) !important;
+  box-shadow: -5px 0 0 var(--fp-day-hover), 5px 0 0 var(--fp-day-hover) !important;
+}
+
+/* 箭头颜色修正 */
+.flatpickr-calendar.arrowTop:before { border-bottom-color: var(--fp-border) !important; }
+.flatpickr-calendar.arrowTop:after { border-bottom-color: var(--fp-bg) !important; }
+.flatpickr-calendar.arrowBottom:before { border-top-color: var(--fp-border) !important; }
+.flatpickr-calendar.arrowBottom:after { border-top-color: var(--fp-bg) !important; }
+
+.flatpickr-months .flatpickr-month,
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year {
+  color: var(--fp-color) !important;
+  fill: var(--fp-color) !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  background: var(--fp-bg) !important;
+}
+
+.flatpickr-weekday {
+  color: #9ca3af !important;
+}
+
+.flatpickr-time {
+  border-top: 1px solid var(--fp-border) !important;
+  background: var(--fp-bg) !important;
+}
+
+.flatpickr-time input,
+.flatpickr-time .flatpickr-am-pm,
+.flatpickr-time .flatpickr-time-separator {
+  color: var(--fp-color) !important;
+}
+
+.flatpickr-time input:hover,
+.flatpickr-time .flatpickr-am-pm:hover {
+  background: var(--fp-day-hover) !important;
+}
+
+.flatpickr-prev-month, 
+.flatpickr-next-month {
+  color: var(--fp-color) !important;
+  fill: var(--fp-color) !important;
+}
+
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+  opacity: 0.25; /* 降低非本月日期的存在感 */
+}
+
+/* -------------------------------------- */
+/* 时间选择器细节修正 (消除白色块)          */
+/* -------------------------------------- */
+.flatpickr-time .numInputWrapper {
+  background: transparent !important;
+}
+
+.flatpickr-time .numInputWrapper:hover {
+  background: var(--fp-day-hover) !important;
+  border-radius: 0.25rem;
+}
+
+.flatpickr-time .numInputWrapper span {
+  border: none !important;
+}
+
+.flatpickr-time .numInputWrapper span:hover {
+  background: transparent !important;
+}
+
+.flatpickr-time .numInputWrapper span.arrowUp:after {
+  border-bottom-color: var(--fp-color) !important;
+  top: 40% !important;
+}
+
+.flatpickr-time .numInputWrapper span.arrowDown:after {
+  border-top-color: var(--fp-color) !important;
+}
+
+/* 确保 input 自身无背景 */
+.flatpickr-time input {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.flatpickr-time input:focus {
+  background: var(--fp-day-hover) !important;
+  border-radius: 0.25rem;
+}

@@ -1,29 +1,19 @@
 <template>
-  <router-view />
-  
-  <!-- Toast 通知 -->
-  <Toast ref="toastRef" />
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useThemeStore } from '@/stores/theme'
-import Toast from '@/components/CompToast/CompToast.vue'
-import { setToastInstance } from '@/composables/useToast'
-
-const themeStore = useThemeStore()
-const toastRef = ref(null)
-
-onMounted(() => {
-  // 初始化主题
-  themeStore.initTheme()
-  
-  // Flowbite 按需加载：只在需要时初始化
-  // 如果项目中没有使用 Flowbite 的 JavaScript 功能（data-* 属性），可以移除
-  // 如果需要，可以改为动态导入：
-  // import('flowbite').then(({ initFlowbite }) => initFlowbite())
-  
-  // 设置 Toast 实例
-  setToastInstance(toastRef.value)
-})
+<script>
+export default {
+  name: "App",
+  created() {
+    // 在创建时立即初始化主题，确保页面加载时就有正确的样式
+    this.$store.dispatch("theme/initTheme");
+  },
+  mounted() {
+    // 确保主题已应用
+    this.$store.dispatch("theme/applyTheme");
+  },
+};
 </script>

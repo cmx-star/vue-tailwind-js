@@ -1,22 +1,20 @@
-import { createApp } from "vue";
-import { createPinia } from "pinia";
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Vuex from "vuex";
 import App from "./App.vue";
-import router from "@/router/origin";
-import i18n from "./lang";
-import VCalendar from "v-calendar";
-
-// 导入样式
+import router from "./router";
+import store from "./store";
+import i18n from "./i18n";
 import "./styles/index.css";
-import "v-calendar/style.css";
-
-// 创建应用
-const app = createApp(App);
 
 // 使用插件
-app.use(createPinia());
-app.use(router);
-app.use(i18n);
-app.use(VCalendar, {});
+Vue.use(VueRouter);
+Vue.use(Vuex);
 
-// 挂载应用
-app.mount("#app");
+// 创建 Vue 实例
+new Vue({
+  router,
+  store,
+  i18n,
+  render: (h) => h(App),
+}).$mount("#app");

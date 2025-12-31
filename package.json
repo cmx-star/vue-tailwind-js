@@ -2,36 +2,34 @@
   "name": "vue-admin-js",
   "version": "1.0.0",
   "type": "module",
-  "description": "轻量级后台管理系统 - 基于 Vite + Vue 3 + Flowbite",
+  "description": "Vue 2 后台管理系统 - 基于 Vite + Flowbite + 国际化 + 多主题",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "build:report": "vite build --mode analyze"
+    "build:report": "ANALYZE=true vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@floating-ui/vue": "^1.1.9",
-    "@heroicons/vue": "^2.1.1",
-    "@vueuse/core": "^14.1.0",
-    "axios": "^1.6.7",
+    "@floating-ui/dom": "^1.7.4",
+    "axios": "^1.13.2",
     "dayjs": "^1.11.10",
+    "flatpickr": "^4.6.13",
     "flowbite": "^4.0.1",
     "frappe-charts": "^1.6.2",
     "nprogress": "^0.2.0",
-    "pinia": "^2.3.1",
-    "v-calendar": "^3.1.2",
-    "vue": "^3.4.21",
-    "vue-i18n": "^10.0.8",
-    "vue-router": "^4.3.0"
+    "vue": "^2.7.14",
+    "vue-i18n": "^8.28.2",
+    "vue-router": "^3.6.5",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",
-    "@vitejs/plugin-vue": "^5.2.4",
     "autoprefixer": "^10.4.18",
     "postcss": "^8.4.35",
-    "rollup-plugin-visualizer": "^5.14.0",
+    "rollup-plugin-visualizer": "^6.0.5",
     "tailwindcss": "^4.1.18",
     "terser": "^5.44.1",
-    "vite": "^5.4.21"
+    "vite": "^5.4.21",
+    "vite-plugin-vue2": "^2.0.3"
   }
 }

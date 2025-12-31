@@ -1,9 +1,4 @@
 /**
  * 路由白名单
  */
-export const whiteRoutes = [
-  "Login",
-  "NotFound",
-  // "register",
-  // "forgotPwd",
-];
+export const whiteRoutes = ["Login", "NotFound", "/login", "/404"];

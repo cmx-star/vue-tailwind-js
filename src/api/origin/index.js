@@ -1,17 +1,20 @@
-/**
- * @desc API统一导出
- * @author maanpeng
- */
-import * as user from "./system/user";
-import * as account from "./system/account";
-import * as menu from "./system/menu";
-import * as role from "./system/role";
+import httpRequest from "@/http/httpRequest";
+import { loginMock, menuMock } from "../mock";
 
-let api = {
-  ...user,
-  ...account,
-  ...menu,
-  ...role,
+export const login = (data) => {
+  return httpRequest.post("/api/login", data, {
+    mock: true,
+    mockResponse: loginMock,
+  });
 };
 
-export default api;
+export const getMenuList = () => {
+  return httpRequest.get(
+    "/api/menu/list",
+    {},
+    {
+      mock: true,
+      mockResponse: menuMock,
+    }
+  );
+};
