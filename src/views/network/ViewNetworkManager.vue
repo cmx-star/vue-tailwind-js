@@ -1,8 +1,10 @@
 <template>
   <div class="p-6 space-y-8">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+    <div
+      class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700"
+    >
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">按钮组件示例</h1>
-      
+
       <!-- 基础变体 -->
       <section class="mb-8">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">基础变体</h2>
@@ -63,26 +65,62 @@
         <div class="flex flex-wrap items-center gap-3">
           <CompButton variant="default" size="sm">
             <template #icon-left>
-              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/>
+              <svg
+                class="w-4 h-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
+                />
               </svg>
             </template>
             购物车
           </CompButton>
-          
+
           <CompButton variant="success" size="base">
             <template #icon-left>
-              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              <svg
+                class="w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
               </svg>
             </template>
             确认
           </CompButton>
-          
+
           <CompButton variant="danger" size="base">
             <template #icon-left>
-              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              <svg
+                class="w-4 h-4"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </template>
             删除
@@ -130,37 +168,37 @@ export default {
       this.$toast.info({
         title: 'Info alert!',
         message: 'Change a few things up and try submitting again.',
-        duration: 3000
-      });
+        duration: 3000,
+      })
     },
     showSuccessToast() {
       this.$toast.success({
         title: 'Success alert!',
         message: 'Your changes have been saved successfully.',
-        duration: 3000
-      });
+        duration: 3000,
+      })
     },
     showDangerToast() {
       this.$toast.danger({
         title: 'Danger alert!',
         message: 'Something went wrong. Please try again.',
-        duration: 3000
-      });
+        duration: 3000,
+      })
     },
     showWarningToast() {
       this.$toast.warning({
         title: 'Warning alert!',
         message: 'Please check your input and try again.',
-        duration: 3000
-      });
+        duration: 3000,
+      })
     },
     showDarkToast() {
       this.$toast.dark({
         title: 'Dark alert!',
         message: 'This is a dark themed notification.',
-        duration: 3000
-      });
-    }
-  }
-};
+        duration: 3000,
+      })
+    },
+  },
+}
 </script>

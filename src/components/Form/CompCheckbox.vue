@@ -9,10 +9,13 @@
         :disabled="disabled"
         :class="checkboxClasses"
         @change="handleChange"
-      >
+      />
       <label :for="inputId" :class="labelClasses">
         <slot>
-          <p v-if="label" class="select-none w-full text-sm font-medium text-gray-900 dark:text-white">
+          <p
+            v-if="label"
+            class="select-none w-full text-sm font-medium text-gray-900 dark:text-white"
+          >
             {{ label }}
           </p>
           <p v-if="description" class="select-none text-sm text-gray-700 dark:text-gray-400">
@@ -30,81 +33,84 @@ export default {
   props: {
     checked: {
       type: Boolean,
-      default: false
+      default: false,
     },
     value: {
       type: [String, Number, Boolean],
-      default: ''
+      default: '',
     },
     label: {
       type: String,
-      default: ''
+      default: '',
     },
     description: {
       type: String,
-      default: ''
+      default: '',
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     bordered: {
       type: Boolean,
-      default: false
+      default: false,
     },
     variant: {
       type: String,
       default: 'default',
-      validator: (value) => ['default', 'bordered', 'list'].includes(value)
-    }
+      validator: (value) => ['default', 'bordered', 'list'].includes(value),
+    },
   },
   computed: {
     inputId() {
-      return `checkbox-${Math.random().toString(36).substr(2, 9)}`;
+      return `checkbox-${Math.random().toString(36).substr(2, 9)}`
     },
     wrapperClasses() {
       if (this.variant === 'bordered' || this.variant === 'list') {
-        return 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm';
+        return 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm'
       }
-      return this.bordered ? 'flex items-center mb-4' : 'flex items-center mb-4';
+      return this.bordered ? 'flex items-center mb-4' : 'flex items-center mb-4'
     },
     containerPadding() {
       if (this.variant === 'bordered') {
-        return this.description ? 'space-x-2.5' : 'ps-4';
+        return this.description ? 'space-x-2.5' : 'ps-4'
       }
       if (this.variant === 'list') {
-        return 'ps-3';
+        return 'ps-3'
       }
-      return '';
+      return ''
     },
     checkboxClasses() {
-      const baseClasses = 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600';
-      
+      const baseClasses =
+        'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
+
       if (this.variant === 'bordered' && this.description) {
-        return `${baseClasses} mt-4 ms-4`;
+        return `${baseClasses} mt-4 ms-4`
       }
-      
-      return baseClasses;
+
+      return baseClasses
     },
     labelClasses() {
-      const baseClasses = 'select-none ms-2 text-sm font-medium';
-      const disabledClasses = this.disabled ? 'text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-white';
-      
+      const baseClasses = 'select-none ms-2 text-sm font-medium'
+      const disabledClasses = this.disabled
+        ? 'text-gray-400 dark:text-gray-500'
+        : 'text-gray-900 dark:text-white'
+
       if (this.variant === 'bordered') {
-        return this.description ? 'py-4 pe-4' : `${baseClasses} w-full py-4 ${disabledClasses}`;
+        return this.description ? 'py-4 pe-4' : `${baseClasses} w-full py-4 ${disabledClasses}`
       }
-      
+
       if (this.variant === 'list') {
-        return `${baseClasses} w-full py-3 ${disabledClasses}`;
+        return `${baseClasses} w-full py-3 ${disabledClasses}`
       }
-      
-      return `${baseClasses} ${disabledClasses}`;
-    }
+
+      return `${baseClasses} ${disabledClasses}`
+    },
   },
   methods: {
     handleChange(event) {
-      this.$emit('change', event.target.checked);
-    }
-  }
-};
+      this.$emit('change', event.target.checked)
+    },
+  },
+}
 </script>

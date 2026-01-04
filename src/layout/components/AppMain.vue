@@ -10,13 +10,13 @@
 
 <script>
 export default {
-  name: "AppMain",
+  name: 'AppMain',
   computed: {
     key() {
-      return this.$route.path;
+      return this.$route.path
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -30,7 +30,7 @@ export default {
 /* transition blur */
 .fade-transform-enter-active,
 .fade-transform-leave-active {
-  transition: all .3s;
+  transition: all 0.3s;
 }
 
 .fade-transform-enter {

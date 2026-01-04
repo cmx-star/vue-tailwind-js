@@ -3,26 +3,18 @@
     <div
       class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700"
     >
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">
-        快速设置向导
-      </h1>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">快速设置向导</h1>
 
       <!-- 水平步骤条 -->
       <div class="mb-8">
-        <CompStepper
-          :steps="steps"
-          :current-step="currentStep"
-          layout="vertical"
-        />
+        <CompStepper :steps="steps" :current-step="currentStep" layout="vertical" />
       </div>
 
       <!-- 表单内容区 -->
-      <form @submit.prevent="handleNext" novalidate autocomplete="off">
+      <form novalidate autocomplete="off" @submit.prevent="handleNext">
         <!-- Step 1: 基本信息 -->
         <div v-show="currentStep === 0" class="space-y-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            基本信息
-          </h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">基本信息</h2>
 
           <div class="grid gap-6 md:grid-cols-2">
             <CompFormInput
@@ -77,9 +69,7 @@
 
         <!-- Step 2: 账户设置 -->
         <div v-show="currentStep === 1" class="space-y-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            账户设置
-          </h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">账户设置</h2>
 
           <CompFormInput
             v-model="formData.username"
@@ -120,9 +110,7 @@
           />
 
           <div class="space-y-4">
-            <h3 class="text-sm font-medium text-gray-900 dark:text-white">
-              选择角色
-            </h3>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-white">选择角色</h3>
             <CompRadio
               :checked="formData.role === 'admin'"
               value="admin"
@@ -149,14 +137,10 @@
 
         <!-- Step 3: 配置通知和偏好 -->
         <div v-show="currentStep === 2" class="space-y-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            配置通知和偏好
-          </h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">配置通知和偏好</h2>
 
           <div class="space-y-4">
-            <h3 class="text-sm font-medium text-gray-900 dark:text-white">
-              通知设置
-            </h3>
+            <h3 class="text-sm font-medium text-gray-900 dark:text-white">通知设置</h3>
             <CompCheckbox
               :checked="formData.notifications.email"
               label="Email 通知"
@@ -198,15 +182,11 @@
 
         <!-- Step 4: 所有信息确认 -->
         <div v-show="currentStep === 3" class="space-y-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            所有信息确认
-          </h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">所有信息确认</h2>
 
           <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 space-y-4">
             <div>
-              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                基本信息
-              </h3>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">基本信息</h3>
               <p class="text-gray-900 dark:text-white">
                 {{ formData.firstName }} {{ formData.lastName }}
               </p>
@@ -219,26 +199,18 @@
             </div>
 
             <div>
-              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                账户
-              </h3>
-              <p class="text-gray-900 dark:text-white">
-                用户名: {{ formData.username }}
-              </p>
-              <p class="text-gray-900 dark:text-white">
-                角色: {{ getRoleLabel(formData.role) }}
-              </p>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">账户</h3>
+              <p class="text-gray-900 dark:text-white">用户名: {{ formData.username }}</p>
+              <p class="text-gray-900 dark:text-white">角色: {{ getRoleLabel(formData.role) }}</p>
             </div>
 
             <div>
-              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                偏好
-              </h3>
+              <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">偏好</h3>
               <p class="text-gray-900 dark:text-white">
-                暗色模式: {{ formData.darkMode ? "是" : "否" }}
+                暗色模式: {{ formData.darkMode ? '是' : '否' }}
               </p>
               <p class="text-gray-900 dark:text-white">
-                双因素认证: {{ formData.twoFactor ? "是" : "否" }}
+                双因素认证: {{ formData.twoFactor ? '是' : '否' }}
               </p>
               <p class="text-gray-900 dark:text-white">
                 通知:
@@ -246,7 +218,7 @@
                   Object.entries(formData.notifications)
                     .filter(([k, v]) => v)
                     .map(([k]) => k)
-                    .join(", ") || "无"
+                    .join(', ') || '无'
                 }}
               </p>
             </div>
@@ -268,7 +240,7 @@
             type="submit"
             class="px-4 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
           >
-            {{ currentStep === steps.length - 1 ? "完成" : "下一步" }}
+            {{ currentStep === steps.length - 1 ? '完成' : '下一步' }}
           </button>
         </div>
       </form>
@@ -277,34 +249,30 @@
 </template>
 
 <script>
-import {
-  validateStep,
-  validateField as validateFieldUtil,
-  createRules,
-} from "@/utils/validator.js";
-import Schema from "async-validator";
+import { validateStep, createRules } from '@/utils/validator.js'
+import Schema from 'async-validator'
 
 export default {
-  name: "ViewQuickSetup",
+  name: 'ViewQuickSetup',
   components: {},
   data() {
     return {
       currentStep: 0,
       steps: [
-        { title: "基本信息", subtitle: "填写您的个人信息" },
-        { title: "账户设置", subtitle: "设置用户名和密码" },
-        { title: "配置通知和偏好", subtitle: "配置通知和偏好" },
-        { title: "所有信息确认", subtitle: "所有信息确认" },
+        { title: '基本信息', subtitle: '填写您的个人信息' },
+        { title: '账户设置', subtitle: '设置用户名和密码' },
+        { title: '配置通知和偏好', subtitle: '配置通知和偏好' },
+        { title: '所有信息确认', subtitle: '所有信息确认' },
       ],
       formData: {
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        username: "",
-        password: "",
-        confirmPassword: "",
-        role: "user",
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        username: '',
+        password: '',
+        confirmPassword: '',
+        role: 'user',
         notifications: {
           email: true,
           sms: false,
@@ -312,91 +280,88 @@ export default {
         },
         darkMode: false,
         twoFactor: false,
-        bio: "",
+        bio: '',
       },
       errors: {},
-    };
+    }
   },
   methods: {
     validateField(fieldName) {
       // 清除当前字段的错误
-      this.$set(this.errors, fieldName, "");
+      this.$set(this.errors, fieldName, '')
 
       // 只验证当前步骤的字段
       if (
         this.currentStep === 0 &&
-        !["firstName", "lastName", "email", "phone"].includes(fieldName)
+        !['firstName', 'lastName', 'email', 'phone'].includes(fieldName)
       ) {
-        return;
+        return
       }
       if (
         this.currentStep === 1 &&
-        !["username", "password", "confirmPassword"].includes(fieldName)
+        !['username', 'password', 'confirmPassword'].includes(fieldName)
       ) {
-        return;
+        return
       }
 
-      const rules = createRules(this.currentStep, this.formData);
+      const rules = createRules(this.currentStep, this.formData)
       if (!rules[fieldName]) {
-        return;
+        return
       }
 
-      const validator = new Schema({ [fieldName]: rules[fieldName] });
-      validator.validate(
-        { [fieldName]: this.formData[fieldName] },
-        (errors) => {
-          if (errors && errors.length > 0) {
-            this.$set(this.errors, fieldName, errors[0].message);
-          } else {
-            this.$set(this.errors, fieldName, "");
-          }
+      const validator = new Schema({ [fieldName]: rules[fieldName] })
+      validator.validate({ [fieldName]: this.formData[fieldName] }, (errors) => {
+        if (errors && errors.length > 0) {
+          this.$set(this.errors, fieldName, errors[0].message)
+        } else {
+          this.$set(this.errors, fieldName, '')
         }
-      );
+      })
     },
     async handleNext() {
       try {
-        await validateStep(this.currentStep, this.formData);
+        await validateStep(this.currentStep, this.formData)
         // 验证成功，清除错误
-        this.errors = {};
+        this.errors = {}
 
         if (this.currentStep === this.steps.length - 1) {
-          this.handleSubmit();
+          this.handleSubmit()
         } else {
-          this.currentStep++;
+          this.currentStep++
         }
       } catch (errors) {
         // 验证失败，显示错误
-        const newErrors = {};
+        const newErrors = {}
         errors.forEach((error) => {
-          newErrors[error.field] = error.message;
-        });
-        this.errors = { ...this.errors, ...newErrors };
+          newErrors[error.field] = error.message
+        })
+        this.errors = { ...this.errors, ...newErrors }
       }
     },
     handlePrevious() {
       if (this.currentStep > 0) {
-        this.currentStep--;
+        this.currentStep--
       }
     },
     handleSubmit() {
       this.$toast.success({
-        title: "设置完成",
-        message: "您的账户已成功创建！",
+        title: '设置完成',
+        message: '您的账户已成功创建！',
         duration: 3000,
-      });
+      })
 
       // 重置表单
       setTimeout(() => {
-        this.currentStep = 0;
+        this.currentStep = 0
         this.formData = {
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          username: "",
-          password: "",
-          confirmPassword: "",
-          role: "user",
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          username: '',
+          password: '',
+          confirmPassword: '',
+          role: 'user',
           notifications: {
             email: true,
             sms: false,
@@ -404,19 +369,19 @@ export default {
           },
           darkMode: false,
           twoFactor: false,
-          bio: "",
-        };
-        this.errors = {};
-      }, 1500);
+          bio: '',
+        }
+        this.errors = {}
+      }, 1500)
     },
     getRoleLabel(role) {
       const labels = {
-        admin: "管理员",
-        user: "普通用户",
-        guest: "访客",
-      };
-      return labels[role] || role;
+        admin: '管理员',
+        user: '普通用户',
+        guest: '访客',
+      }
+      return labels[role] || role
     },
   },
-};
+}
 </script>

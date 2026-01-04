@@ -1,5 +1,5 @@
 /* Tailwind CSS 核心样式 */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* 配置暗色模式为 selector 模式 */
 @variant dark (&:where(.dark, .dark *));
@@ -11,8 +11,7 @@
 @source "../node_modules/flowbite";
 
 /* 主题变量定义 - 必须放在最后 */
-@import "./modules/theme.css";
-
+@import './modules/theme.css';
 
 /* Flatpickr 深度适配 - CSS 变量方案 */
 :root {
@@ -46,7 +45,9 @@
 .flatpickr-day {
   color: var(--fp-color) !important;
   border-radius: 0.5rem !important;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
 }
 
 .flatpickr-day:hover,
@@ -73,19 +74,31 @@
 .flatpickr-day.onAfterTransition {
   background: var(--fp-in-range) !important;
   border-color: transparent !important;
-  box-shadow: -5px 0 0 var(--fp-in-range), 5px 0 0 var(--fp-in-range) !important;
+  box-shadow:
+    -5px 0 0 var(--fp-in-range),
+    5px 0 0 var(--fp-in-range) !important;
 }
 
 .flatpickr-day.inRange:hover {
   background: var(--fp-day-hover) !important;
-  box-shadow: -5px 0 0 var(--fp-day-hover), 5px 0 0 var(--fp-day-hover) !important;
+  box-shadow:
+    -5px 0 0 var(--fp-day-hover),
+    5px 0 0 var(--fp-day-hover) !important;
 }
 
 /* 箭头颜色修正 */
-.flatpickr-calendar.arrowTop:before { border-bottom-color: var(--fp-border) !important; }
-.flatpickr-calendar.arrowTop:after { border-bottom-color: var(--fp-bg) !important; }
-.flatpickr-calendar.arrowBottom:before { border-top-color: var(--fp-border) !important; }
-.flatpickr-calendar.arrowBottom:after { border-top-color: var(--fp-bg) !important; }
+.flatpickr-calendar.arrowTop:before {
+  border-bottom-color: var(--fp-border) !important;
+}
+.flatpickr-calendar.arrowTop:after {
+  border-bottom-color: var(--fp-bg) !important;
+}
+.flatpickr-calendar.arrowBottom:before {
+  border-top-color: var(--fp-border) !important;
+}
+.flatpickr-calendar.arrowBottom:after {
+  border-top-color: var(--fp-bg) !important;
+}
 
 .flatpickr-months .flatpickr-month,
 .flatpickr-current-month .flatpickr-monthDropdown-months,
@@ -118,7 +131,7 @@
   background: var(--fp-day-hover) !important;
 }
 
-.flatpickr-prev-month, 
+.flatpickr-prev-month,
 .flatpickr-next-month {
   color: var(--fp-color) !important;
   fill: var(--fp-color) !important;

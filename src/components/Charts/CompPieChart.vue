@@ -5,11 +5,7 @@
     :style="{ height: height + 'px' }"
     @mousemove="updateMouse"
   >
-    <svg
-      :viewBox="viewBox"
-      class="pie-svg"
-      :class="{ 'pie-svg-ring': innerRadius > 0 }"
-    >
+    <svg :viewBox="viewBox" class="pie-svg" :class="{ 'pie-svg-ring': innerRadius > 0 }">
       <!-- 外层扇形（饼图或环形图外层） -->
       <path
         v-for="(slice, i) in pathData"
@@ -18,12 +14,12 @@
         :fill="slice.color"
         class="pie-slice"
         :class="{ 'pie-slice-hovered': hovered === slice }"
-        @mouseenter="hovered = slice"
-        @mouseleave="hovered = null"
         :style="{
           transform: hovered === slice ? `scale(1.05)` : 'scale(1)',
           transformOrigin: 'center',
         }"
+        @mouseenter="hovered = slice"
+        @mouseleave="hovered = null"
       />
 
       <!-- 内层圆（环形图） -->
@@ -67,10 +63,7 @@
         @mouseenter="hovered = item"
         @mouseleave="hovered = null"
       >
-        <div
-          class="pie-legend-color"
-          :style="{ backgroundColor: item.color }"
-        ></div>
+        <div class="pie-legend-color" :style="{ backgroundColor: item.color }"></div>
         <span class="pie-legend-label">{{ item.name || item.label }}</span>
         <span class="pie-legend-value">{{ formatValue(item.value) }}</span>
       </div>
@@ -80,12 +73,17 @@
     <div
       v-if="hovered"
       class="fixed z-50 pointer-events-none rounded-lg px-3 py-2 text-sm shadow-lg"
-      :class="isDark 
-        ? 'bg-gray-800 border border-gray-700 text-gray-100' 
-        : 'bg-white border border-gray-200 text-gray-900'"
+      :class="
+        isDark
+          ? 'bg-gray-800 border border-gray-700 text-gray-100'
+          : 'bg-white border border-gray-200 text-gray-900'
+      "
       :style="tooltipStyle"
     >
-      <div class="font-semibold mb-2 pb-2 border-b" :class="isDark ? 'border-gray-700' : 'border-gray-200'">
+      <div
+        class="font-semibold mb-2 pb-2 border-b"
+        :class="isDark ? 'border-gray-700' : 'border-gray-200'"
+      >
         {{ hovered.name || hovered.label }}
       </div>
       <div class="space-y-1 text-xs" :class="isDark ? 'text-gray-300' : 'text-gray-600'">
@@ -108,7 +106,7 @@
 
 <script>
 export default {
-  name: "CompPieChart",
+  name: 'CompPieChart',
   props: {
     data: {
       type: Array,
@@ -125,14 +123,14 @@ export default {
     colors: {
       type: Array,
       default: () => [
-        "#3B82F6",
-        "#10B981",
-        "#F59E0B",
-        "#EF4444",
-        "#8B5CF6",
-        "#EC4899",
-        "#14B8A6",
-        "#F97316",
+        '#3B82F6',
+        '#10B981',
+        '#F59E0B',
+        '#EF4444',
+        '#8B5CF6',
+        '#EC4899',
+        '#14B8A6',
+        '#F97316',
       ],
     },
     showLegend: {
@@ -149,132 +147,120 @@ export default {
     return {
       hovered: null,
       mouse: { x: 0, y: 0 },
-    };
+    }
   },
   computed: {
     isDark() {
-      return this.$store.state.theme.isDark;
+      return this.$store.state.theme.isDark
     },
     chartColors() {
       return this.isDark
-        ? [
-            "#60a5fa",
-            "#34d399",
-            "#fbbf24",
-            "#f87171",
-            "#a78bfa",
-            "#f472b6",
-            "#2dd4bf",
-            "#fb923c",
-          ]
-        : this.colors;
+        ? ['#60a5fa', '#34d399', '#fbbf24', '#f87171', '#a78bfa', '#f472b6', '#2dd4bf', '#fb923c']
+        : this.colors
     },
     processedData() {
       if (!this.data || this.data.length === 0) {
-        return [];
+        return []
       }
 
       // 过滤和验证数据
       const validData = this.data
-        .filter(
-          (item) => item && item.value != null && !isNaN(Number(item.value))
-        )
+        .filter((item) => item && item.value != null && !isNaN(Number(item.value)))
         .map((item, index) => {
-          const value = Number(item.value);
-          if (value <= 0) return null;
+          const value = Number(item.value)
+          if (value <= 0) return null
 
           return {
             name: item.name || item.label || `项目 ${index + 1}`,
             label: item.label || item.name || `项目 ${index + 1}`,
             value: value,
-            color:
-              item.color || this.chartColors[index % this.chartColors.length],
-          };
+            color: item.color || this.chartColors[index % this.chartColors.length],
+          }
         })
-        .filter((item) => item !== null);
+        .filter((item) => item !== null)
 
-      return validData;
+      return validData
     },
     total() {
-      return this.processedData.reduce((acc, v) => acc + v.value, 0);
+      return this.processedData.reduce((acc, v) => acc + v.value, 0)
     },
     tooltipStyle() {
       if (!this.hovered || !this.$refs.chartContainer) {
-        return { display: 'none' };
+        return { display: 'none' }
       }
-      
-      const containerRect = this.$refs.chartContainer.getBoundingClientRect();
-      const tooltipWidth = 180;
-      const tooltipHeight = 90;
-      
+
+      const containerRect = this.$refs.chartContainer.getBoundingClientRect()
+      const tooltipWidth = 180
+      const tooltipHeight = 90
+
       // 使用鼠标在页面中的绝对位置
-      const mouseX = this.mouse.x + containerRect.left;
-      const mouseY = this.mouse.y + containerRect.top;
-      
+      const mouseX = this.mouse.x + containerRect.left
+      const mouseY = this.mouse.y + containerRect.top
+
       // 默认位置：鼠标右下方
-      let left = mouseX + 15;
-      let top = mouseY - tooltipHeight / 2;
-      
+      let left = mouseX + 15
+      let top = mouseY - tooltipHeight / 2
+
       // 防止超出右边界
       if (left + tooltipWidth > window.innerWidth - 10) {
-        left = mouseX - tooltipWidth - 15;
+        left = mouseX - tooltipWidth - 15
       }
-      
+
       // 防止超出左边界
       if (left < 10) {
-        left = 10;
+        left = 10
       }
-      
+
       // 防止超出上边界
       if (top < 10) {
-        top = mouseY + 15;
+        top = mouseY + 15
       }
-      
+
       // 防止超出下边界
       if (top + tooltipHeight > window.innerHeight - 10) {
-        top = mouseY - tooltipHeight - 15;
+        top = mouseY - tooltipHeight - 15
       }
-      
+
       return {
         left: `${left}px`,
         top: `${top}px`,
-        display: 'block'
-      };
+        display: 'block',
+      }
     },
     viewBox() {
       // 为悬停效果留出空间
-      return "-1.1 -1.1 2.2 2.2";
+      return '-1.1 -1.1 2.2 2.2'
     },
     pathData() {
       if (this.processedData.length === 0 || this.total === 0) {
-        return [];
+        return []
       }
 
-      let cumulativePercent = 0;
-      const outerRadius = 1;
-      const innerRadius = this.innerRadius;
+      let cumulativePercent = 0
+      const outerRadius = 1
+      const innerRadius = this.innerRadius
 
       return this.processedData.map((item) => {
-        const startAngle = 2 * Math.PI * cumulativePercent;
-        const percent = item.value / this.total;
-        cumulativePercent += percent;
-        const endAngle = 2 * Math.PI * cumulativePercent;
+        const startAngle = 2 * Math.PI * cumulativePercent
+        const percent = item.value / this.total
+        cumulativePercent += percent
+        const endAngle = 2 * Math.PI * cumulativePercent
 
-        const startX = Math.cos(startAngle);
-        const startY = Math.sin(startAngle);
-        const endX = Math.cos(endAngle);
-        const endY = Math.sin(endAngle);
+        const startX = Math.cos(startAngle)
+        const startY = Math.sin(startAngle)
+        const endX = Math.cos(endAngle)
+        const endY = Math.sin(endAngle)
 
         // 当占比超过 50% 时，SVG 弧线需要切换标志位
-        const largeArcFlag = percent > 0.5 ? 1 : 0;
+        const largeArcFlag = percent > 0.5 ? 1 : 0
 
-        let d;
+        let d
         if (innerRadius > 0) {
           // 环形图路径
-          const innerStartX = Math.cos(startAngle) * innerRadius;
-          const innerStartY = Math.sin(startAngle) * innerRadius;
-          const innerEndX = Math.cos(endAngle) * innerRadius;
-          const innerEndY = Math.sin(endAngle) * innerRadius;
+          const innerStartX = Math.cos(startAngle) * innerRadius
+          const innerStartY = Math.sin(startAngle) * innerRadius
+          const innerEndX = Math.cos(endAngle) * innerRadius
+          const innerEndY = Math.sin(endAngle) * innerRadius
 
           d = `
             M ${startX} ${startY}
@@ -282,50 +268,50 @@ export default {
             L ${innerEndX} ${innerEndY}
             A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${innerStartX} ${innerStartY}
             Z
-          `;
+          `
         } else {
           // 饼图路径
-          d = `M 0 0 L ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} Z`;
+          d = `M 0 0 L ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} Z`
         }
 
-        return { ...item, d, percent, startAngle, endAngle };
-      });
+        return { ...item, d, percent, startAngle, endAngle }
+      })
     },
   },
   watch: {
     data: {
       handler() {
         // 数据变化时重置悬停状态
-        this.hovered = null;
+        this.hovered = null
       },
       deep: true,
     },
     isDark() {
       // 主题变化时重置悬停状态
-      this.hovered = null;
+      this.hovered = null
     },
   },
   methods: {
     updateMouse(e) {
       if (this.$refs.chartContainer) {
-        const rect = this.$refs.chartContainer.getBoundingClientRect();
-        this.mouse.x = e.clientX - rect.left;
-        this.mouse.y = e.clientY - rect.top;
+        const rect = this.$refs.chartContainer.getBoundingClientRect()
+        this.mouse.x = e.clientX - rect.left
+        this.mouse.y = e.clientY - rect.top
       } else {
-        this.mouse.x = e.clientX;
-        this.mouse.y = e.clientY;
+        this.mouse.x = e.clientX
+        this.mouse.y = e.clientY
       }
     },
     formatValue(value) {
       if (value >= 1000000) {
-        return (value / 1000000).toFixed(1) + "M";
+        return (value / 1000000).toFixed(1) + 'M'
       } else if (value >= 1000) {
-        return (value / 1000).toFixed(1) + "K";
+        return (value / 1000).toFixed(1) + 'K'
       }
-      return value.toFixed(0);
+      return value.toFixed(0)
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -433,5 +419,4 @@ export default {
   font-weight: 600;
   margin-left: 4px;
 }
-
 </style>

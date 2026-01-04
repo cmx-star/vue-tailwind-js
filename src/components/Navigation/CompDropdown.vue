@@ -1,5 +1,5 @@
 <template>
-  <div class="relative inline-block" ref="dropdown">
+  <div ref="dropdown" class="relative inline-block">
     <!-- Trigger Button -->
     <button
       :type="type"
@@ -53,117 +53,126 @@ export default {
   props: {
     type: {
       type: String,
-      default: 'button'
+      default: 'button',
     },
     trigger: {
       type: String,
       default: 'click',
-      validator: (value) => ['click', 'hover'].includes(value)
+      validator: (value) => ['click', 'hover'].includes(value),
     },
     variant: {
       type: String,
-      default: 'default'
+      default: 'default',
     },
     size: {
       type: String,
-      default: 'base'
+      default: 'base',
     },
     placement: {
       type: String,
       default: 'bottom',
-      validator: (value) => ['bottom', 'top', 'left', 'right'].includes(value)
-    }
+      validator: (value) => ['bottom', 'top', 'left', 'right'].includes(value),
+    },
   },
   data() {
     return {
       isOpen: false,
-      hoverTimer: null
-    };
+      hoverTimer: null,
+    }
   },
   computed: {
     buttonClasses() {
-      const baseClasses = 'inline-flex items-center justify-center box-border border font-medium leading-5 transition-all duration-200 focus:outline-none focus:ring-4';
+      const baseClasses =
+        'inline-flex items-center justify-center box-border border font-medium leading-5 transition-all duration-200 focus:outline-none focus:ring-4'
       const sizeClasses = {
         sm: 'text-sm px-3 py-2',
         base: 'text-sm px-4 py-2.5',
-        lg: 'text-base px-5 py-3'
-      };
+        lg: 'text-base px-5 py-3',
+      }
       const variantClasses = {
-        default: 'text-white bg-blue-600 border-transparent hover:bg-blue-700 focus:ring-blue-300 shadow-sm rounded-lg',
-        secondary: 'text-gray-700 bg-gray-100 border-gray-200 hover:bg-gray-200 focus:ring-gray-300 dark:bg-gray-700 dark:text-gray-300 shadow-sm rounded-lg',
-        ghost: 'text-gray-700 bg-transparent border-transparent hover:bg-gray-100 focus:ring-gray-300 dark:text-gray-300 dark:hover:bg-gray-700 rounded-lg'
-      };
-      
-      return `${baseClasses} ${sizeClasses[this.size]} ${variantClasses[this.variant]}`;
+        default:
+          'text-white bg-blue-600 border-transparent hover:bg-blue-700 focus:ring-blue-300 shadow-sm rounded-lg',
+        secondary:
+          'text-gray-700 bg-gray-100 border-gray-200 hover:bg-gray-200 focus:ring-gray-300 dark:bg-gray-700 dark:text-gray-300 shadow-sm rounded-lg',
+        ghost:
+          'text-gray-700 bg-transparent border-transparent hover:bg-gray-100 focus:ring-gray-300 dark:text-gray-300 dark:hover:bg-gray-700 rounded-lg',
+      }
+
+      return `${baseClasses} ${sizeClasses[this.size]} ${variantClasses[this.variant]}`
     },
     menuClasses() {
-      const baseClasses = 'absolute z-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg w-44 mt-2';
+      const baseClasses =
+        'absolute z-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg w-44 mt-2'
       const placementClasses = {
         bottom: 'top-full left-0',
         top: 'bottom-full left-0 mb-2',
         left: 'right-full top-0 mr-2',
-        right: 'left-full top-0 ml-2'
-      };
-      
-      return `${baseClasses} ${placementClasses[this.placement]}`;
-    }
+        right: 'left-full top-0 ml-2',
+      }
+
+      return `${baseClasses} ${placementClasses[this.placement]}`
+    },
   },
   mounted() {
-    document.addEventListener('click', this.handleClickOutside);
-    this.$on('item-click', this.closeDropdown);
+    document.addEventListener('click', this.handleClickOutside)
+    this.$on('item-click', this.closeDropdown)
   },
-  beforeDestroy() {
-    document.removeEventListener('click', this.handleClickOutside);
-    this.$off('item-click', this.closeDropdown);
-    this.clearHoverTimer();
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside)
+    this.$off('item-click', this.closeDropdown)
+    this.clearHoverTimer()
   },
   methods: {
     handleClick() {
       if (this.trigger === 'click') {
-        this.isOpen = !this.isOpen;
+        this.isOpen = !this.isOpen
       }
     },
     closeDropdown() {
-      this.isOpen = false;
+      this.isOpen = false
     },
     handleMouseEnter() {
       if (this.trigger === 'hover') {
-        this.clearHoverTimer();
-        this.isOpen = true;
+        this.clearHoverTimer()
+        this.isOpen = true
       }
     },
     handleMouseLeave() {
       if (this.trigger === 'hover') {
         this.hoverTimer = setTimeout(() => {
-          this.isOpen = false;
-        }, 100);
+          this.isOpen = false
+        }, 100)
       }
     },
     handleMenuEnter() {
       if (this.trigger === 'hover') {
-        this.clearHoverTimer();
+        this.clearHoverTimer()
       }
     },
     handleMenuLeave() {
       if (this.trigger === 'hover') {
         this.hoverTimer = setTimeout(() => {
-          this.isOpen = false;
-        }, 100);
+          this.isOpen = false
+        }, 100)
       }
     },
     clearHoverTimer() {
       if (this.hoverTimer) {
-        clearTimeout(this.hoverTimer);
-        this.hoverTimer = null;
+        clearTimeout(this.hoverTimer)
+        this.hoverTimer = null
       }
     },
     handleClickOutside(event) {
-      if (this.trigger === 'click' && this.$refs.dropdown && !this.$refs.dropdown.contains(event.target)) {
-        this.isOpen = false;
+      if (
+        this.trigger === 'click' &&
+        this.$refs.dropdown &&
+        !this.$refs.dropdown.contains(event.target)
+      ) {
+        this.isOpen = false
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>
 
 <style scoped>

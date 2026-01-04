@@ -4,39 +4,38 @@
 export const storage = {
   get(key, defaultValue = null) {
     try {
-      const item = localStorage.getItem(key);
+      const item = localStorage.getItem(key)
       if (item === null) {
-        return defaultValue;
+        return defaultValue
       }
-      return JSON.parse(item);
+      return JSON.parse(item)
     } catch (error) {
-      console.error(`Error reading from localStorage key "${key}":`, error);
-      return defaultValue;
+      console.error(`Error reading from localStorage key "${key}":`, error)
+      return defaultValue
     }
   },
 
   set(key, value) {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      localStorage.setItem(key, JSON.stringify(value))
     } catch (error) {
-      console.error(`Error writing to localStorage key "${key}":`, error);
+      console.error(`Error writing to localStorage key "${key}":`, error)
     }
   },
 
   remove(key) {
     try {
-      localStorage.removeItem(key);
+      localStorage.removeItem(key)
     } catch (error) {
-      console.error(`Error removing from localStorage key "${key}":`, error);
+      console.error(`Error removing from localStorage key "${key}":`, error)
     }
   },
 
   clear() {
     try {
-      localStorage.clear();
+      localStorage.clear()
     } catch (error) {
-      console.error("Error clearing localStorage:", error);
+      console.error('Error clearing localStorage:', error)
     }
   },
-};
-
+}

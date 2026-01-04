@@ -10,11 +10,11 @@
 
 <script>
 export default {
-  name: "CompAvatar",
+  name: 'CompAvatar',
   props: {
     name: {
       type: String,
-      default: "User",
+      default: 'User',
     },
     size: {
       type: [String, Number],
@@ -22,44 +22,43 @@ export default {
     },
     backgroundColor: {
       type: String,
-      default: "#0D8ABC",
+      default: '#0D8ABC',
     },
     textColor: {
       type: String,
-      default: "#ffffff",
+      default: '#ffffff',
     },
     image: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   computed: {
     initials() {
-      if (!this.name) return "U";
-      const names = this.name.trim().split(" ");
+      if (!this.name) return 'U'
+      const names = this.name.trim().split(' ')
       if (names.length >= 2) {
-        return (names[0][0] + names[names.length - 1][0]).toUpperCase();
+        return (names[0][0] + names[names.length - 1][0]).toUpperCase()
       }
-      return this.name[0].toUpperCase();
+      return this.name[0].toUpperCase()
     },
     sizeValue() {
-      return typeof this.size === "number" ? this.size : parseInt(this.size);
+      return typeof this.size === 'number' ? this.size : parseInt(this.size)
     },
     containerStyle() {
-      const size = this.sizeValue;
+      const size = this.sizeValue
       return {
         width: `${size}px`,
         height: `${size}px`,
         backgroundColor: this.backgroundColor,
         fontSize: `${size * 0.4}px`,
-      };
+      }
     },
     textStyle() {
       return {
         color: this.textColor,
-      };
+      }
     },
   },
-};
+}
 </script>
-

@@ -8,12 +8,7 @@
         :disabled="currentPage === 1"
         @click="handlePrevious"
       >
-        <svg
-          class="w-4 h-4"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <path
             stroke="currentColor"
             stroke-linecap="round"
@@ -25,12 +20,7 @@
       </button>
 
       <!-- Page Info -->
-      <button
-        type="button"
-        :class="pageInfoClasses"
-      >
-        {{ currentPage }} of {{ totalPages }}
-      </button>
+      <button type="button" :class="pageInfoClasses">{{ currentPage }} of {{ totalPages }}</button>
 
       <!-- Next Button -->
       <button
@@ -39,12 +29,7 @@
         :disabled="currentPage === totalPages"
         @click="handleNext"
       >
-        <svg
-          class="w-4 h-4"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <path
             stroke="currentColor"
             stroke-linecap="round"
@@ -64,47 +49,47 @@ export default {
   props: {
     total: {
       type: Number,
-      required: true
+      required: true,
     },
     pageSize: {
       type: Number,
-      default: 10
+      default: 10,
     },
     currentPage: {
       type: Number,
-      default: 1
-    }
+      default: 1,
+    },
   },
   computed: {
     totalPages() {
-      return Math.ceil(this.total / this.pageSize);
+      return Math.ceil(this.total / this.pageSize)
     },
     baseButtonClasses() {
-      return 'inline-flex items-center justify-center text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 leading-5 h-9 w-9';
+      return 'inline-flex items-center justify-center text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 leading-5 h-9 w-9'
     },
     prevButtonClasses() {
-      return `${this.baseButtonClasses} rounded-s-lg ${this.currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`;
+      return `${this.baseButtonClasses} rounded-s-lg ${this.currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}`
     },
     nextButtonClasses() {
-      return `${this.baseButtonClasses} rounded-e-lg ${this.currentPage === this.totalPages ? 'opacity-50 cursor-not-allowed' : ''}`;
+      return `${this.baseButtonClasses} rounded-e-lg ${this.currentPage === this.totalPages ? 'opacity-50 cursor-not-allowed' : ''}`
     },
     pageInfoClasses() {
-      return 'inline-flex shrink-0 text-sm items-center justify-center text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white leading-5 px-3 h-9 focus:outline-none';
-    }
+      return 'inline-flex shrink-0 text-sm items-center justify-center text-gray-700 bg-white dark:bg-gray-800 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white leading-5 px-3 h-9 focus:outline-none'
+    },
   },
   methods: {
     handlePrevious() {
       if (this.currentPage > 1) {
-        this.$emit('update:currentPage', this.currentPage - 1);
-        this.$emit('change', this.currentPage - 1);
+        this.$emit('update:currentPage', this.currentPage - 1)
+        this.$emit('change', this.currentPage - 1)
       }
     },
     handleNext() {
       if (this.currentPage < this.totalPages) {
-        this.$emit('update:currentPage', this.currentPage + 1);
-        this.$emit('change', this.currentPage + 1);
+        this.$emit('update:currentPage', this.currentPage + 1)
+        this.$emit('change', this.currentPage + 1)
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>

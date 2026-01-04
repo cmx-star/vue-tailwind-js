@@ -2,10 +2,10 @@
   <div class="relative inline-block w-full">
     <button
       ref="referenceEl"
-      @click="toggleDropdown"
       :disabled="disabled"
       class="w-full px-4 py-2 text-sm text-left rounded-lg border transition-colors flex items-center justify-between"
       :class="buttonClasses"
+      @click="toggleDropdown"
     >
       <span>{{ displayValue }}</span>
       <svg
@@ -15,12 +15,7 @@
         stroke="currentColor"
         viewBox="0 0 24 24"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 9l-7 7-7-7"
-        />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
       </svg>
     </button>
 
@@ -38,20 +33,16 @@
         ref="floatingEl"
         :style="floatingStyles"
         class="rounded-lg shadow-lg z-[100] border min-w-full"
-        :class="[
-          isDark
-            ? 'bg-[#1f2937] border-gray-700'
-            : 'bg-white border-gray-200'
-        ]"
+        :class="[isDark ? 'bg-[#1f2937] border-gray-700' : 'bg-white border-gray-200']"
       >
         <div class="py-1 max-h-60 overflow-auto">
           <button
             v-for="option in options"
             :key="getOptionValue(option)"
-            @click="selectOption(option)"
             type="button"
             class="w-full text-left px-4 py-2 text-sm transition-colors whitespace-nowrap option-item"
-            :class="{ 'selected': isSelected(option), 'dark-mode': isDark }"
+            :class="{ selected: isSelected(option), 'dark-mode': isDark }"
+            @click="selectOption(option)"
           >
             {{ getOptionLabel(option) }}
           </button>
@@ -60,23 +51,19 @@
     </transition>
 
     <!-- 点击外部关闭 -->
-    <div
-      v-if="isOpen"
-      @click="isOpen = false"
-      class="fixed inset-0 z-40"
-    ></div>
+    <div v-if="isOpen" class="fixed inset-0 z-40" @click="isOpen = false"></div>
   </div>
 </template>
 
 <script>
-import { computePosition, flip, shift, offset, autoUpdate } from '@floating-ui/dom';
+import { computePosition, flip, shift, offset, autoUpdate } from '@floating-ui/dom'
 
 export default {
   name: 'CompSelect',
   props: {
     value: {
       type: [String, Number],
-      default: ''
+      default: '',
     },
     options: {
       type: Array,
@@ -85,20 +72,20 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '请选择'
+      default: '请选择',
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     optionLabel: {
       type: String,
-      default: 'label'
+      default: 'label',
     },
     optionValue: {
       type: String,
-      default: 'value'
-    }
+      default: 'value',
+    },
   },
   data() {
     return {
@@ -106,112 +93,100 @@ export default {
       floatingStyles: {
         position: 'absolute',
         top: '0',
-        left: '0'
+        left: '0',
       },
-      cleanup: null
-    };
+      cleanup: null,
+    }
   },
   computed: {
     isDark() {
-      return this.$store.state.theme.isDark;
+      return this.$store.state.theme.isDark
     },
     displayValue() {
-      const selected = this.options.find(opt => this.getOptionValue(opt) === this.value);
-      return selected ? this.getOptionLabel(selected) : this.placeholder;
+      const selected = this.options.find((opt) => this.getOptionValue(opt) === this.value)
+      return selected ? this.getOptionLabel(selected) : this.placeholder
     },
     buttonClasses() {
       if (this.disabled) {
         return this.isDark
           ? 'bg-gray-800 border-gray-600 text-gray-400 cursor-not-allowed'
-          : 'bg-gray-100 border-gray-300 text-gray-500 cursor-not-allowed';
+          : 'bg-gray-100 border-gray-300 text-gray-500 cursor-not-allowed'
       }
       return this.isDark
         ? 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600'
-        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50';
-    }
+        : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+    },
   },
   watch: {
     isOpen(newVal) {
       if (newVal) {
         this.$nextTick(() => {
-          this.updatePosition();
-        });
+          this.updatePosition()
+        })
       } else {
         if (this.cleanup) {
-          this.cleanup();
-          this.cleanup = null;
+          this.cleanup()
+          this.cleanup = null
         }
       }
-    }
+    },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.cleanup) {
-      this.cleanup();
+      this.cleanup()
     }
   },
   methods: {
     toggleDropdown() {
       if (!this.disabled) {
-        this.isOpen = !this.isOpen;
+        this.isOpen = !this.isOpen
       }
     },
     async updatePosition() {
-      if (!this.$refs.referenceEl || !this.$refs.floatingEl) return;
+      if (!this.$refs.referenceEl || !this.$refs.floatingEl) return
 
       const update = async () => {
-        const { x, y } = await computePosition(
-          this.$refs.referenceEl,
-          this.$refs.floatingEl,
-          {
-            placement: 'bottom-start',
-            middleware: [
-              offset(4),
-              flip(),
-              shift({ padding: 8 })
-            ]
-          }
-        );
+        const { x, y } = await computePosition(this.$refs.referenceEl, this.$refs.floatingEl, {
+          placement: 'bottom-start',
+          middleware: [offset(4), flip(), shift({ padding: 8 })],
+        })
 
         this.floatingStyles = {
           position: 'absolute',
           top: `${y}px`,
-          left: `${x}px`
-        };
-      };
+          left: `${x}px`,
+        }
+      }
 
       // 初始定位
-      await update();
+      await update()
 
       // 自动更新定位
-      this.cleanup = autoUpdate(
-        this.$refs.referenceEl,
-        this.$refs.floatingEl,
-        update
-      );
+      this.cleanup = autoUpdate(this.$refs.referenceEl, this.$refs.floatingEl, update)
     },
     getOptionLabel(option) {
       if (typeof option === 'object' && option !== null) {
-        return option[this.optionLabel] || String(option);
+        return option[this.optionLabel] || String(option)
       }
-      return String(option);
+      return String(option)
     },
     getOptionValue(option) {
       if (typeof option === 'object' && option !== null) {
-        return option[this.optionValue];
+        return option[this.optionValue]
       }
-      return option;
+      return option
     },
     isSelected(option) {
-      return this.getOptionValue(option) === this.value;
+      return this.getOptionValue(option) === this.value
     },
     selectOption(option) {
-      const value = this.getOptionValue(option);
-      this.$emit('input', value);
-      this.$emit('change', value);
-      this.isOpen = false;
-    }
-  }
-};
+      const value = this.getOptionValue(option)
+      this.$emit('input', value)
+      this.$emit('change', value)
+      this.isOpen = false
+    },
+  },
+}
 </script>
 
 <style scoped>

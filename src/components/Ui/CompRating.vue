@@ -26,21 +26,21 @@ export default {
     rating: {
       type: Number,
       required: true,
-      validator: (value) => value >= 0 && value <= 5
+      validator: (value) => value >= 0 && value <= 5,
     },
     totalStars: {
       type: Number,
-      default: 5
+      default: 5,
     },
     size: {
       type: String,
       default: 'base',
-      validator: (value) => ['sm', 'base', 'md', 'lg'].includes(value)
+      validator: (value) => ['sm', 'base', 'md', 'lg'].includes(value),
     },
     readonly: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   computed: {
     sizeClasses() {
@@ -48,27 +48,29 @@ export default {
         sm: 'w-5 h-5',
         base: 'w-6 h-6',
         md: 'w-7 h-7',
-        lg: 'w-8 h-8'
-      };
-      return sizeMap[this.size];
-    }
+        lg: 'w-8 h-8',
+      }
+      return sizeMap[this.size]
+    },
   },
   methods: {
     starClasses(starIndex) {
-      const filled = starIndex <= this.rating;
+      const filled = starIndex <= this.rating
       const colorClass = filled
         ? 'text-yellow-400 dark:text-yellow-300'
-        : 'text-gray-300 dark:text-gray-600';
-      const cursorClass = this.readonly ? '' : 'cursor-pointer hover:text-yellow-500 transition-colors';
-      
-      return `${this.sizeClasses} ${colorClass} ${cursorClass}`;
+        : 'text-gray-300 dark:text-gray-600'
+      const cursorClass = this.readonly
+        ? ''
+        : 'cursor-pointer hover:text-yellow-500 transition-colors'
+
+      return `${this.sizeClasses} ${colorClass} ${cursorClass}`
     },
     handleStarClick(starIndex) {
       if (!this.readonly) {
-        this.$emit('update:rating', starIndex);
-        this.$emit('change', starIndex);
+        this.$emit('update:rating', starIndex)
+        this.$emit('change', starIndex)
       }
-    }
-  }
-};
+    },
+  },
+}
 </script>

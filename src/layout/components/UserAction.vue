@@ -1,17 +1,11 @@
 <template>
-  <div class="relative" v-click-outside="closeUserDropdown">
+  <div v-click-outside="closeUserDropdown" class="relative">
     <button
-      @click="toggleUserDropdown"
       class="p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center justify-center gap-2"
+      @click="toggleUserDropdown"
     >
-      <CompAvatar
-        name="Admin"
-        :size="24"
-        backgroundColor="#0D8ABC"
-        textColor="#ffffff"
-      />
-      <span
-        class="text-sm font-medium text-gray-700 dark:text-gray-200 hidden md:block"
+      <CompAvatar name="Admin" :size="24" background-color="#0D8ABC" text-color="#ffffff" />
+      <span class="text-sm font-medium text-gray-700 dark:text-gray-200 hidden md:block"
         >管理员</span
       >
     </button>
@@ -21,13 +15,11 @@
     >
       <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
         <p class="text-sm font-medium text-gray-900 dark:text-white">Admin</p>
-        <p class="text-xs text-gray-500 dark:text-gray-400">
-          admin@example.com
-        </p>
+        <p class="text-xs text-gray-500 dark:text-gray-400">admin@example.com</p>
       </div>
       <button
-        @click="handleLogout"
         class="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600 dark:text-red-400 flex items-center gap-2"
+        @click="handleLogout"
       >
         <CompIcon name="sign-out-alt" :size="16" class="w-4 h-4" />
         退出登录
@@ -37,44 +29,44 @@
 </template>
 
 <script>
-import { removeToken } from "@/utils/auth";
-import { resetRouter } from "@/router";
+import { removeToken } from '@/utils/auth'
+import { resetRouter } from '@/router'
 
 export default {
-  name: "UserAction",
+  name: 'UserAction',
   components: {},
-  data() {
-    return {
-      showUserDropdown: false,
-    };
-  },
-  methods: {
-    toggleUserDropdown() {
-      this.showUserDropdown = !this.showUserDropdown;
-    },
-    closeUserDropdown() {
-      this.showUserDropdown = false;
-    },
-    handleLogout() {
-      removeToken();
-      resetRouter();
-      this.$router.push("/login");
-    },
-  },
   directives: {
-    "click-outside": {
+    'click-outside': {
       bind(el, binding) {
         el.clickOutsideEvent = function (event) {
           if (!(el === event.target || el.contains(event.target))) {
-            binding.value(event);
+            binding.value(event)
           }
-        };
-        document.body.addEventListener("click", el.clickOutsideEvent);
+        }
+        document.body.addEventListener('click', el.clickOutsideEvent)
       },
       unbind(el) {
-        document.body.removeEventListener("click", el.clickOutsideEvent);
+        document.body.removeEventListener('click', el.clickOutsideEvent)
       },
     },
   },
-};
+  data() {
+    return {
+      showUserDropdown: false,
+    }
+  },
+  methods: {
+    toggleUserDropdown() {
+      this.showUserDropdown = !this.showUserDropdown
+    },
+    closeUserDropdown() {
+      this.showUserDropdown = false
+    },
+    handleLogout() {
+      removeToken()
+      resetRouter()
+      this.$router.push('/login')
+    },
+  },
+}
 </script>

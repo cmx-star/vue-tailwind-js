@@ -4,8 +4,8 @@
     <div class="flex items-center gap-4">
       <Logo class="hidden md:flex" :collapsed="sidebarCollapsed" />
       <button
-        @click="toggleSidebar"
         class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-400"
+        @click="toggleSidebar"
       >
         <CompIcon name="bars" :size="18" class="text-lg" />
       </button>
@@ -18,13 +18,13 @@
       <button
         v-for="nav in topNavList"
         :key="nav.key"
-        @click="handleTopNavClick(nav)"
         class="flex flex-col items-center justify-center px-2 sm:px-3 lg:px-4 py-1.5 rounded-xl transition-all duration-300 relative group overflow-hidden flex-shrink-0"
         :class="
           activeTopNav === nav.key
             ? 'text-blue-600 dark:text-blue-400 font-bold'
             : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'
         "
+        @click="handleTopNavClick(nav)"
       >
         <!-- 背景高亮 -->
         <div
@@ -36,11 +36,7 @@
           :class="{ 'scale-x-100': activeTopNav === nav.key }"
         ></div>
 
-        <CompIcon
-          :name="nav.icon"
-          :size="18"
-          class="text-base sm:text-lg mb-0.5"
-        />
+        <CompIcon :name="nav.icon" :size="18" class="text-base sm:text-lg mb-0.5" />
         <span
           class="text-[9px] sm:text-[10px] tracking-wider uppercase font-semibold whitespace-nowrap"
           >{{ nav.label }}</span
@@ -52,23 +48,21 @@
     <div class="flex items-center gap-2">
       <LanguageSwitcher class="hidden md:block" />
       <ThemeSwitcher class="hidden md:block" />
-      <div
-        class="w-px h-6 bg-gray-200 dark:border-gray-700 mx-2 hidden sm:block"
-      ></div>
+      <div class="w-px h-6 bg-gray-200 dark:border-gray-700 mx-2 hidden sm:block"></div>
       <UserAction />
     </div>
   </nav>
 </template>
 
 <script>
-import Logo from "./Logo.vue";
-import UserAction from "./UserAction.vue";
-import ThemeSwitcher from "./ThemeSwitcher.vue";
-import LanguageSwitcher from "./LanguageSwitcher.vue";
-import { mapState } from "vuex";
+import Logo from './Logo.vue'
+import UserAction from './UserAction.vue'
+import ThemeSwitcher from './ThemeSwitcher.vue'
+import LanguageSwitcher from './LanguageSwitcher.vue'
+import { mapState } from 'vuex'
 
 export default {
-  name: "Navbar",
+  name: 'Navbar',
   components: {
     Logo,
     UserAction,
@@ -76,50 +70,45 @@ export default {
     LanguageSwitcher,
   },
   computed: {
-    ...mapState("app", [
-      "activeTopNav",
-      "topNavList",
-      "menuList",
-      "sidebarCollapsed",
-    ]),
-  },
-  methods: {
-    toggleSidebar() {
-      this.$store.commit("app/TOGGLE_SIDEBAR");
-    },
-    handleTopNavClick(nav) {
-      this.$store.commit("app/SET_ACTIVE_TOP_NAV", nav.key);
-
-      // 找到该 topNav 下的第一个有效菜单进行跳转
-      if (nav.uri && nav.key === 0) {
-        this.$router.push(nav.uri).catch(() => {});
-        return;
-      }
-
-      const topMenus = this.menuList.filter((m) => m.topNav === nav.key);
-      if (topMenus.length > 0) {
-        const firstMenu = topMenus[0];
-        let targetUri = firstMenu.uri;
-        if (firstMenu.subMenu && firstMenu.subMenu.length > 0) {
-          targetUri = `${firstMenu.uri}/${firstMenu.subMenu[0].uri}`;
-        }
-        this.$router.push(targetUri).catch(() => {});
-      } else if (nav.uri) {
-        this.$router.push(nav.uri).catch(() => {});
-      }
-    },
+    ...mapState('app', ['activeTopNav', 'topNavList', 'menuList', 'sidebarCollapsed']),
   },
   watch: {
-    "$route.meta.topNav": {
+    '$route.meta.topNav': {
       immediate: true,
       handler(val) {
         if (val !== undefined && val !== null) {
-          this.$store.commit("app/SET_ACTIVE_TOP_NAV", val);
+          this.$store.commit('app/SET_ACTIVE_TOP_NAV', val)
         }
       },
     },
   },
-};
+  methods: {
+    toggleSidebar() {
+      this.$store.commit('app/TOGGLE_SIDEBAR')
+    },
+    handleTopNavClick(nav) {
+      this.$store.commit('app/SET_ACTIVE_TOP_NAV', nav.key)
+
+      // 找到该 topNav 下的第一个有效菜单进行跳转
+      if (nav.uri && nav.key === 0) {
+        this.$router.push(nav.uri).catch(() => {})
+        return
+      }
+
+      const topMenus = this.menuList.filter((m) => m.topNav === nav.key)
+      if (topMenus.length > 0) {
+        const firstMenu = topMenus[0]
+        let targetUri = firstMenu.uri
+        if (firstMenu.subMenu && firstMenu.subMenu.length > 0) {
+          targetUri = `${firstMenu.uri}/${firstMenu.subMenu[0].uri}`
+        }
+        this.$router.push(targetUri).catch(() => {})
+      } else if (nav.uri) {
+        this.$router.push(nav.uri).catch(() => {})
+      }
+    },
+  },
+}
 </script>
 
 <style scoped>

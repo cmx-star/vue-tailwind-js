@@ -3,18 +3,18 @@
     <div class="w-full max-w-md">
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          {{ $t("login.title") }}
+          {{ $t('login.title') }}
         </h1>
         <p class="text-gray-600 dark:text-gray-400">
-          {{ $t("login.subtitle") }}
+          {{ $t('login.subtitle') }}
         </p>
       </div>
 
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        <form @submit.prevent="handleLogin" class="space-y-6">
+        <form class="space-y-6" @submit.prevent="handleLogin">
           <div>
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              {{ $t("login.username") }}
+              {{ $t('login.username') }}
             </label>
             <input
               v-model="formData.username"
@@ -27,7 +27,7 @@
 
           <div>
             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              {{ $t("login.password") }}
+              {{ $t('login.password') }}
             </label>
             <input
               v-model="formData.password"
@@ -46,11 +46,11 @@
                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
               />
               <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
-                {{ $t("login.remember") }}
+                {{ $t('login.remember') }}
               </span>
             </label>
             <a href="#" class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400">
-              {{ $t("login.forgot") }}
+              {{ $t('login.forgot') }}
             </a>
           </div>
 
@@ -60,7 +60,7 @@
             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span v-if="loading">登录中...</span>
-            <span v-else>{{ $t("login.login") }}</span>
+            <span v-else>{{ $t('login.login') }}</span>
           </button>
         </form>
       </div>
@@ -69,49 +69,48 @@
 </template>
 
 <script>
-import { login } from "@/api/origin";
-import { setToken } from "@/utils/auth";
+import { login } from '@/api/origin'
+import { setToken } from '@/utils/auth'
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     return {
       loading: false,
       formData: {
-        username: "admin",
-        password: "password",
+        username: 'admin',
+        password: 'password',
         remember: false,
       },
-    };
+    }
   },
   methods: {
     async handleLogin() {
-      if (this.loading) return;
-      this.loading = true;
+      if (this.loading) return
+      this.loading = true
       try {
-        console.log("Starting login with:", this.formData.username);
-        const res = await login(this.formData);
-        console.log("Login response:", res);
-        
+        console.log('Starting login with:', this.formData.username)
+        const res = await login(this.formData)
+        console.log('Login response:', res)
+
         if (res && res.code === 200) {
-          setToken(res.data.token);
+          setToken(res.data.token)
           // 跳转到首页
-          this.$router.push("/").catch((err) => {
+          this.$router.push('/').catch((err) => {
             // Vue Router 3.1.0+ push/replace 会返回 Promise，需要捕获重定向异常
-            if (err && err.name !== "NavigationDuplicated" && !err.message.includes("Redirected")) {
-              console.error("Navigation error:", err);
+            if (err && err.name !== 'NavigationDuplicated' && !err.message.includes('Redirected')) {
+              console.error('Navigation error:', err)
             }
-          });
+          })
         } else {
-          console.error("Login failed: Invalid code", res);
+          console.error('Login failed: Invalid code', res)
         }
       } catch (error) {
-        console.error("Login API error:", error);
+        console.error('Login API error:', error)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
   },
-};
+}
 </script>
-

@@ -1,24 +1,24 @@
 export const loginMock = {
   code: 200,
   data: {
-    token: "mock-token-abc-123",
+    token: 'mock-token-abc-123',
     userInfo: {
-      username: "admin",
-      role: "admin",
+      username: 'admin',
+      role: 'admin',
     },
   },
-  message: "success",
-};
+  message: 'success',
+}
 
 export const menuMock = {
   code: 200,
   data: [
     {
       id: 1,
-      name: "dashboard",
-      uri: "/dashboard",
-      icon: "house",
-      permissionValue: "ViewDashboard",
+      name: 'dashboard',
+      uri: '/dashboard',
+      icon: 'house',
+      permissionValue: 'ViewDashboard',
       type: 1,
       show: 1,
       aside: 0,
@@ -26,10 +26,10 @@ export const menuMock = {
     },
     {
       id: 2,
-      name: "edgeComputing",
-      uri: "/edge",
-      icon: "microchip",
-      permissionValue: "ParentView",
+      name: 'edgeComputing',
+      uri: '/edge',
+      icon: 'microchip',
+      permissionValue: 'ParentView',
       type: 1,
       show: 1,
       aside: 1,
@@ -37,9 +37,9 @@ export const menuMock = {
       subMenu: [
         {
           id: 21,
-          name: "productManagement",
-          uri: "node",
-          permissionValue: "ViewNodeManagement",
+          name: 'productManagement',
+          uri: 'node',
+          permissionValue: 'ViewNodeManagement',
           type: 1,
           show: 1,
           aside: 1,
@@ -47,9 +47,9 @@ export const menuMock = {
         },
         {
           id: 22,
-          name: "analyticsManagement",
-          uri: "analytics",
-          permissionValue: "ViewAnalytics",
+          name: 'analyticsManagement',
+          uri: 'analytics',
+          permissionValue: 'ViewAnalytics',
           type: 1,
           show: 1,
           aside: 1,
@@ -59,10 +59,10 @@ export const menuMock = {
     },
     {
       id: 3,
-      name: "networkCenter", // 类型 1: 纯一级
-      uri: "/network/overview",
-      icon: "network-wired",
-      permissionValue: "ViewNetworkManager",
+      name: 'networkCenter', // 类型 1: 纯一级
+      uri: '/network/overview',
+      icon: 'network-wired',
+      permissionValue: 'ViewNetworkManager',
       type: 1,
       show: 1,
       aside: 1,
@@ -70,10 +70,10 @@ export const menuMock = {
     },
     {
       id: 4,
-      name: "interfaceManagement", // 类型 2: 二级结构 (父节点使用 Layout)
-      uri: "/network/interface",
-      icon: "ethernet",
-      permissionValue: "ParentView",
+      name: 'interfaceManagement', // 类型 2: 二级结构 (父节点使用 Layout)
+      uri: '/network/interface',
+      icon: 'ethernet',
+      permissionValue: 'ParentView',
       type: 1,
       show: 1,
       aside: 1,
@@ -81,9 +81,9 @@ export const menuMock = {
       subMenu: [
         {
           id: 41,
-          name: "interfaceConfig",
-          uri: "config",
-          permissionValue: "ViewInterfaceConfig",
+          name: 'interfaceConfig',
+          uri: 'config',
+          permissionValue: 'ViewInterfaceConfig',
           type: 1,
           show: 1,
           aside: 1,
@@ -93,10 +93,10 @@ export const menuMock = {
     },
     {
       id: 5,
-      name: "securityPolicy", // 类型 3: 三级结构
-      uri: "/network/security",
-      icon: "shield-halved",
-      permissionValue: "ParentView",
+      name: 'securityPolicy', // 类型 3: 三级结构
+      uri: '/network/security',
+      icon: 'shield-halved',
+      permissionValue: 'ParentView',
       type: 1,
       show: 1,
       aside: 1,
@@ -104,9 +104,9 @@ export const menuMock = {
       subMenu: [
         {
           id: 51,
-          name: "firewall",
-          uri: "firewall",
-          permissionValue: "ParentView",
+          name: 'firewall',
+          uri: 'firewall',
+          permissionValue: 'ParentView',
           type: 1,
           show: 1,
           aside: 1,
@@ -114,9 +114,9 @@ export const menuMock = {
           subMenu: [
             {
               id: 511,
-              name: "firewallSettings",
-              uri: "settings",
-              permissionValue: "ViewFirewallSettings",
+              name: 'firewallSettings',
+              uri: 'settings',
+              permissionValue: 'ViewFirewallSettings',
               type: 1,
               show: 1,
               aside: 1,
@@ -128,10 +128,10 @@ export const menuMock = {
     },
     {
       id: 6,
-      name: "vpnService",
-      uri: "/vpn",
-      icon: "shield-virus",
-      permissionValue: "ParentView",
+      name: 'vpnService',
+      uri: '/vpn',
+      icon: 'shield-virus',
+      permissionValue: 'ParentView',
       type: 1,
       show: 1,
       aside: 1,
@@ -139,9 +139,9 @@ export const menuMock = {
       subMenu: [
         {
           id: 61,
-          name: "userList",
-          uri: "users",
-          permissionValue: "ViewUserList",
+          name: 'userList',
+          uri: 'users',
+          permissionValue: 'ViewUserList',
           type: 1,
           show: 1,
           aside: 1,
@@ -151,10 +151,10 @@ export const menuMock = {
     },
     {
       id: 7,
-      name: "deploymentWizard",
-      uri: "/wizard",
-      icon: "wand-magic-sparkles",
-      permissionValue: "ParentView",
+      name: 'deploymentWizard',
+      uri: '/wizard',
+      icon: 'wand-magic-sparkles',
+      permissionValue: 'ParentView',
       type: 1,
       show: 1,
       aside: 1,
@@ -162,9 +162,9 @@ export const menuMock = {
       subMenu: [
         {
           id: 71,
-          name: "quickSetup",
-          uri: "quick",
-          permissionValue: "ViewQuickSetup",
+          name: 'quickSetup',
+          uri: 'quick',
+          permissionValue: 'ViewQuickSetup',
           type: 1,
           show: 1,
           aside: 1,
@@ -174,10 +174,10 @@ export const menuMock = {
     },
     {
       id: 8,
-      name: "systemSettings",
-      uri: "/settings",
-      icon: "gears",
-      permissionValue: "ViewSystemSettings",
+      name: 'systemSettings',
+      uri: '/settings',
+      icon: 'gears',
+      permissionValue: 'ViewSystemSettings',
       type: 1,
       show: 1,
       aside: 1,
@@ -185,10 +185,10 @@ export const menuMock = {
     },
     {
       id: 9,
-      name: "systemManagement",
-      uri: "/system",
-      icon: "gears",
-      permissionValue: "ParentView",
+      name: 'systemManagement',
+      uri: '/system',
+      icon: 'gears',
+      permissionValue: 'ParentView',
       type: 1,
       show: 1,
       aside: 1,
@@ -196,9 +196,9 @@ export const menuMock = {
       subMenu: [
         {
           id: 91,
-          name: "operationLog",
-          uri: "logs",
-          permissionValue: "ViewLogManagement",
+          name: 'operationLog',
+          uri: 'logs',
+          permissionValue: 'ViewLogManagement',
           type: 1,
           show: 1,
           aside: 1,
@@ -206,9 +206,9 @@ export const menuMock = {
         },
         {
           id: 92,
-          name: "personalSettings",
-          uri: "settings",
-          permissionValue: "ViewSettings",
+          name: 'personalSettings',
+          uri: 'settings',
+          permissionValue: 'ViewSettings',
           type: 1,
           show: 1,
           aside: 1,
@@ -217,5 +217,5 @@ export const menuMock = {
       ],
     },
   ],
-  message: "success",
-};
+  message: 'success',
+}

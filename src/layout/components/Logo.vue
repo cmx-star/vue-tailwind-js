@@ -17,14 +17,14 @@
 
 <script>
 export default {
-  name: "Logo",
+  name: 'Logo',
   props: {
     collapsed: {
       type: Boolean,
       default: false,
     },
   },
-};
+}
 </script>
 
 <style scoped>

@@ -52,8 +52,20 @@
         @click="close"
       >
         <span class="sr-only">Close</span>
-        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        <svg
+          class="w-3 h-3"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 14 14"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+          />
         </svg>
       </button>
     </div>
@@ -72,58 +84,59 @@ export default {
       duration: 3000,
       showClose: true,
       onClose: null,
-      timer: null
-    };
+      timer: null,
+    }
   },
   computed: {
     toastClasses() {
-      const baseClasses = 'flex items-start sm:items-center p-4 text-sm rounded-lg transition-all duration-300';
-      
+      const baseClasses =
+        'flex items-start sm:items-center p-4 text-sm rounded-lg transition-all duration-300'
+
       const typeClasses = {
         info: 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400',
         danger: 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400',
         success: 'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400',
         warning: 'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300',
-        dark: 'text-gray-800 bg-gray-100 dark:bg-gray-700 dark:text-gray-300'
-      };
-      
-      return `${baseClasses} ${typeClasses[this.type] || typeClasses.info}`;
-    }
+        dark: 'text-gray-800 bg-gray-100 dark:bg-gray-700 dark:text-gray-300',
+      }
+
+      return `${baseClasses} ${typeClasses[this.type] || typeClasses.info}`
+    },
   },
   mounted() {
-    this.startTimer();
+    this.startTimer()
   },
-  beforeDestroy() {
-    this.clearTimer();
+  beforeUnmount() {
+    this.clearTimer()
   },
   methods: {
     startTimer() {
       if (this.duration > 0) {
         this.timer = setTimeout(() => {
-          this.close();
-        }, this.duration);
+          this.close()
+        }, this.duration)
       }
     },
     clearTimer() {
       if (this.timer) {
-        clearTimeout(this.timer);
-        this.timer = null;
+        clearTimeout(this.timer)
+        this.timer = null
       }
     },
     close() {
-      this.visible = false;
+      this.visible = false
       if (typeof this.onClose === 'function') {
-        this.onClose();
+        this.onClose()
       }
       setTimeout(() => {
-        this.$destroy();
+        this.$destroy()
         if (this.$el && this.$el.parentNode) {
-          this.$el.parentNode.removeChild(this.$el);
+          this.$el.parentNode.removeChild(this.$el)
         }
-      }, 300);
-    }
-  }
-};
+      }, 300)
+    },
+  },
+}
 </script>
 
 <style scoped>
