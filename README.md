@@ -99,11 +99,11 @@ Vue Admin JS 是一个轻量级、高性能的后台管理系统框架,采用 Vu
 - ✅ **实时数据**: 支持数据动态更新
 - ✅ **高性能**: uPlot 渲染大数据集
 
-### 🔐 权限管理
+### 🔐 路由与菜单
 
-- ✅ **路由守卫**: 基于角色的路由访问控制
-- ✅ **动态菜单**: 根据权限动态生成菜单
-- ✅ **按钮权限**: 细粒度的操作权限控制
+- ✅ **路由守卫**: 登录状态验证和路由跳转控制
+- ✅ **动态菜单**: 基于后端数据动态生成菜单结构
+- ✅ **权限标识**: 通过 `permissionValue` 映射页面组件
 
 ### 🚀 性能优化
 
@@ -241,43 +241,66 @@ npm run preview
 ```
 vue-admin-js/
 ├── public/                 # 静态资源目录
-│   └── favicon.ico        # 网站图标
+│   └── favicon.svg        # 网站图标
+├── scripts/               # 脚本工具
+│   └── create-page.js    # 页面生成脚本
 ├── src/                   # 源代码目录
-│   ├── assets/           # 资源文件
-│   │   ├── css/         # 全局样式
-│   │   └── images/      # 图片资源
+│   ├── api/              # API 接口
+│   │   ├── mock/        # Mock 数据
+│   │   └── origin/      # 原始 API 定义
 │   ├── components/       # 公共组件
-│   │   ├── Chart/       # 图表组件
-│   │   ├── Form/        # 表单组件
-│   │   ├── Layout/      # 布局组件
-│   │   └── ...
-│   ├── locales/         # 国际化语言包
-│   │   ├── en.js       # 英文
-│   │   └── zh.js       # 中文
+│   │   ├── Charts/      # 图表组件 (CompLineChart, CompAreaChart, CompBarChart, CompPieChart)
+│   │   ├── Form/        # 表单组件 (CompInput, CompSelect, CompCheckbox, CompRadio, etc.)
+│   │   ├── Navigation/  # 导航组件 (CompDropdown, CompPagination)
+│   │   └── Ui/          # UI 组件 (CompButton, CompAvatar, CompIcon, CompTable, etc.)
+│   ├── http/            # HTTP 请求
+│   │   └── httpRequest.js  # Axios 封装
+│   ├── lang/            # 国际化
+│   │   ├── index.js    # i18n 配置
+│   │   └── locales/    # 语言包
+│   │       ├── en-US.json  # 英文
+│   │       └── zh-CN.json  # 中文
+│   ├── layout/          # 布局组件
+│   │   ├── index.vue   # 主布局
+│   │   └── components/ # 布局子组件
+│   │       ├── LayoutNavbar.vue        # 顶部导航栏
+│   │       ├── LayoutSidebar.vue       # 侧边栏
+│   │       ├── LayoutSidebarItem.vue   # 侧边栏菜单项
+│   │       ├── LayoutAppMain.vue       # 主内容区
+│   │       ├── LayoutLogo.vue          # Logo
+│   │       ├── LayoutUserAction.vue    # 用户操作
+│   │       ├── LayoutThemeSwitcher.vue # 主题切换
+│   │       └── LayoutLanguageSwitcher.vue # 语言切换
+│   ├── plugins/         # 插件
+│   │   ├── Modal/      # 模态框插件
+│   │   └── Toast/      # 提示插件
 │   ├── router/          # 路由配置
-│   │   └── index.js    # 路由定义
-│   ├── stores/          # Vuex 状态管理
-│   │   ├── index.js    # Store 入口
-│   │   ├── auth.js     # 认证模块
-│   │   ├── theme.js    # 主题模块
-│   │   └── ...
+│   │   ├── index.js    # 路由入口
+│   │   └── origin/     # 路由定义
+│   ├── store/           # Vuex 状态管理
+│   │   └── index.js    # Store 入口
+│   ├── styles/          # 样式文件
+│   │   ├── index.css   # 全局样式
+│   │   └── modules/    # 模块样式
 │   ├── utils/           # 工具函数
-│   │   ├── request.js  # Axios 封装
+│   │   ├── auth.js     # 认证工具
 │   │   ├── storage.js  # 本地存储
-│   │   └── ...
+│   │   └── validate.js # 验证工具
 │   ├── views/           # 页面组件
-│   │   ├── Dashboard/  # 仪表盘
-│   │   ├── User/       # 用户管理
-│   │   ├── Settings/   # 系统设置
-│   │   └── ...
+│   │   ├── common/     # 公共页面 (ViewLogin, View404)
+│   │   ├── overview/   # 概览 (ViewDashboard)
+│   │   ├── edge/       # 边缘计算
+│   │   ├── network/    # 网络管理
+│   │   ├── system/     # 系统设置
+│   │   ├── vpn/        # VPN 管理
+│   │   └── wizard/     # 向导页面
 │   ├── App.vue          # 根组件
 │   └── main.js          # 入口文件
-├── scripts/             # 脚本工具
-│   └── create-page.js  # 页面生成脚本
+├── .env.development    # 开发环境变量
+├── .env.production     # 生产环境变量
 ├── .eslintrc.js        # ESLint 配置
 ├── .prettierrc         # Prettier 配置
-├── commitlint.config.js # Commitlint 配置
-├── tailwind.config.js  # Tailwind 配置
+├── commitlint.config.cjs # Commitlint 配置
 ├── vite.config.js      # Vite 配置
 └── package.json        # 项目配置
 ```
@@ -620,14 +643,25 @@ npm run build
 
 ### 环境变量
 
-如需配置环境变量,可在项目根目录创建 `.env.production` 文件:
+项目已配置环境变量支持,Vite 会自动加载对应的 `.env` 文件:
+
+**开发环境** (`.env.development`):
 
 ```env
-VITE_API_BASE_URL=https://api.your-domain.com
-VITE_APP_TITLE=Vue Admin JS
+VITE_APP_BASE_API=/api
 ```
 
-> 注: 当前项目暂未使用环境变量,可根据实际需求添加
+**生产环境** (`.env.production`):
+
+```env
+VITE_APP_BASE_API=/api
+```
+
+**使用方式:**
+
+- `src/http/httpRequest.js` 中使用 `import.meta.env.VITE_APP_BASE_API` 设置 API 基础地址
+- 运行 `npm run dev` 自动加载 `.env.development`
+- 运行 `npm run build` 自动加载 `.env.production`
 
 ---
 
