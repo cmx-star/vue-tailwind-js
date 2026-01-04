@@ -5,7 +5,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import i18n from "./i18n";
-import Toast from "./components/Toast/toast.js";
+import Toast from "./plugins/Toast";
 import "./styles/index.css";
 import "uplot/dist/uPlot.min.css";
 

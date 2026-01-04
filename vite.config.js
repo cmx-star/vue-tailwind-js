@@ -3,11 +3,29 @@ import { createVuePlugin } from "vite-plugin-vue2";
 import tailwindcss from "@tailwindcss/vite";
 import { visualizer } from "rollup-plugin-visualizer";
 import { fileURLToPath, URL } from "node:url";
+import Components from "unplugin-vue-components/vite";
 
 export default defineConfig({
   plugins: [
     createVuePlugin(),
     tailwindcss(),
+
+    // 自动注册组件 - 按需导入，只打包使用的组件
+    Components({
+      // 组件目录
+      dirs: ["src/components"],
+      // 组件后缀
+      extensions: ["vue"],
+      // 深度搜索子目录
+      deep: true,
+      // 生成类型声明
+      dts: false, // Vue 2 不需要
+      // 包含的文件模式
+      include: [/\.vue$/, /\.vue\?vue/],
+      // 自定义组件解析器
+      resolvers: [],
+    }),
+
     process.env.ANALYZE === "true" &&
       visualizer({
         open: true,

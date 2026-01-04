@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: "Avatar",
+  name: "CompAvatar",
   props: {
     name: {
       type: String,

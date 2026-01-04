@@ -122,13 +122,9 @@
 </template>
 
 <script>
-import CompButton from '@/components/Button/CompButton.vue';
-
 export default {
   name: 'ViewNetworkManager',
-  components: {
-    CompButton
-  },
+  components: {},
   methods: {
     showInfoToast() {
       this.$toast.info({

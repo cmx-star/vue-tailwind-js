@@ -3,7 +3,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-sm border border-gray-100 dark:border-gray-700">
       <div class="flex items-center space-x-4 mb-6">
         <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
-          <Icon name="ethernet" :size="24" class="text-green-600" />
+          <CompIcon name="ethernet" :size="24" class="text-green-600" />
         </div>
         <div>
           <h1 class="text-2xl font-bold text-gray-900 dark:text-white">接口配置</h1>
@@ -25,12 +25,8 @@
 </template>
 
 <script>
-import Icon from "@/components/Icon/Icon.vue";
-
 export default {
   name: "ViewInterfaceConfig",
-  components: {
-    Icon,
-  },
+  components: {},
 };
 </script>

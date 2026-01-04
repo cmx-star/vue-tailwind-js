@@ -7,7 +7,7 @@
         @click="toggleSidebar"
         class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-400"
       >
-        <Icon name="bars" :size="18" class="text-lg" />
+        <CompIcon name="bars" :size="18" class="text-lg" />
       </button>
     </div>
 
@@ -36,7 +36,7 @@
           :class="{ 'scale-x-100': activeTopNav === nav.key }"
         ></div>
 
-        <Icon
+        <CompIcon
           :name="nav.icon"
           :size="18"
           class="text-base sm:text-lg mb-0.5"
@@ -65,7 +65,6 @@ import Logo from "./Logo.vue";
 import UserAction from "./UserAction.vue";
 import ThemeSwitcher from "./ThemeSwitcher.vue";
 import LanguageSwitcher from "./LanguageSwitcher.vue";
-import Icon from "@/components/Icon/Icon.vue";
 import { mapState } from "vuex";
 
 export default {
@@ -75,7 +74,6 @@ export default {
     UserAction,
     ThemeSwitcher,
     LanguageSwitcher,
-    Icon,
   },
   computed: {
     ...mapState("app", [

@@ -543,31 +543,8 @@
 </template>
 
 <script>
-import CompFormInput from '@/components/Form/CompFormInput.vue';
-import CompFileUpload from '@/components/Form/CompFileUpload.vue';
-import CompNumberInput from '@/components/Form/CompNumberInput.vue';
-import CompCodeInput from '@/components/Form/CompCodeInput.vue';
-import CompTextarea from '@/components/Form/CompTextarea.vue';
-import CompCheckbox from '@/components/Form/CompCheckbox.vue';
-import CompRadio from '@/components/Form/CompRadio.vue';
-import CompToggle from '@/components/Form/CompToggle.vue';
-import CompRange from '@/components/Form/CompRange.vue';
-import CompFloatingInput from '@/components/Form/CompFloatingInput.vue';
-
 export default {
   name: 'ViewAnalytics',
-  components: {
-    CompFormInput,
-    CompFileUpload,
-    CompNumberInput,
-    CompCodeInput,
-    CompTextarea,
-    CompCheckbox,
-    CompRadio,
-    CompToggle,
-    CompRange,
-    CompFloatingInput
-  },
   data() {
     return {
       form: {

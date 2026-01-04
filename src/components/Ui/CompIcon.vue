@@ -45,7 +45,7 @@ const iconPaths = {
 };
 
 export default {
-  name: "Icon",
+  name: "CompIcon",
   props: {
     name: {
       type: String,

@@ -4,7 +4,7 @@
 
 <script>
 import uPlot from 'uplot';
-import { createTooltipPlugin } from '../tooltipPlugin.js';
+import { createTooltipPlugin } from './tooltipPlugin.js';
 
 export default {
   name: 'CompLineChart',

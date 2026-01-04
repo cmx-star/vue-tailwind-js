@@ -29,13 +29,9 @@
 </template>
 
 <script>
-import CompTable from '@/components/Table/CompTable.vue';
-
 export default {
   name: 'ViewNodeManagement',
-  components: {
-    CompTable
-  },
+  components: {},
   data() {
     return {
       columns: [

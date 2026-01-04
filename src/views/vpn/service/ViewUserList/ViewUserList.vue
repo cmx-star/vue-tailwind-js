@@ -277,25 +277,9 @@
 </template>
 
 <script>
-import CompDropdown from '@/components/Dropdown/CompDropdown.vue';
-import CompDropdownItem from '@/components/Dropdown/CompDropdownItem.vue';
-import CompPagination from '@/components/Pagination/CompPagination.vue';
-import CompPaginationCompact from '@/components/Pagination/CompPaginationCompact.vue';
-import CompProgress from '@/components/Progress/CompProgress.vue';
-import CompRating from '@/components/Rating/CompRating.vue';
-import CompStepper from '@/components/Stepper/CompStepper.vue';
-
 export default {
   name: 'ViewUserList',
-  components: {
-    CompDropdown,
-    CompDropdownItem,
-    CompPagination,
-    CompPaginationCompact,
-    CompProgress,
-    CompRating,
-    CompStepper
-  },
+  components: {},
   data() {
     return {
       page1: 3,

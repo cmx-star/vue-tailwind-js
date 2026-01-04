@@ -269,12 +269,6 @@
 </template>
 
 <script>
-import CompStepper from "@/components/Stepper/CompStepper.vue";
-import CompFormInput from "@/components/Form/CompFormInput.vue";
-import CompTextarea from "@/components/Form/CompTextarea.vue";
-import CompCheckbox from "@/components/Form/CompCheckbox.vue";
-import CompRadio from "@/components/Form/CompRadio.vue";
-import CompToggle from "@/components/Form/CompToggle.vue";
 import {
   validateStep,
   validateField as validateFieldUtil,
@@ -284,14 +278,7 @@ import Schema from "async-validator";
 
 export default {
   name: "ViewQuickSetup",
-  components: {
-    CompStepper,
-    CompFormInput,
-    CompTextarea,
-    CompCheckbox,
-    CompRadio,
-    CompToggle,
-  },
+  components: {},
   data() {
     return {
       currentStep: 0,

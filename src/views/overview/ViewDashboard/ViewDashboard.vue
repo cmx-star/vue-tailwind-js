@@ -332,23 +332,9 @@
 </template>
 
 <script>
-import CompSelect from "@/components/Form/Select/Select.vue";
-import CompDatePicker from "@/components/Form/DatePicker/DatePicker.vue";
-import CompLineChart from "@/components/Charts/LineChart/LineChart.vue";
-import CompAreaChart from "@/components/Charts/AreaChart/AreaChart.vue";
-import CompBarChart from "@/components/Charts/BarChart/BarChart.vue";
-import CompPieChart from "@/components/Charts/PieChart/PieChart.vue";
-
 export default {
   name: "Dashboard",
-  components: {
-    CompSelect,
-    CompDatePicker,
-    CompLineChart,
-    CompAreaChart,
-    CompBarChart,
-    CompPieChart,
-  },
+  components: {},
   data() {
     return {
       selectedPeriod: "week",
