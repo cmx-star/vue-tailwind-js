@@ -42,9 +42,9 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
-import Sidebar from './components/Sidebar.vue'
-import AppMain from './components/AppMain.vue'
+import Navbar from './components/LayoutNavbar.vue'
+import Sidebar from './components/LayoutSidebar.vue'
+import AppMain from './components/LayoutAppMain.vue'
 import { mapState } from 'vuex'
 
 export default {

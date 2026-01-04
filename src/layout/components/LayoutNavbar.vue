@@ -55,10 +55,10 @@
 </template>
 
 <script>
-import Logo from './Logo.vue'
-import UserAction from './UserAction.vue'
-import ThemeSwitcher from './ThemeSwitcher.vue'
-import LanguageSwitcher from './LanguageSwitcher.vue'
+import Logo from './LayoutLogo.vue'
+import UserAction from './LayoutUserAction.vue'
+import ThemeSwitcher from './LayoutThemeSwitcher.vue'
+import LanguageSwitcher from './LayoutLanguageSwitcher.vue'
 import { mapState } from 'vuex'
 
 export default {

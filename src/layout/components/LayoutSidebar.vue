@@ -29,7 +29,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import SidebarItem from './SidebarItem.vue'
+import SidebarItem from './LayoutSidebarItem.vue'
 
 export default {
   name: 'Sidebar',
