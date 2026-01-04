@@ -23,6 +23,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :required="required"
+        :autocomplete="autocomplete"
         class="border-x-0 h-10 text-center w-full bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white py-2.5 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none"
         @input="handleInput"
         @blur="handleBlur"
@@ -89,6 +90,10 @@ export default {
     containerClass: {
       type: String,
       default: 'mb-6'
+    },
+    autocomplete: {
+      type: String,
+      default: 'off'
     }
   },
   computed: {

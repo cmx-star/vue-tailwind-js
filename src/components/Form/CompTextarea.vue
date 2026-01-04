@@ -12,6 +12,7 @@
       :readonly="readonly"
       :required="required"
       :rows="rows"
+      :autocomplete="autocomplete"
       :class="textareaClasses"
       @input="$emit('input', $event.target.value)"
       @blur="$emit('blur', $event)"
@@ -73,6 +74,10 @@ export default {
     containerClass: {
       type: String,
       default: 'mb-6'
+    },
+    autocomplete: {
+      type: String,
+      default: 'off'
     }
   },
   computed: {

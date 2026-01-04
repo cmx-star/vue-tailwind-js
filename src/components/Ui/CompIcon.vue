@@ -1,6 +1,6 @@
 <template>
   <svg
-    :class="iconClass"
+    :class="computedIconClass"
     :style="iconStyle"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -62,7 +62,7 @@ export default {
       type: [String, Number],
       default: 16,
     },
-    class: {
+    iconClass: {
       type: String,
       default: "",
     },
@@ -71,8 +71,15 @@ export default {
     iconPath() {
       return iconPaths[this.name] || "";
     },
-    iconClass() {
-      return this.class || "";
+    computedIconClass() {
+      const classes = [];
+      if (this.iconClass) {
+        classes.push(this.iconClass);
+      }
+      if (this.$attrs.class) {
+        classes.push(this.$attrs.class);
+      }
+      return classes.join(" ");
     },
     iconStyle() {
       const size = typeof this.size === "number" ? this.size : parseInt(this.size);

@@ -9,6 +9,7 @@
           type="text"
           maxlength="1"
           :value="code[index] || ''"
+          :autocomplete="autocomplete"
           :class="inputClasses"
           @input="handleInput(index, $event)"
           @keydown="handleKeydown(index, $event)"
@@ -38,6 +39,10 @@ export default {
     containerClass: {
       type: String,
       default: 'mb-6'
+    },
+    autocomplete: {
+      type: String,
+      default: 'off'
     }
   },
   data() {

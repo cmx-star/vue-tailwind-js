@@ -17,7 +17,7 @@
       </div>
 
       <!-- 表单内容区 -->
-      <form @submit.prevent="handleNext" novalidate>
+      <form @submit.prevent="handleNext" novalidate autocomplete="off">
         <!-- Step 1: 基本信息 -->
         <div v-show="currentStep === 0" class="space-y-6">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
@@ -29,6 +29,7 @@
               v-model="formData.firstName"
               label="First Name"
               placeholder="John"
+              autocomplete="given-name"
               :state="errors.firstName ? 'error' : 'default'"
               :helper-text="errors.firstName"
               required
@@ -39,6 +40,7 @@
               v-model="formData.lastName"
               label="Last Name"
               placeholder="Doe"
+              autocomplete="family-name"
               :state="errors.lastName ? 'error' : 'default'"
               :helper-text="errors.lastName"
               required
@@ -52,6 +54,7 @@
             type="email"
             label="Email Address"
             placeholder="john.doe@example.com"
+            autocomplete="email"
             :state="errors.email ? 'error' : 'default'"
             :helper-text="errors.email"
             required
@@ -64,6 +67,7 @@
             type="tel"
             label="Phone Number"
             placeholder="123-456-7890"
+            autocomplete="tel"
             :state="errors.phone ? 'error' : 'default'"
             :helper-text="errors.phone"
             @blur="validateField('phone')"
@@ -81,6 +85,7 @@
             v-model="formData.username"
             label="Username"
             placeholder="johndoe"
+            autocomplete="username"
             :state="errors.username ? 'error' : 'default'"
             :helper-text="errors.username"
             required
@@ -93,6 +98,7 @@
             type="password"
             label="Password"
             placeholder="••••••••"
+            autocomplete="new-password"
             :state="errors.password ? 'error' : 'default'"
             :helper-text="errors.password"
             required
@@ -105,6 +111,7 @@
             type="password"
             label="Confirm Password"
             placeholder="••••••••"
+            autocomplete="new-password"
             :state="errors.confirmPassword ? 'error' : 'default'"
             :helper-text="errors.confirmPassword"
             required
@@ -185,6 +192,7 @@
             label="个人简介"
             :rows="4"
             placeholder="介绍一下自己..."
+            autocomplete="off"
           />
         </div>
 

@@ -8,6 +8,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :required="required"
+        :autocomplete="autocomplete"
         :class="inputClasses"
         @input="$emit('input', $event.target.value)"
         @blur="$emit('blur', $event)"
@@ -63,6 +64,10 @@ export default {
     containerClass: {
       type: String,
       default: 'mb-6'
+    },
+    autocomplete: {
+      type: String,
+      default: 'off'
     }
   },
   computed: {
