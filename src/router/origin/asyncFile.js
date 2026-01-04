@@ -1,11 +1,13 @@
 // 使用 Vite 的 import.meta.glob 自动扫描所有 .vue 组件
-// 匹配规则：src/views 及其子目录下的所有 .vue 文件
-const modules = import.meta.glob("../../views/**/*.vue");
+// 匹配规则：src/views 及其子目录下的所有 .vue 文件，排除局部 components 目录
+const modules = import.meta.glob([
+  "../../views/**/*.vue",
+  "!../../views/**/components/**",
+]);
 
 // 特殊布局组件手动指定
 export const componentMap = {
   Layout: () => import("@/layout/index.vue"),
-  ParentView: () => import("@/layout/components/ParentView.vue"),
 };
 
 /**
@@ -21,12 +23,18 @@ export function loadRoutes(componentName) {
   }
 
   // 2. 自动搜索 views 目录下的组件
-  // 匹配规则 A: 匹配文件名 (例如 ViewLogin -> views/.../ViewLogin.vue)
-  // 匹配规则 B: 如果 componentName 是路径，尝试直接读取
+  // 匹配规则 A: 精确匹配文件名 (忽略 .vue 后缀)
+  // 匹配规则 B: 允许忽略 View 前缀进行匹配
   const modulePath = Object.keys(modules).find((path) => {
-    // 提取文件名 (不含扩展名)
-    const fileName = path.split("/").pop().replace(".vue", "");
-    return fileName === componentName || path.includes(`/${componentName}.vue`);
+    const fileName = path.split("/").pop().replace(".vue", "").toLowerCase();
+    const targetName = componentName.toLowerCase();
+    const pureTargetName = targetName.replace("view", "");
+
+    return (
+      fileName === targetName ||
+      fileName === pureTargetName ||
+      path.toLowerCase().includes(`/${targetName}.vue`)
+    );
   });
 
   if (modulePath) {
@@ -41,5 +49,5 @@ export function loadRoutes(componentName) {
   const fallback = Object.keys(modules).find((p) => p.includes("View404.vue"));
   return fallback
     ? modules[fallback]
-    : () => import("@/views/common/View404/View404.vue");
+    : () => import("@/views/common/View404.vue");
 }

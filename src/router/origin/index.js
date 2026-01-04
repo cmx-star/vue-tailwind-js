@@ -69,9 +69,13 @@ async function handleDynamicRoutes() {
    * @param {Array} menuList 菜单列表
    * @param {Boolean} isRoot 是否为顶层根节点
    */
-  const mapMenusToRoutes = (menuList, isRoot = false) => {
+  const mapMenusToRoutes = (menuList, isRoot = false, parentMeta = {}) => {
     return menuList.map((item) => {
       const hasChildren = item.subMenu && item.subMenu.length > 0;
+
+      // 确定导航上下文 (优先级：显式定义 > 父级继承 > 默认值)
+      const topNav = item.topNav ?? parentMeta.topNav ?? 0;
+      const aside = item.aside ?? parentMeta.aside ?? 1;
 
       const route = {
         path: item.uri,
@@ -82,25 +86,34 @@ async function handleDynamicRoutes() {
           const name = item.name || item.uri.split("/").pop();
           return name.charAt(0).toUpperCase() + name.slice(1);
         })(),
-        // 如果是根节点且有子菜单，强制包装 Layout；如果是中间节点有子菜单，强制包装 ParentView
-        component:
-          isRoot && hasChildren
-            ? loadRoutes("Layout")
-            : loadRoutes(
-                item.permissionValue ||
-                  (item.name || item.uri.split("/").pop())
-                    .charAt(0)
-                    .toUpperCase() +
-                    (item.name || item.uri.split("/").pop()).slice(1)
-              ),
+        // 确定渲染组件
+        component: (() => {
+          if (isRoot && hasChildren) return loadRoutes("Layout");
+
+          // 如果是中间节点且有子菜单，且未指定业务组件，自动注入渲染容器 (Virtual Parent)
+          if (
+            hasChildren &&
+            (!item.permissionValue || item.permissionValue === "ParentView")
+          ) {
+            return { render: (h) => h("router-view") };
+          }
+
+          return loadRoutes(
+            item.permissionValue ||
+              (item.name || item.uri.split("/").pop()).charAt(0).toUpperCase() +
+                (item.name || item.uri.split("/").pop()).slice(1)
+          );
+        })(),
         meta: {
           title: item.name,
           icon: item.icon,
-          aside: item.aside ?? 1, // 默认显示在侧边栏
-          topNav: item.topNav ?? 0, // 默认不指定顶部导航分组
+          aside,
+          topNav,
           noCache: item.noCache || false,
         },
-        children: hasChildren ? mapMenusToRoutes(item.subMenu) : [],
+        children: hasChildren
+          ? mapMenusToRoutes(item.subMenu, false, { topNav, aside })
+          : [],
       };
 
       // 边缘情况处理：如果根节点没有子菜单，通常需要包裹一个空路径的 Layout 子路由（Vue Router 3 常规做法）
