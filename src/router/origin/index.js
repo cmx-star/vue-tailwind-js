@@ -12,6 +12,14 @@ const createRouter = () =>
   new VueRouter({
     mode: "hash",
     routes: constantRoutes,
+    // 优化：增加滚动行为控制
+    scrollBehavior: (to, from, savedPosition) => {
+      if (savedPosition) {
+        return savedPosition;
+      } else {
+        return { x: 0, y: 0 };
+      }
+    },
   });
 
 const originalPush = VueRouter.prototype.push;
@@ -51,74 +59,75 @@ export function resetRouter() {
   isRoutesLoaded = false;
 }
 
-// 处理动态菜单转换为路由
+// 处理动态菜单转换为路由 (精简版)
 async function handleDynamicRoutes() {
-  console.log("Fetching menu list...");
   const res = await getMenuList();
-  console.log("Menu list received:", res);
   const menus = res.data || [];
 
-  const dynamicRoutes = [];
+  /**
+   * 递归映射菜单为路由
+   * @param {Array} menuList 菜单列表
+   * @param {Boolean} isRoot 是否为顶层根节点
+   */
+  const mapMenusToRoutes = (menuList, isRoot = false) => {
+    return menuList.map((item) => {
+      const hasChildren = item.subMenu && item.subMenu.length > 0;
 
-  const mapMenuToRoute = (menu, parentPath = "") => {
-    // 基础路由对象
-    const route = {
-      path: menu.uri,
-      name:
-        menu.permissionValue !== "Layout" ? menu.permissionValue : undefined,
-      component: loadRoutes(menu.permissionValue),
-      meta: {
-        title: menu.name,
-        icon: menu.icon,
-        aside: menu.aside ?? 1,
-        topNav: menu.topNav,
-      },
-      children: [],
-    };
+      const route = {
+        path: item.uri,
+        // 优化：从 uri 或 name 派生 permissionValue (例如 /dashboard -> ViewDashboard)
+        name: (() => {
+          if (item.permissionValue === "ParentView") return undefined;
+          if (item.permissionValue) return item.permissionValue;
+          const name = item.name || item.uri.split("/").pop();
+          return name.charAt(0).toUpperCase() + name.slice(1);
+        })(),
+        // 如果是根节点且有子菜单，强制包装 Layout；如果是中间节点有子菜单，强制包装 ParentView
+        component:
+          isRoot && hasChildren
+            ? loadRoutes("Layout")
+            : loadRoutes(
+                item.permissionValue ||
+                  (item.name || item.uri.split("/").pop())
+                    .charAt(0)
+                    .toUpperCase() +
+                    (item.name || item.uri.split("/").pop()).slice(1)
+              ),
+        meta: {
+          title: item.name,
+          icon: item.icon,
+          aside: item.aside ?? 1, // 默认显示在侧边栏
+          topNav: item.topNav ?? 0, // 默认不指定顶部导航分组
+          noCache: item.noCache || false,
+        },
+        children: hasChildren ? mapMenusToRoutes(item.subMenu) : [],
+      };
 
-    // 递归处理子菜单
-    if (menu.subMenu && menu.subMenu.length > 0) {
-      menu.subMenu.forEach((sub) => {
-        route.children.push(mapMenuToRoute(sub, menu.uri));
-      });
-    }
+      // 边缘情况处理：如果根节点没有子菜单，通常需要包裹一个空路径的 Layout 子路由（Vue Router 3 常规做法）
+      if (isRoot && !hasChildren && route.path.startsWith("/")) {
+        const originalComponent = route.component;
+        const originalName = route.name;
+        route.component = loadRoutes("Layout");
+        route.name = undefined;
+        route.children = [
+          {
+            path: "",
+            name: originalName,
+            component: originalComponent,
+            meta: { ...route.meta },
+          },
+        ];
+      }
 
-    return route;
+      return route;
+    });
   };
 
-  menus.forEach((menu) => {
-    // 根节点通常映射到 Layout
-    const rootRoute = {
-      path: menu.uri,
-      component: loadRoutes("Layout"),
-      children: [],
-    };
-
-    if (menu.subMenu && menu.subMenu.length > 0) {
-      menu.subMenu.forEach((sub) => {
-        rootRoute.children.push(mapMenuToRoute(sub, menu.uri));
-      });
-    } else {
-      // 没有任何子菜单的一级菜单，默认注入一个子路由
-      rootRoute.children.push({
-        path: "",
-        name: menu.permissionValue,
-        component: loadRoutes(menu.permissionValue),
-        meta: {
-          title: menu.name,
-          icon: menu.icon,
-          aside: menu.aside ?? 1,
-          topNav: menu.topNav,
-        },
-      });
-    }
-    dynamicRoutes.push(rootRoute);
-  });
+  const dynamicRoutes = mapMenusToRoutes(menus, true);
 
   // 404 必须在最后添加
   dynamicRoutes.push({ path: "*", redirect: "/404", meta: { aside: 0 } });
 
-  console.log("Registering dynamic routes:", dynamicRoutes);
   dynamicRoutes.forEach((route) => {
     router.addRoute(route);
   });
@@ -132,31 +141,28 @@ async function handleDynamicRoutes() {
 
 router.beforeEach(async (to, from, next) => {
   NProgress.start();
+
+  // 优化：设置页面标题
+  if (to.meta && to.meta.title) {
+    document.title = `${to.meta.title} - Admin Dashboard`;
+  }
+
   const token = getToken();
-  console.log(
-    `Navigation Guard: to=${
-      to.path
-    }, hasToken=${!!token}, routesLoaded=${isRoutesLoaded}`
-  );
 
   if (token) {
     if (to.path === "/login") {
-      console.log("Token exists, redirecting from login to /");
       next({ path: "/" });
       NProgress.done();
     } else {
       if (!isRoutesLoaded) {
         try {
-          console.log("Initial load: Loading dynamic routes...");
           await handleDynamicRoutes();
           isRoutesLoaded = true;
-          console.log(
-            "Dynamic routes loaded, retrying navigation to:",
-            to.fullPath
-          );
+          // 优化：确认为异步挂载，使用 replace 避免 history 混乱
           next({ ...to, replace: true });
         } catch (error) {
           console.error("Dynamic routes load failed", error);
+          // 优化：错误时清除 Token 并回到登录页
           next({ path: "/login" });
           NProgress.done();
         }
@@ -165,7 +171,6 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
-    // 检查是否在白名单 (支持名称和路径)
     if (whiteRoutes.includes(to.name) || whiteRoutes.includes(to.path)) {
       next();
     } else {

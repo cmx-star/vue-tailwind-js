@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view />
+    <transition name="fade-transform" mode="out-in">
+      <router-view />
+    </transition>
   </div>
 </template>
 
@@ -17,3 +19,21 @@ export default {
   },
 };
 </script>
+
+<style>
+/* 路由切换动画 */
+.fade-transform-enter-active,
+.fade-transform-leave-active {
+  transition: all 0.3s;
+}
+
+.fade-transform-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+</style>
