@@ -11,19 +11,7 @@ const appModule = {
     sidebarCollapsed: false,
     menuList: [],
     activeTopNav: 0,
-    topNavList: [
-      { key: 0, label: '概览', uri: '/dashboard', icon: 'house' },
-      { key: 1, label: '网络', uri: '/network/list', icon: 'network-wired' },
-      { key: 2, label: 'VPN', uri: '/vpn/users', icon: 'shield-halved' },
-      { key: 3, label: '边缘计算', uri: '/edge/node', icon: 'microchip' },
-      {
-        key: 4,
-        label: '向导',
-        uri: '/wizard/quick',
-        icon: 'wand-magic-sparkles',
-      },
-      { key: 5, label: '系统', uri: '/settings', icon: 'gears' },
-    ],
+    topNavList: [], // 动态生成,初始为空
   },
   mutations: {
     TOGGLE_SIDEBAR(state) {
@@ -37,6 +25,49 @@ const appModule = {
     },
     SET_ACTIVE_TOP_NAV(state, key) {
       state.activeTopNav = key
+    },
+    SET_TOP_NAV_LIST(state, list) {
+      state.topNavList = list
+    },
+  },
+  actions: {
+    // 根据菜单数据动态生成顶部导航列表
+    generateTopNavList({ commit }, menuList) {
+      // 定义顶部导航的基础配置 (label 使用 i18n key)
+      const topNavConfig = [
+        { key: 0, labelKey: 'menu.topNav.overview', uri: '/dashboard', icon: 'house' },
+        {
+          key: 1,
+          labelKey: 'menu.topNav.network',
+          uri: '/network/overview',
+          icon: 'network-wired',
+        },
+        { key: 2, labelKey: 'menu.topNav.vpn', uri: '/vpn/users', icon: 'shield-halved' },
+        { key: 3, labelKey: 'menu.topNav.edge', uri: '/edge/node', icon: 'microchip' },
+        {
+          key: 4,
+          labelKey: 'menu.topNav.wizard',
+          uri: '/wizard/quick',
+          icon: 'wand-magic-sparkles',
+        },
+        { key: 5, labelKey: 'menu.topNav.system', uri: '/system/logs', icon: 'gears' },
+      ]
+
+      // 统计每个 topNav 下有多少菜单项
+      const topNavCounts = {}
+      menuList.forEach((menu) => {
+        const topNav = menu.topNav
+        if (topNav !== undefined && topNav !== null) {
+          topNavCounts[topNav] = (topNavCounts[topNav] || 0) + 1
+        }
+      })
+
+      // 只保留有菜单项的顶部导航
+      const filteredTopNavList = topNavConfig.filter((nav) => {
+        return topNavCounts[nav.key] > 0
+      })
+
+      commit('SET_TOP_NAV_LIST', filteredTopNavList)
     },
   },
 }

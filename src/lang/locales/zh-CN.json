@@ -48,7 +48,17 @@
     "systemSettings": "系统设置",
     "systemManagement": "系统管理",
     "operationLog": "操作日志",
-    "personalSettings": "个人设置"
+    "personalSettings": "个人设置",
+    "userManagement": "用户管理",
+    "roleManagement": "身份管理",
+    "topNav": {
+      "overview": "概览",
+      "network": "网络",
+      "vpn": "VPN",
+      "edge": "边缘计算",
+      "wizard": "向导",
+      "system": "系统"
+    }
   },
   "theme": {
     "title": "主题设置",

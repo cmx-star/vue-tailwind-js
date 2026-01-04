@@ -63,6 +63,29 @@
             <span v-else>{{ $t('login.login') }}</span>
           </button>
         </form>
+
+        <!-- 测试账号快速填充 -->
+        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 text-center">
+            测试账号 (点击自动填充)
+          </p>
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              v-for="account in testAccounts"
+              :key="account.username"
+              type="button"
+              class="px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-left"
+              @click="fillAccount(account)"
+            >
+              <div class="font-medium text-gray-900 dark:text-white">
+                {{ account.label }}
+              </div>
+              <div class="text-gray-500 dark:text-gray-400 mt-0.5">
+                {{ account.description }}
+              </div>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -82,9 +105,39 @@ export default {
         password: 'password',
         remember: false,
       },
+      testAccounts: [
+        {
+          username: 'admin',
+          password: 'password',
+          label: '超级管理员',
+          description: '所有菜单权限',
+        },
+        {
+          username: 'network_admin',
+          password: 'password',
+          label: '网络管理员',
+          description: '概览+网络+VPN',
+        },
+        {
+          username: 'system_admin',
+          password: 'password',
+          label: '系统管理员',
+          description: '概览+系统',
+        },
+        {
+          username: 'user',
+          password: 'password',
+          label: '普通用户',
+          description: '仅概览',
+        },
+      ],
     }
   },
   methods: {
+    fillAccount(account) {
+      this.formData.username = account.username
+      this.formData.password = account.password
+    },
     async handleLogin() {
       if (this.loading) return
       this.loading = true

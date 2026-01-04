@@ -39,7 +39,7 @@
         <CompIcon :name="nav.icon" :size="18" class="text-base sm:text-lg mb-0.5" />
         <span
           class="text-[9px] sm:text-[10px] tracking-wider uppercase font-semibold whitespace-nowrap"
-          >{{ nav.label }}</span
+          >{{ $t(nav.labelKey) }}</span
         >
       </button>
     </div>

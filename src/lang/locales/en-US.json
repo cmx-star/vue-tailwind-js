@@ -48,7 +48,17 @@
     "systemSettings": "System Settings",
     "systemManagement": "System Management",
     "operationLog": "Operation Log",
-    "personalSettings": "Personal Settings"
+    "personalSettings": "Personal Settings",
+    "userManagement": "User Management",
+    "roleManagement": "Role Management",
+    "topNav": {
+      "overview": "Overview",
+      "network": "Network",
+      "vpn": "VPN",
+      "edge": "Edge Computing",
+      "wizard": "Wizard",
+      "system": "System"
+    }
   },
   "theme": {
     "title": "Theme Settings",

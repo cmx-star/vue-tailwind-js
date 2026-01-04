@@ -134,6 +134,8 @@ async function handleDynamicRoutes() {
 
   if (store.commit) {
     store.commit('app/SET_MENU_LIST', menus)
+    // 根据菜单数据动态生成顶部导航
+    store.dispatch('app/generateTopNavList', menus)
   }
 
   return dynamicRoutes
