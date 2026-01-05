@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       chart: null,
+      resizeTimer: null,
     }
   },
   computed: {
@@ -110,10 +111,19 @@ export default {
             label: ds.name || `系列 ${idx + 1}`,
             stroke: this.chartColors[idx % this.chartColors.length],
             width: 2,
-            // 面积图需要填充
-            fill: this.isDark
-              ? `${this.chartColors[idx % this.chartColors.length]}30`
-              : `${this.chartColors[idx % this.chartColors.length]}25`,
+            // 面积图使用渐变填充
+            fill: (u) => {
+              const color = this.chartColors[idx % this.chartColors.length]
+              // 确保 height 是有效的数值
+              const height = u.bbox?.height || this.height || 300
+              const gradient = u.ctx.createLinearGradient(0, 0, 0, height)
+
+              // 从 100% 不透明到 50% 不透明
+              gradient.addColorStop(0, `${color}FF`) // 顶部 100% 不透明
+              gradient.addColorStop(1, `${color}80`) // 底部 50% 不透明
+
+              return gradient
+            },
             points: {
               show: false,
               size: 4,
@@ -212,14 +222,24 @@ export default {
     this.$nextTick(() => {
       this.initChart()
     })
+    window.addEventListener('resize', this.handleResize)
   },
   beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize)
     if (this.chart) {
       this.chart.destroy()
       this.chart = null
     }
   },
   methods: {
+    handleResize() {
+      if (this.resizeTimer) {
+        clearTimeout(this.resizeTimer)
+      }
+      this.resizeTimer = setTimeout(() => {
+        this.updateChart()
+      }, 150)
+    },
     initChart() {
       if (!this.$refs.chartContainer || !this.chartData || !this.chartOptions) {
         return

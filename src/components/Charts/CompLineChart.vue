@@ -33,6 +33,7 @@ export default {
   data() {
     return {
       chart: null,
+      resizeTimer: null,
     }
   },
   computed: {
@@ -220,14 +221,27 @@ export default {
     this.$nextTick(() => {
       this.initChart()
     })
+    // 添加窗口大小变化监听
+    window.addEventListener('resize', this.handleResize)
   },
   beforeUnmount() {
+    // 移除监听器
+    window.removeEventListener('resize', this.handleResize)
     if (this.chart) {
       this.chart.destroy()
       this.chart = null
     }
   },
   methods: {
+    handleResize() {
+      // 使用防抖避免频繁调用
+      if (this.resizeTimer) {
+        clearTimeout(this.resizeTimer)
+      }
+      this.resizeTimer = setTimeout(() => {
+        this.updateChart()
+      }, 150)
+    },
     initChart() {
       if (!this.$refs.chartContainer || !this.chartData || !this.chartOptions) {
         return

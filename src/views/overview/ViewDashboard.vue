@@ -172,18 +172,6 @@
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">柱状图</h3>
         <CompBarChart :data="barChartData" :height="300" :colors="['#F59E0B', '#EF4444']" />
       </div>
-
-      <!-- 饼图 -->
-      <div
-        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-      >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">饼图</h3>
-        <CompPieChart
-          :data="pieChartData"
-          :height="300"
-          :colors="['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6']"
-        />
-      </div>
     </div>
 
     <!-- 组件展示区域 -->
@@ -336,14 +324,6 @@ export default {
           },
         ],
       },
-      // 饼图数据
-      pieChartData: [
-        { label: '直接访问', value: 335 },
-        { label: '邮件营销', value: 310 },
-        { label: '联盟广告', value: 234 },
-        { label: '视频广告', value: 135 },
-        { label: '搜索引擎', value: 1548 },
-      ],
       // 组件展示数据
       demoSelect: '',
       selectOptions: [

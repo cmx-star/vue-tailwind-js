@@ -26,6 +26,7 @@ export default {
   data() {
     return {
       chart: null,
+      resizeTimer: null,
     }
   },
   computed: {
@@ -262,14 +263,24 @@ export default {
     this.$nextTick(() => {
       this.initChart()
     })
+    window.addEventListener('resize', this.handleResize)
   },
   beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize)
     if (this.chart) {
       this.chart.destroy()
       this.chart = null
     }
   },
   methods: {
+    handleResize() {
+      if (this.resizeTimer) {
+        clearTimeout(this.resizeTimer)
+      }
+      this.resizeTimer = setTimeout(() => {
+        this.updateChart()
+      }, 150)
+    },
     initChart() {
       if (!this.$refs.chartContainer || !this.chartData || !this.chartOptions) {
         return
