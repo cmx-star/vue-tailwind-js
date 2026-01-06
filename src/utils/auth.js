@@ -4,35 +4,35 @@
  */
 
 // Token 相关的 Key
-const TokenKey = "token";
-const LangKey = "lang";
+const TokenKey = 'token'
+const LangKey = 'lang'
 
 /**
  * 获取 Token
  */
 export function getToken() {
-  return localStorage.getItem(TokenKey);
+  return localStorage.getItem(TokenKey)
 }
 
 /**
  * 设置 Token
  */
 export function setToken(token) {
-  return localStorage.setItem(TokenKey, token);
+  return localStorage.setItem(TokenKey, token)
 }
 
 /**
  * 移除 Token
  */
 export function removeToken() {
-  return localStorage.removeItem(TokenKey);
+  return localStorage.removeItem(TokenKey)
 }
 
 /**
  * 获取语言
  */
 export function getLang() {
-  return localStorage.getItem(LangKey) || "cn";
+  return localStorage.getItem(LangKey) || 'cn'
 }
 
 /**
@@ -40,9 +40,9 @@ export function getLang() {
  */
 export function getUserLogin() {
   try {
-    return JSON.parse(localStorage.getItem("userInfo") || "{}");
-  } catch (e) {
-    return {};
+    return JSON.parse(localStorage.getItem('userInfo') || '{}')
+  } catch {
+    return {}
   }
 }
 
@@ -52,19 +52,18 @@ export function getUserLogin() {
  */
 export const storage = {
   get(key) {
-    return localStorage.getItem(key);
+    return localStorage.getItem(key)
   },
   set(key, value) {
-    localStorage.setItem(key, String(value));
+    localStorage.setItem(key, String(value))
   },
   remove(key) {
-    localStorage.removeItem(key);
+    localStorage.removeItem(key)
   },
   clear() {
-    localStorage.clear();
+    localStorage.clear()
   },
-};
+}
 
 // 默认导出 storage 对象，兼容原有引用
-export default storage;
-
+export default storage

@@ -4,12 +4,12 @@
  */
 
 const map = {
-  disappear: "@/views/common/View404.vue",
-  login: "@/views/common/ViewLogin.vue",
-  Layout: "@/layout/index.vue",
-};
+  disappear: '@/views/common/View404.vue',
+  login: '@/views/common/ViewLogin.vue',
+  Layout: '@/layout/index.vue',
+}
 
-export default function (config) {
+export default function (_config) {
   // 简化版，直接返回 map
-  return map;
+  return map
 }

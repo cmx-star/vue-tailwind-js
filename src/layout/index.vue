@@ -11,10 +11,7 @@
     <aside
       v-if="isAside"
       class="fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-40 transition-all duration-300 overflow-hidden"
-      :class="[
-        isMobile ? 'hidden' : '',
-        appStore.sidebarCollapse ? 'w-16' : 'w-64',
-      ]"
+      :class="[isMobile ? 'hidden' : '', appStore.sidebarCollapse ? 'w-16' : 'w-64']"
     >
       <Sidebar />
     </aside>
@@ -39,12 +36,7 @@
     <main
       class="pt-16 min-h-screen"
       :style="{
-        marginLeft:
-          isMobile || !isAside
-            ? '0'
-            : appStore.sidebarCollapse
-            ? '4rem'
-            : '16rem',
+        marginLeft: isMobile || !isAside ? '0' : appStore.sidebarCollapse ? '4rem' : '16rem',
         transition: 'margin-left 0.3s ease',
       }"
     >
@@ -57,80 +49,66 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
-import { useRoute } from "vue-router";
-import { useAppStore } from "@/stores/app";
-import Navbar from "./components/Navbar.vue";
-import Sidebar from "./components/Sidebar/index.vue";
-import AppMain from "./components/AppMain.vue";
-import FloatingMenuButton from "./components/FloatingMenuButton.vue";
+import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useEventListener, useDebounceFn } from '@vueuse/core'
+import { useAppStore } from '@/stores/app'
+import Navbar from './components/Navbar.vue'
+import Sidebar from './components/Sidebar/index.vue'
+import AppMain from './components/AppMain.vue'
+import FloatingMenuButton from './components/FloatingMenuButton.vue'
 
-const route = useRoute();
-const appStore = useAppStore();
-const isMobile = ref(false);
+const route = useRoute()
+const appStore = useAppStore()
+const isMobile = ref(false)
 
-const mobileSidebarOpen = computed(() => appStore.mobileSidebarOpen);
+const mobileSidebarOpen = computed(() => appStore.mobileSidebarOpen)
 
 // 根据路由 meta.aside 判断是否显示侧边栏，如果没有设置则默认显示
 const isAside = computed(() => {
   if (route.meta && route.meta.aside !== undefined) {
-    return route.meta.aside === "1" || route.meta.aside === 1;
+    return route.meta.aside === '1' || route.meta.aside === 1
   }
   // 默认显示侧边栏（除了登录和404页）
-  return route.path !== "/login" && route.path !== "/404";
-});
+  return route.path !== '/login' && route.path !== '/404'
+})
 
-const MOBILE_BREAKPOINT = 768;
+const MOBILE_BREAKPOINT = 768
 
 const checkMobile = () => {
-  const width = window.innerWidth;
-  const wasMobile = isMobile.value;
-  isMobile.value = width < MOBILE_BREAKPOINT;
+  const width = window.innerWidth
+  const wasMobile = isMobile.value
+  isMobile.value = width < MOBILE_BREAKPOINT
 
   if (isMobile.value) {
-    appStore.setSidebarCollapse(true);
+    appStore.setSidebarCollapse(true)
   } else {
     if (wasMobile) {
-      appStore.setSidebarCollapse(false);
+      appStore.setSidebarCollapse(false)
     }
   }
-};
+}
 
-let resizeTimer = null;
+const debouncedCheckMobile = useDebounceFn(checkMobile, 150)
 
-const handleResize = () => {
-  if (resizeTimer) {
-    clearTimeout(resizeTimer);
-  }
-  resizeTimer = setTimeout(() => {
-    checkMobile();
-  }, 150);
-};
+useEventListener('resize', debouncedCheckMobile)
 
 watch(
   () => appStore.sidebarCollapse,
   (collapse) => {
     if (isMobile.value) {
-      appStore.setMobileSidebarOpen(!collapse);
+      appStore.setMobileSidebarOpen(!collapse)
     }
-  }
-);
+  },
+)
 
 watch(mobileSidebarOpen, (visible) => {
   if (!visible && isMobile.value) {
-    appStore.setSidebarCollapse(true);
+    appStore.setSidebarCollapse(true)
   }
-});
+})
 
 onMounted(() => {
-  checkMobile();
-  window.addEventListener("resize", handleResize);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", handleResize);
-  if (resizeTimer) {
-    clearTimeout(resizeTimer);
-  }
-});
+  checkMobile()
+})
 </script>

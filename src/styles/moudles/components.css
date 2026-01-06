@@ -1,5 +1,5 @@
 /* 组件样式 */
-@import "tailwindcss" reference;
+@import 'tailwindcss' reference;
 
 /* 自定义滚动条 */
 .custom-scrollbar::-webkit-scrollbar {

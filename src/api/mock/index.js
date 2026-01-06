@@ -1,301 +1,273 @@
-/**
- * @desc Mock API
- * @use 此文件只是在API接口未开发完成，前端调试使用
- * @warning 无用的case请及时注释掉
- * @author maanpeng
- */
-export default function mockApi(url) {
-  switch (url) {
-    case "/api/auth/login":
-    case "/api/user/login": {
-      return {
-        code: 200,
-        data: {
-          token: "mock_token_" + Date.now(),
-          userInfo: {
-            id: 1,
-            username: "admin",
-            email: "admin@example.com",
-            avatar: "https://ui-avatars.com/api/?name=admin",
-            role: "admin",
-          },
+const loginMock = {
+  code: 200,
+  data: {
+    token: 'mock-token-abc-123',
+    userInfo: {
+      username: 'admin',
+      role: 'admin',
+    },
+  },
+  message: 'success',
+}
+
+const menuMock = {
+  code: 200,
+  data: [
+    {
+      id: 1,
+      name: 'dashboard',
+      uri: '/dashboard',
+      icon: 'house',
+      permissionValue: 'ViewDashboard',
+      type: 1,
+      show: 1,
+      aside: 0,
+      topNav: 0,
+    },
+    {
+      id: 2,
+      name: 'edgeComputing',
+      uri: '/edge',
+      icon: 'microchip',
+      permissionValue: 'ParentView',
+      type: 1,
+      show: 1,
+      aside: 1,
+      topNav: 3,
+      subMenu: [
+        {
+          id: 21,
+          name: 'productManagement',
+          uri: 'node',
+          permissionValue: 'ViewNodeManagement',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 3,
         },
-      };
-    }
-    case "/api/user/info": {
-      return {
-        code: 200,
-        data: {
-          userInfo: {
-            id: 1,
-            username: "admin",
-            email: "admin@example.com",
-            avatar: "https://ui-avatars.com/api/?name=admin",
-            role: "admin",
-          },
-          roles: ["admin"],
-          permissions: ["*"],
+        {
+          id: 22,
+          name: 'analyticsManagement',
+          uri: 'analytics',
+          permissionValue: 'ViewAnalytics',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 3,
         },
-      };
-    }
-    case "/api/menu/list": {
-      return {
-        code: 200,
-        data: [
-          // 概览 - 没有左侧导航，直接显示仪表盘
-          {
-            id: 1,
-            name: "nav.overview",
-            uri: "/dashboard",
-            permissionValue: "Dashboard",
-            icon: "HomeIcon",
-            show: "1",
-            type: "1",
-            aside: "0", // 概览不显示左侧导航
-            topNav: 0, // 顶部导航标识 0-5
-            subMenu: [],
-          },
-          // 网络 - 有左侧导航
-          {
-            id: 2,
-            name: "nav.network",
-            uri: "/network",
-            permissionValue: "Network",
-            icon: "DocumentTextIcon",
-            show: "1",
-            type: "1",
-            aside: "1",
-            topNav: 1,
-            subMenu: [
-              {
-                id: 21,
-                name: "nav.network",
-                uri: "networkManager",
-                permissionValue: "NetworkManager",
-                icon: "TableCellsIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [],
-              },
-              {
-                id: 22,
-                name: "nav.tupoManager",
-                uri: "tupoManager",
-                permissionValue: "TupoManager",
-                icon: "DocumentTextIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [],
-              },
-            ],
-          },
-          // VPN - 有左侧导航
-          {
-            id: 3,
-            name: "nav.vpn",
-            uri: "/vpn",
-            permissionValue: "VPN",
-            icon: "Cog6ToothIcon",
-            show: "1",
-            type: "1",
-            aside: "1",
-            topNav: 2,
-            subMenu: [
-              {
-                id: 31,
-                name: "nav.vpnConfig",
-                uri: "vpnConfig",
-                permissionValue: "VPNConfig",
-                icon: "Cog6ToothIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [],
-              },
-              {
-                id: 32,
-                name: "nav.userManager",
-                uri: "userManager",
-                permissionValue: "UserManager",
-                icon: "UserGroupIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [
-                  {
-                    id: 321,
-                    name: "nav.userList",
-                    uri: "list",
-                    permissionValue: "UserList",
-                    icon: "",
-                    show: "1",
-                    type: "1",
-                    aside: "1",
-                    subMenu: [],
-                  },
-                  {
-                    id: 322,
-                    name: "nav.userRoles",
-                    uri: "roles",
-                    permissionValue: "UserRoles",
-                    icon: "",
-                    show: "1",
-                    type: "1",
-                    aside: "1",
-                    subMenu: [],
-                  },
-                ],
-              },
-            ],
-          },
-          // 边缘计算 - 有左侧导航
-          {
-            id: 4,
-            name: "nav.edgeComputing",
-            uri: "/edge",
-            permissionValue: "EdgeComputing",
-            icon: "ChartBarIcon",
-            show: "1",
-            type: "1",
-            aside: "1",
-            topNav: 3,
-            subMenu: [
-              {
-                id: 41,
-                name: "nav.analyticsManager",
-                uri: "analyticsManager",
-                permissionValue: "AnalyticsManager",
-                icon: "ChartBarIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [],
-              },
-              {
-                id: 42,
-                name: "nav.nodeManager",
-                uri: "nodeManager",
-                permissionValue: "NodeManager",
-                icon: "ServerIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [],
-              },
-            ],
-          },
-          // 系统管理 - 有左侧导航
-          {
-            id: 5,
-            name: "nav.systemManagement",
-            uri: "/system",
-            permissionValue: "SystemManagement",
-            icon: "Cog6ToothIcon",
-            show: "1",
-            type: "1",
-            aside: "1",
-            topNav: 4,
-            subMenu: [
-              {
-                id: 51,
-                name: "nav.settingsManager",
-                uri: "settingsManager",
-                permissionValue: "SettingsManager",
-                icon: "Cog6ToothIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [],
-              },
-              {
-                id: 52,
-                name: "nav.logManager",
-                uri: "logManager",
-                permissionValue: "LogManager",
-                icon: "DocumentTextIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [],
-              },
-            ],
-          },
-          // 设置向导 - 有左侧导航
-          {
-            id: 6,
-            name: "nav.setupWizard",
-            uri: "/wizard",
-            permissionValue: "SetupWizard",
-            icon: "DocumentTextIcon",
-            show: "1",
-            type: "1",
-            aside: "1",
-            topNav: 5,
-            subMenu: [
-              {
-                id: 61,
-                name: "nav.examplesManager",
-                uri: "examplesManager",
-                permissionValue: "ExamplesManager",
-                icon: "DocumentTextIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [],
-              },
-              {
-                id: 62,
-                name: "nav.quickManager",
-                uri: "quickManager",
-                permissionValue: "QuickManager",
-                icon: "BoltIcon",
-                show: "1",
-                type: "1",
-                aside: "1",
-                subMenu: [],
-              },
-            ],
-          },
-        ],
-      };
-    }
-    case "/api/user/list": {
-      return {
-        code: 200,
-        data: {
-          list: [
+      ],
+    },
+    {
+      id: 3,
+      name: 'networkCenter',
+      uri: '/network/overview',
+      icon: 'network-wired',
+      permissionValue: 'ViewNetworkManager',
+      type: 1,
+      show: 1,
+      aside: 1,
+      topNav: 1,
+    },
+    {
+      id: 4,
+      name: 'interfaceManagement',
+      uri: '/network/interface',
+      icon: 'ethernet',
+      permissionValue: 'ParentView',
+      type: 1,
+      show: 1,
+      aside: 1,
+      topNav: 1,
+      subMenu: [
+        {
+          id: 41,
+          name: 'interfaceConfig',
+          uri: 'config',
+          permissionValue: 'ViewInterfaceConfig',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 1,
+        },
+      ],
+    },
+    {
+      id: 5,
+      name: 'securityPolicy',
+      uri: '/network/security',
+      icon: 'shield-halved',
+      permissionValue: 'ParentView',
+      type: 1,
+      show: 1,
+      aside: 1,
+      topNav: 1,
+      subMenu: [
+        {
+          id: 51,
+          name: 'firewall',
+          uri: 'firewall',
+          permissionValue: 'ParentView',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 1,
+          subMenu: [
             {
-              id: 1,
-              username: "admin",
-              email: "admin@example.com",
-              role: "admin",
-              createTime: "2024-01-01 00:00:00",
-            },
-            {
-              id: 2,
-              username: "user",
-              email: "user@example.com",
-              role: "user",
-              createTime: "2024-01-02 00:00:00",
+              id: 511,
+              name: 'firewallSettings',
+              uri: 'settings',
+              permissionValue: 'ViewFirewallSettings',
+              type: 1,
+              show: 1,
+              aside: 1,
+              topNav: 1,
             },
           ],
-          total: 2,
         },
-      };
-    }
-    case "/api/system/config": {
-      return {
-        code: 200,
-        data: {
-          siteName: "后台管理系统",
-          logo: "",
-          theme: "blue",
+      ],
+    },
+    {
+      id: 6,
+      name: 'vpnService',
+      uri: '/vpn',
+      icon: 'shield-virus',
+      permissionValue: 'ParentView',
+      type: 1,
+      show: 1,
+      aside: 1,
+      topNav: 2,
+      subMenu: [
+        {
+          id: 61,
+          name: 'userList',
+          uri: 'users',
+          permissionValue: 'ViewUserList',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 2,
         },
-      };
-    }
-    // 添加更多mock数据...
-  }
-  return false;
+      ],
+    },
+    {
+      id: 7,
+      name: 'deploymentWizard',
+      uri: '/wizard',
+      icon: 'wand-magic-sparkles',
+      permissionValue: 'ParentView',
+      type: 1,
+      show: 1,
+      aside: 1,
+      topNav: 4,
+      subMenu: [
+        {
+          id: 71,
+          name: 'quickSetup',
+          uri: 'quick',
+          permissionValue: 'ViewQuickSetup',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 4,
+        },
+      ],
+    },
+    {
+      id: 8,
+      name: 'systemSettings',
+      uri: '/settings',
+      icon: 'gears',
+      permissionValue: 'ViewSystemSettings',
+      type: 1,
+      show: 1,
+      aside: 1,
+      topNav: 5,
+    },
+    {
+      id: 9,
+      name: 'systemManagement',
+      uri: '/system',
+      icon: 'gears',
+      permissionValue: 'ParentView',
+      type: 1,
+      show: 1,
+      aside: 1,
+      topNav: 5,
+      subMenu: [
+        {
+          id: 91,
+          name: 'operationLog',
+          uri: 'logs',
+          permissionValue: 'ViewLogManagement',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 5,
+        },
+        {
+          id: 92,
+          name: 'personalSettings',
+          uri: 'settings',
+          permissionValue: 'ViewSettings',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 5,
+        },
+        {
+          id: 93,
+          name: 'userManagement',
+          uri: 'users',
+          permissionValue: 'ViewUserManagement',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 5,
+        },
+        {
+          id: 94,
+          name: 'roleManagement',
+          uri: 'roles',
+          permissionValue: 'ViewRoleManagement',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 5,
+        },
+      ],
+    },
+  ],
+  message: 'success',
 }
+
+const userInfoMock = {
+  code: 200,
+  data: {
+    username: 'admin',
+    role: 'admin',
+    nickname: '超级管理员',
+    email: 'admin@example.com',
+  },
+  message: 'success',
+}
+
+/**
+ * mockApi 函数：根据 URL 判断是否有对应的 mock 数据
+ * @param {string} url - 请求的 URL
+ * @returns {object|null} - 返回 mock 数据或 null
+ *
+ * 注意：/api/menu/list 不在这里处理，因为需要根据用户角色过滤菜单
+ * 该接口由 src/api/origin/index.js 的 getMenuList 函数处理
+ */
+export default function mockApi(url) {
+  const mockMap = {
+    '/api/login': loginMock,
+    '/api/menu/list': menuMock,
+    '/api/user/info': userInfoMock,
+  }
+
+  return mockMap[url] || null
+}
+
+// 同时导出具名导出，供其他文件使用
+export { loginMock, menuMock }

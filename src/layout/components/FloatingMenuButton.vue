@@ -21,134 +21,138 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { useRoute } from 'vue-router';
-import { useAppStore } from '@/stores/app';
-import { Bars3Icon } from '@heroicons/vue/24/outline';
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useEventListener } from '@vueuse/core'
+import { useAppStore } from '@/stores/app'
+import { Bars3Icon } from '@heroicons/vue/24/outline'
 
-const route = useRoute();
-const appStore = useAppStore();
+const route = useRoute()
+const appStore = useAppStore()
 
-const floatingBtn = ref(null);
-const position = ref({ x: 20, y: window.innerHeight - 80 });
-const isDragging = ref(false);
-const dragStart = ref({ x: 0, y: 0 });
-const clickThreshold = 5; // 移动小于5px视为点击
+const floatingBtn = ref(null)
+const position = ref({ x: 20, y: window.innerHeight - 80 })
+const isDragging = ref(false)
+const dragStart = ref({ x: 0, y: 0 })
+const clickThreshold = 5 // 移动小于5px视为点击
 
 // 检查是否为移动端
-const isMobile = ref(false);
+const isMobile = ref(false)
 
 // 检查是否有侧边栏
 const isAside = computed(() => {
-  return route.meta && (route.meta.aside === '1' || route.meta.aside === 1);
-});
+  return route.meta && (route.meta.aside === '1' || route.meta.aside === 1)
+})
 
 // 检查屏幕尺寸
 const checkMobile = () => {
-  isMobile.value = window.innerWidth < 768;
-};
+  isMobile.value = window.innerWidth < 768
+}
 
 // 从 localStorage 加载位置
 const loadPosition = () => {
-  const saved = localStorage.getItem('floatingMenuPosition');
+  const saved = localStorage.getItem('floatingMenuPosition')
   if (saved) {
     try {
-      const parsed = JSON.parse(saved);
-      position.value = parsed;
+      const parsed = JSON.parse(saved)
+      position.value = parsed
     } catch (e) {
-      console.error('Failed to parse saved position:', e);
+      console.error('Failed to parse saved position:', e)
     }
   }
-};
+}
 
 // 保存位置到 localStorage
 const savePosition = () => {
-  localStorage.setItem('floatingMenuPosition', JSON.stringify(position.value));
-};
+  localStorage.setItem('floatingMenuPosition', JSON.stringify(position.value))
+}
 
 // 边界检测
 const constrainPosition = () => {
-  const btnSize = 48; // 按钮尺寸
-  const margin = 10; // 边距
-  
-  position.value.x = Math.max(margin, Math.min(window.innerWidth - btnSize - margin, position.value.x));
-  position.value.y = Math.max(margin, Math.min(window.innerHeight - btnSize - margin, position.value.y));
-};
+  const btnSize = 48 // 按钮尺寸
+  const margin = 10 // 边距
+
+  position.value.x = Math.max(
+    margin,
+    Math.min(window.innerWidth - btnSize - margin, position.value.x),
+  )
+  position.value.y = Math.max(
+    margin,
+    Math.min(window.innerHeight - btnSize - margin, position.value.y),
+  )
+}
 
 // 触摸开始
 const handleTouchStart = (e) => {
-  isDragging.value = false;
-  const touch = e.touches[0];
+  isDragging.value = false
+  const touch = e.touches[0]
   dragStart.value = {
     x: touch.clientX - position.value.x,
     y: touch.clientY - position.value.y,
     startX: position.value.x,
     startY: position.value.y,
-  };
-};
+  }
+}
 
 // 触摸移动
 const handleTouchMove = (e) => {
-  const touch = e.touches[0];
-  const newX = touch.clientX - dragStart.value.x;
-  const newY = touch.clientY - dragStart.value.y;
-  
+  const touch = e.touches[0]
+  const newX = touch.clientX - dragStart.value.x
+  const newY = touch.clientY - dragStart.value.y
+
   // 计算移动距离
   const distance = Math.sqrt(
-    Math.pow(newX - dragStart.value.startX, 2) + 
-    Math.pow(newY - dragStart.value.startY, 2)
-  );
-  
+    Math.pow(newX - dragStart.value.startX, 2) + Math.pow(newY - dragStart.value.startY, 2),
+  )
+
   // 如果移动距离超过阈值,标记为拖动
   if (distance > clickThreshold) {
-    isDragging.value = true;
+    isDragging.value = true
   }
-  
-  position.value.x = newX;
-  position.value.y = newY;
-  constrainPosition();
-};
+
+  position.value.x = newX
+  position.value.y = newY
+  constrainPosition()
+}
 
 // 触摸结束
 const handleTouchEnd = () => {
   if (isDragging.value) {
-    savePosition();
+    savePosition()
     // 延迟重置拖动状态,避免触发点击
     setTimeout(() => {
-      isDragging.value = false;
-    }, 100);
+      isDragging.value = false
+    }, 100)
   }
-};
+}
 
 // 点击事件
-const handleClick = (e) => {
+const handleClick = (_e) => {
   if (!isDragging.value) {
-    appStore.toggleSidebar();
+    appStore.toggleSidebar()
   }
-};
+}
 
 // 窗口大小改变
 const handleResize = () => {
-  checkMobile();
-  constrainPosition();
-};
+  checkMobile()
+  constrainPosition()
+}
+
+useEventListener('resize', handleResize)
 
 onMounted(() => {
-  checkMobile();
-  loadPosition();
-  constrainPosition();
-  window.addEventListener('resize', handleResize);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', handleResize);
-});
+  checkMobile()
+  loadPosition()
+  constrainPosition()
+})
 </script>
 
 <style scoped>
 /* 添加脉冲动画提示用户可以拖动 */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {

@@ -9,7 +9,7 @@ import {
   Cog6ToothIcon,
   UserGroupIcon,
   ChartBarIcon,
-} from "@heroicons/vue/24/outline";
+} from '@heroicons/vue/24/outline'
 
 // 图标映射表
 const iconMap = {
@@ -29,7 +29,7 @@ const iconMap = {
   Analytics: ChartBarIcon,
   System: Cog6ToothIcon,
   Examples: DocumentTextIcon,
-};
+}
 
 /**
  * 根据图标名称获取图标组件
@@ -37,7 +37,6 @@ const iconMap = {
  * @returns {Component|null} 图标组件
  */
 export function getIcon(iconName) {
-  if (!iconName) return null;
-  return iconMap[iconName] || null;
+  if (!iconName) return null
+  return iconMap[iconName] || null
 }
-

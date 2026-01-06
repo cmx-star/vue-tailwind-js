@@ -6,9 +6,7 @@
     >
       后
     </div>
-    <h1 class="text-lg font-bold text-gray-900 dark:text-white whitespace-nowrap">
-      后台管理
-    </h1>
+    <h1 class="text-lg font-bold text-gray-900 dark:text-white whitespace-nowrap">后台管理</h1>
   </div>
 </template>
 

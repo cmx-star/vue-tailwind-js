@@ -15,36 +15,34 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
-import { useAppStore } from "@/stores/app";
-import { useMenuStore } from "@/stores/menu";
-import SidebarItem from "./SidebarItem.vue";
+import { computed } from 'vue'
+import { useAppStore } from '@/stores/app'
+import { useMenuStore } from '@/stores/menu'
+import SidebarItem from './SidebarItem.vue'
 
-const appStore = useAppStore();
-const menuStore = useMenuStore();
+const appStore = useAppStore()
+const menuStore = useMenuStore()
 
 // 获取当前顶部导航对应的菜单列表
 const currentTopNavMenus = computed(() => {
-  const activeTopNav = menuStore.activeTopNav;
-  if (activeTopNav === undefined || activeTopNav === null) return [];
+  const activeTopNav = menuStore.activeTopNav
+  if (activeTopNav === undefined || activeTopNav === null) return []
 
   // 过滤出当前 topNav 对应的菜单
-  const menus = menuStore.menuList.filter(
-    (menu) => menu.meta?.topNav === activeTopNav
-  );
+  const menus = menuStore.menuList.filter((menu) => menu.meta?.topNav === activeTopNav)
 
   // 如果菜单列表为空，返回默认菜单（用于开发阶段）
   if (menus.length === 0) {
     return [
       {
-        title: "nav.dashboard",
-        path: "/dashboard",
-        name: "Dashboard",
+        title: 'nav.dashboard',
+        path: '/dashboard',
+        name: 'Dashboard',
       },
-    ];
+    ]
   }
-  return menus;
-});
+  return menus
+})
 </script>
 
 <style scoped>

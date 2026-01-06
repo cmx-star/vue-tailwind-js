@@ -1,22 +1,25 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
     <div class="text-center">
-      <h1 class="text-9xl font-bold text-primary-600 dark:text-primary-400">404</h1>
-      <p class="text-2xl font-semibold text-gray-900 dark:text-white mt-4">
-        {{ $t('common.pageNotFound') }}
-      </p>
-      <p class="text-gray-600 dark:text-gray-400 mt-2">
-        {{ $t('common.pageNotFoundDesc') }}
-      </p>
-      <button
-        class="mt-8 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
-        @click="$router.push('/dashboard')"
-      >
-        {{ $t('common.backHome') }}
+      <h1 class="text-9xl font-extrabold text-blue-600 tracking-widest">404</h1>
+      <div class="bg-blue-600 px-2 text-sm rounded rotate-12 absolute">Page Not Found</div>
+      <button class="mt-5">
+        <router-link
+          to="/"
+          class="relative inline-block text-sm font-medium text-blue-600 group active:text-blue-500 focus:outline-none focus:ring"
+        >
+          <span
+            class="absolute inset-0 transition-transform translate-x-0.5 translate-y-0.5 bg-blue-600 group-hover:translate-y-0 group-hover:translate-x-0"
+          ></span>
+          <span class="relative block px-8 py-3 bg-white border border-current"> Go Home </span>
+        </router-link>
       </button>
     </div>
   </div>
 </template>
 
-<script setup>
+<script>
+export default {
+  name: 'View404',
+}
 </script>

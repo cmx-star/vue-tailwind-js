@@ -1,10 +1,14 @@
 <template>
   <div class="w-full">
-    <label v-if="label" :for="inputId" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+    <label
+      v-if="label"
+      :for="inputId"
+      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+    >
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </label>
-    <div class="relative" ref="referenceRef">
+    <div ref="referenceRef" class="relative">
       <button
         :id="inputId"
         type="button"
@@ -21,13 +25,13 @@
             :class="[
               'h-5 w-5 transition-transform duration-200',
               isOpen ? 'rotate-180' : '',
-              'text-gray-400'
+              'text-gray-400',
             ]"
             aria-hidden="true"
           />
         </span>
       </button>
-      
+
       <Transition
         enter-active-class="transition ease-out duration-100"
         enter-from-class="opacity-0 scale-95"
@@ -63,13 +67,13 @@
               :key="getOptionValue(option, index)"
               :class="[
                 'relative cursor-pointer select-none px-4 py-2 text-sm',
-                isSelected(option) 
-                  ? 'bg-primary-600 text-white' 
-                  : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                isSelected(option)
+                  ? 'bg-primary-600 text-white'
+                  : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700',
               ]"
-              @click="selectOption(option)"
               role="option"
               :aria-selected="isSelected(option)"
+              @click="selectOption(option)"
             >
               <span class="block truncate">
                 {{ getOptionLabel(option) }}
@@ -85,56 +89,72 @@
         </div>
       </Transition>
     </div>
-    <p v-if="error" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ error }}</p>
-    <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ hint }}</p>
+    <p v-if="error" class="mt-1 text-sm text-red-600 dark:text-red-400">
+      {{ error }}
+    </p>
+    <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      {{ hint }}
+    </p>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/vue'
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside, useEventListener } from '@vueuse/core'
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
-  modelValue: [String, Number, Array, Object],
+  modelValue: {
+    type: [String, Number, Array, Object],
+    default: null,
+  },
   options: {
     type: Array,
-    required: true
+    required: true,
   },
-  label: String,
+  label: {
+    type: String,
+    default: '',
+  },
   placeholder: {
     type: String,
-    default: '请选择...'
+    default: '请选择...',
   },
   disabled: Boolean,
   required: Boolean,
-  error: String,
-  hint: String,
+  error: {
+    type: String,
+    default: '',
+  },
+  hint: {
+    type: String,
+    default: '',
+  },
   searchable: {
     type: Boolean,
-    default: false
+    default: false,
   },
   searchPlaceholder: {
     type: String,
-    default: '搜索...'
+    default: '搜索...',
   },
   noOptionsText: {
     type: String,
-    default: '无选项'
+    default: '无选项',
   },
   optionLabel: {
     type: [String, Function],
-    default: 'label'
+    default: 'label',
   },
   optionValue: {
     type: [String, Function],
-    default: 'value'
+    default: 'value',
   },
   multiple: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:modelValue', 'change', 'blur'])
@@ -148,20 +168,20 @@ const floatingRef = ref(null)
 
 const { floatingStyles } = useFloating(referenceRef, floatingRef, {
   placement: 'bottom-start',
-  middleware: [
-    offset(4),
-    flip(),
-    shift({ padding: 8 })
-  ],
-  whileElementsMounted: autoUpdate
+  middleware: [offset(4), flip(), shift({ padding: 8 })],
+  whileElementsMounted: autoUpdate,
 })
 
 // 点击外部关闭
-onClickOutside(floatingRef, () => {
-  isOpen.value = false
-}, {
-  ignore: [referenceRef]
-})
+onClickOutside(
+  floatingRef,
+  () => {
+    isOpen.value = false
+  },
+  {
+    ignore: [referenceRef],
+  },
+)
 
 const toggleDropdown = () => {
   if (!props.disabled) {
@@ -202,17 +222,17 @@ const isSelected = (option) => {
 
 const selectOption = (option) => {
   const value = getOptionValue(option)
-  
+
   if (props.multiple) {
     const currentValue = Array.isArray(props.modelValue) ? [...props.modelValue] : []
     const index = currentValue.indexOf(value)
-    
+
     if (index > -1) {
       currentValue.splice(index, 1)
     } else {
       currentValue.push(value)
     }
-    
+
     emit('update:modelValue', currentValue)
     emit('change', currentValue)
   } else {
@@ -226,9 +246,9 @@ const filteredOptions = computed(() => {
   if (!props.searchable || !searchQuery.value) {
     return props.options
   }
-  
+
   const query = searchQuery.value.toLowerCase()
-  return props.options.filter(option => {
+  return props.options.filter((option) => {
     const label = getOptionLabel(option).toLowerCase()
     return label.includes(query)
   })
@@ -239,46 +259,47 @@ const displayValue = computed(() => {
     if (!Array.isArray(props.modelValue) || props.modelValue.length === 0) {
       return props.placeholder
     }
-    
-    const selectedOptions = props.options.filter(option => {
+
+    const selectedOptions = props.options.filter((option) => {
       const value = getOptionValue(option)
       return props.modelValue.includes(value)
     })
-    
+
     if (selectedOptions.length === 0) {
       return props.placeholder
     }
-    
+
     if (selectedOptions.length === 1) {
       return getOptionLabel(selectedOptions[0])
     }
-    
+
     return `已选择 ${selectedOptions.length} 项`
   } else {
     if (props.modelValue === null || props.modelValue === undefined || props.modelValue === '') {
       return props.placeholder
     }
-    
-    const selectedOption = props.options.find(option => {
+
+    const selectedOption = props.options.find((option) => {
       const value = getOptionValue(option)
       return props.modelValue === value
     })
-    
+
     return selectedOption ? getOptionLabel(selectedOption) : props.placeholder
   }
 })
 
 const buttonClasses = computed(() => {
-  const baseClasses = 'relative w-full cursor-pointer rounded-lg border py-2 pl-3 pr-10 text-left text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
-  
+  const baseClasses =
+    'relative w-full cursor-pointer rounded-lg border py-2 pl-3 pr-10 text-left text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+
   if (props.error) {
     return `${baseClasses} border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-400`
   }
-  
+
   if (props.disabled) {
     return `${baseClasses} border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed`
   }
-  
+
   return `${baseClasses} border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400`
 })
 
@@ -287,17 +308,9 @@ const handleBlur = (event) => {
 }
 
 // 监听 ESC 键关闭
-const handleEscape = (event) => {
+useEventListener('keydown', (event) => {
   if (event.key === 'Escape' && isOpen.value) {
     isOpen.value = false
   }
-}
-
-onMounted(() => {
-  document.addEventListener('keydown', handleEscape)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('keydown', handleEscape)
 })
 </script>

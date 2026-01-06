@@ -1,83 +1,40 @@
+import { h } from 'vue'
+import { RouterView } from 'vue-router'
+
+// 使用相对路径扫描 views 目录下的所有 .vue 文件，确保在 Vite 中路径匹配稳定
+const views = import.meta.glob('../../views/**/*.vue')
+
 /**
- * @desc 动态路由加载
- * @author maanpeng
+ * 动态路由加载核心逻辑
+ * @param {string} name - 权限标识符 (permissionValue)，例如 "NetworkManager"
  */
-import { h } from "vue";
-import { RouterView } from "vue-router";
+export function loadRoutes(name) {
+  // 1. 处理特殊组件映射
+  if (name === 'Layout') {
+    return () => import('@/layout/index.vue')
+  }
+  if (name === 'NotFound' || name === '404' || name === 'disappear') {
+    return () => import('@/views/common/View404.vue')
+  }
 
-export function loadRoutes(name, urlStr) {
-  switch (name) {
-    // 基础组件
-    case "Layout":
-      return () => import("@/layout/index.vue");
+  // 2. 自动化匹配策略
+  // 兼容模式：匹配 permissionValue 对应的 View{name}.vue 或 {name}.vue
+  const matchKey = Object.keys(views).find((path) => {
+    const fileName = path.split('/').pop()
+    return fileName === `View${name}.vue` || fileName === `${name}.vue`
+  })
 
-    // 业务组件 (对应 Mock 的 permissionValue)
-    // Overview (概览)
-    case "Dashboard":
-    case "ViewDashboard":
-      return () => import("@/views/overview/ViewDashboard.vue");
+  if (matchKey) {
+    return views[matchKey]
+  }
 
-    // Network (网络)
-    case "Network":
-      return () => import("@/views/network/ViewNetwork.vue");
-    case "NetworkManager":
-      return () =>
-        import("@/views/network/networkManager/ViewNetworkManager.vue");
-    case "TupoManager":
-      return () => import("@/views/network/tupoManager/ViewTupoManager.vue");
+  // 3. 兜底处理
+  console.warn(
+    `[asyncFile] 路由自动导入失败: 未找到与标识符 "${name}" 匹配的组件 (预期文件名: View${name}.vue)`,
+  )
 
-    // VPN
-    case "VPN":
-      return () => import("@/views/vpn/ViewVPN.vue");
-    case "VPNConfig":
-      return () => import("@/views/vpn/vpnConfig/ViewVPNConfig.vue");
-    case "UserManager":
-      return () => import("@/views/vpn/ViewVPN.vue"); // VPN下的用户管理，暂时使用ViewVPN
-    case "UserList":
-      return () => import("@/views/vpn/userManager/ViewUserList.vue");
-    case "UserRoles":
-      return () => import("@/views/vpn/userManager/ViewUserRoles.vue");
-
-    // Edge Computing (边缘计算)
-    case "EdgeComputing":
-      return () => import("@/views/edge/ViewEdgeComputing.vue");
-    case "AnalyticsManager":
-      return () => import("@/views/edge/analyticsManager/ViewAnalytics.vue");
-    case "NodeManager":
-      return () => import("@/views/edge/nodeManager/ViewNodeManagement.vue");
-
-    // System Management (系统管理)
-    case "SystemManagement":
-      return () => import("@/views/system/ViewSystemManagement.vue");
-    case "SettingsManager":
-      return () => import("@/views/system/settingsManager/ViewSettings.vue");
-    case "LogManager":
-      return () => import("@/views/system/logManager/ViewLogManagement.vue");
-
-    // Setup Wizard (设置向导)
-    case "SetupWizard":
-      return () => import("@/views/wizard/examplesManager/ViewExamples.vue");
-    case "ExamplesManager":
-      return () => import("@/views/wizard/examplesManager/ViewExamples.vue");
-    case "QuickManager":
-      return () => import("@/views/wizard/quickManager/ViewQuickSetup.vue");
-
-    // Common (公共页面)
-    case "NotFound":
-    case "404":
-    case "disappear":
-      return () => import("@/views/common/View404.vue");
-    case "ViewLogin":
-      return () => import("@/views/common/ViewLogin.vue");
-
-    default:
-      console.warn(
-        `[asyncFile] Cannot find component for permissionValue: "${name}"`
-      );
-      // 如果没有匹配到，返回一个 RouterView 作为兜底
-      return {
-        name: "RouterViewFallback",
-        render: () => h(RouterView),
-      };
+  return {
+    name: 'RouterViewFallback',
+    render: () => h(RouterView),
   }
 }

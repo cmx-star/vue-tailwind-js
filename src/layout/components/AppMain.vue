@@ -13,10 +13,10 @@
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
-import Breadcrumb from "./Breadcrumb.vue";
+import { useRoute } from 'vue-router'
+import Breadcrumb from './Breadcrumb.vue'
 
-const route = useRoute();
+const route = useRoute()
 </script>
 
 <style scoped>
