@@ -12,9 +12,21 @@
     "back": "Back",
     "loading": "Loading...",
     "noData": "No Data",
+    "data": "Data",
+    "series": "Series",
     "operation": "Operation",
     "success": "Success",
     "error": "Error",
+    "selected": "Selected",
+    "items": "items",
+    "pleaseSelect": "Please select...",
+    "noOptions": "No options",
+    "date": {
+      "range": "Select date range",
+      "time": "Select time",
+      "dateTime": "Select date time",
+      "date": "Select date"
+    },
     "tip": "Tip",
     "pageNotFound": "Page Not Found",
     "pageNotFoundDesc": "Sorry, the page you are looking for does not exist",
@@ -147,6 +159,36 @@
       "green": "Green",
       "purple": "Purple",
       "orange": "Orange"
+    }
+  },
+  "edge": {
+    "analytics": {
+      "title": "Analytics Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    },
+    "node": {
+      "title": "Node Management Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    },
+    "common": {
+      "inputExample": "Input Example",
+      "interactionExample": "Interaction Example",
+      "listDisplay": "List Display",
+      "name": "Name",
+      "type": "Type",
+      "timeSelect": "Time Selection",
+      "primaryAction": "Primary Action",
+      "secondaryAction": "Secondary Action",
+      "basicBusiness": "Basic Business",
+      "coreBusiness": "Core Business",
+      "taskName": "Task Name",
+      "currentStatus": "Current Status",
+      "systemUpgrade": "System Architecture Upgrade",
+      "componentAdaptation": "Component Library Adaptation",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "clickedMessage": "You clicked: ",
+      "placeholder": "Please enter..."
     }
   }
 }

@@ -12,9 +12,21 @@
     "back": "返回",
     "loading": "加载中...",
     "noData": "暂无数据",
+    "data": "数据",
+    "series": "系列",
     "operation": "操作",
     "success": "操作成功",
     "error": "操作失败",
+    "selected": "已选择",
+    "items": "项",
+    "pleaseSelect": "请选择...",
+    "noOptions": "无选项",
+    "date": {
+      "range": "选择日期范围",
+      "time": "选择时间",
+      "dateTime": "选择日期时间",
+      "date": "选择日期"
+    },
     "tip": "提示",
     "pageNotFound": "页面未找到",
     "pageNotFoundDesc": "抱歉，您访问的页面不存在",
@@ -152,6 +164,36 @@
       "green": "绿色",
       "purple": "紫色",
       "orange": "橙色"
+    }
+  },
+  "edge": {
+    "analytics": {
+      "title": "数据分析模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    },
+    "node": {
+      "title": "节点管理模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    },
+    "common": {
+      "inputExample": "输入示例",
+      "interactionExample": "交互示例",
+      "listDisplay": "列表展示",
+      "name": "名称",
+      "type": "类型",
+      "timeSelect": "时间选择",
+      "primaryAction": "主要操作",
+      "secondaryAction": "辅助操作",
+      "basicBusiness": "基础业务",
+      "coreBusiness": "核心业务",
+      "taskName": "任务名称",
+      "currentStatus": "当前状态",
+      "systemUpgrade": "系统架构升级",
+      "componentAdaptation": "组件库适配",
+      "inProgress": "进行中",
+      "completed": "已完成",
+      "clickedMessage": "您点击了: ",
+      "placeholder": "请输入..."
     }
   }
 }

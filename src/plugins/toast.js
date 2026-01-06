@@ -16,8 +16,8 @@ export const ToastPlugin = {
     // 3. 渲染组件到挂载点
     render(vnode, container)
 
-    // 4. 获取组件实例 (通过 exposed)
-    toastInstance = vnode.component.exposed
+    // 4. 获取组件实例 (Options API 使用 proxy)
+    toastInstance = vnode.component.proxy
 
     // 5. 挂载到全局属性 (可选，适配 Options API)
     app.config.globalProperties.$toast = toastInstance

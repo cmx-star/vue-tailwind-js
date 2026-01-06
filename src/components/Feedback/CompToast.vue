@@ -100,94 +100,98 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script>
+export default {
+  name: 'CompToast',
+  data() {
+    return {
+      toasts: [],
+      toastId: 0,
+    }
+  },
+  methods: {
+    // 获取 Toast 容器样式类
+    getToastClasses(type) {
+      const baseClasses = 'text-sm'
+      switch (type) {
+        case 'success':
+          return `${baseClasses} text-fg-success-strong rounded-base bg-success-soft border border-success-subtle`
+        case 'error':
+        case 'danger':
+          return `${baseClasses} text-fg-danger-strong rounded-base bg-danger-soft border border-danger-subtle`
+        case 'warning':
+          return `${baseClasses} text-fg-warning rounded-base bg-warning-soft border border-warning-subtle`
+        case 'info':
+        default:
+          return `${baseClasses} text-fg-brand-strong rounded-base bg-brand-softer border border-brand-subtle`
+      }
+    },
 
-const toastContainer = ref(null)
-const toasts = ref([])
-let toastId = 0
+    // 获取图标样式类
+    getIconClasses(type) {
+      switch (type) {
+        case 'success':
+          return 'text-fg-success-strong'
+        case 'error':
+        case 'danger':
+          return 'text-fg-danger-strong'
+        case 'warning':
+          return 'text-fg-warning'
+        case 'info':
+        default:
+          return 'text-fg-brand-strong'
+      }
+    },
 
-// 获取 Toast 容器样式类
-const getToastClasses = (type) => {
-  const baseClasses = 'text-sm'
-  switch (type) {
-    case 'success':
-      return `${baseClasses} text-fg-success-strong rounded-base bg-success-soft border border-success-subtle`
-    case 'error':
-    case 'danger':
-      return `${baseClasses} text-fg-danger-strong rounded-base bg-danger-soft border border-danger-subtle`
-    case 'warning':
-      return `${baseClasses} text-fg-warning rounded-base bg-warning-soft border border-warning-subtle`
-    case 'info':
-    default:
-      return `${baseClasses} text-fg-brand-strong rounded-base bg-brand-softer border border-brand-subtle`
-  }
+    // 获取关闭按钮样式类
+    getCloseButtonClasses(type) {
+      switch (type) {
+        case 'success':
+          return 'text-fg-success-strong hover:bg-success-medium focus:ring-success-subtle'
+        case 'error':
+        case 'danger':
+          return 'text-fg-danger-strong hover:bg-danger-medium focus:ring-danger-subtle'
+        case 'warning':
+          return 'text-fg-warning hover:bg-warning-medium focus:ring-warning-subtle'
+        case 'info':
+        default:
+          return 'text-fg-brand-strong hover:bg-brand-soft focus:ring-brand-subtle'
+      }
+    },
+
+    show(message, type = 'info', duration = 3000, title = null) {
+      const id = ++this.toastId
+      this.toasts.push({ id, message, type, title })
+
+      if (duration > 0) {
+        setTimeout(() => {
+          this.removeToast(id)
+        }, duration)
+      }
+    },
+
+    removeToast(id) {
+      const index = this.toasts.findIndex((t) => t.id === id)
+      if (index > -1) {
+        this.toasts.splice(index, 1)
+      }
+    },
+
+    success(message, duration = 3000, title = null) {
+      this.show(message, 'success', duration, title)
+    },
+    error(message, duration = 3000, title = null) {
+      this.show(message, 'error', duration, title)
+    },
+    danger(message, duration = 3000, title = null) {
+      this.show(message, 'danger', duration, title)
+    },
+    warning(message, duration = 3000, title = null) {
+      this.show(message, 'warning', duration, title)
+    },
+    info(message, duration = 3000, title = null) {
+      this.show(message, 'info', duration, title)
+    },
+  },
 }
-
-// 获取图标样式类
-const getIconClasses = (type) => {
-  switch (type) {
-    case 'success':
-      return 'text-fg-success-strong'
-    case 'error':
-    case 'danger':
-      return 'text-fg-danger-strong'
-    case 'warning':
-      return 'text-fg-warning'
-    case 'info':
-    default:
-      return 'text-fg-brand-strong'
-  }
-}
-
-// 获取关闭按钮样式类
-const getCloseButtonClasses = (type) => {
-  switch (type) {
-    case 'success':
-      return 'text-fg-success-strong hover:bg-success-medium focus:ring-success-subtle'
-    case 'error':
-    case 'danger':
-      return 'text-fg-danger-strong hover:bg-danger-medium focus:ring-danger-subtle'
-    case 'warning':
-      return 'text-fg-warning hover:bg-warning-medium focus:ring-warning-subtle'
-    case 'info':
-    default:
-      return 'text-fg-brand-strong hover:bg-brand-soft focus:ring-brand-subtle'
-  }
-}
-
-const show = (message, type = 'info', duration = 3000, title = null) => {
-  const id = ++toastId
-  toasts.value.push({ id, message, type, title })
-
-  if (duration > 0) {
-    setTimeout(() => {
-      removeToast(id)
-    }, duration)
-  }
-}
-
-const removeToast = (id) => {
-  const index = toasts.value.findIndex((t) => t.id === id)
-  if (index > -1) {
-    toasts.value.splice(index, 1)
-  }
-}
-
-const success = (message, duration = 3000, title = null) =>
-  show(message, 'success', duration, title)
-const error = (message, duration = 3000, title = null) => show(message, 'error', duration, title)
-const danger = (message, duration = 3000, title = null) => show(message, 'danger', duration, title)
-const warning = (message, duration = 3000, title = null) =>
-  show(message, 'warning', duration, title)
-const info = (message, duration = 3000, title = null) => show(message, 'info', duration, title)
-
-defineExpose({
-  show,
-  success,
-  error,
-  danger,
-  warning,
-  info,
-})
 </script>

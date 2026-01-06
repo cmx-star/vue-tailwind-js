@@ -73,7 +73,7 @@
                   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                   @click="onConfirm"
                 >
-                  {{ confirmText }}
+                  {{ displayConfirmText }}
                 </button>
                 <button
                   v-if="showCancel"
@@ -81,7 +81,7 @@
                   class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                   @click="onCancel"
                 >
-                  {{ cancelText }}
+                  {{ displayCancelText }}
                 </button>
               </div>
             </slot>
@@ -92,55 +92,64 @@
   </Transition>
 </template>
 
-<script setup>
-defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false,
+<script>
+export default {
+  name: 'CompModal',
+  props: {
+    modelValue: {
+      type: Boolean,
+      default: false,
+    },
+    title: {
+      type: String,
+      default: 'Modal Title',
+    },
+    content: {
+      type: String,
+      default: '',
+    },
+    showFooter: {
+      type: Boolean,
+      default: false,
+    },
+    showConfirm: {
+      type: Boolean,
+      default: true,
+    },
+    showCancel: {
+      type: Boolean,
+      default: true,
+    },
+    confirmText: {
+      type: String,
+      default: '',
+    },
+    cancelText: {
+      type: String,
+      default: '',
+    },
   },
-  title: {
-    type: String,
-    default: 'Modal Title',
+  emits: ['update:modelValue', 'close', 'confirm', 'cancel'],
+  computed: {
+    displayConfirmText() {
+      return this.confirmText || this.$t('common.confirm')
+    },
+    displayCancelText() {
+      return this.cancelText || this.$t('common.cancel')
+    },
   },
-  content: {
-    type: String,
-    default: '',
+  methods: {
+    close() {
+      this.$emit('update:modelValue', false)
+      this.$emit('close')
+    },
+    onConfirm() {
+      this.$emit('confirm')
+    },
+    onCancel() {
+      this.$emit('cancel')
+      this.close()
+    },
   },
-  showFooter: {
-    type: Boolean,
-    default: false,
-  },
-  showConfirm: {
-    type: Boolean,
-    default: true,
-  },
-  showCancel: {
-    type: Boolean,
-    default: true,
-  },
-  confirmText: {
-    type: String,
-    default: '确定',
-  },
-  cancelText: {
-    type: String,
-    default: '取消',
-  },
-})
-
-const emit = defineEmits(['update:modelValue', 'close', 'confirm', 'cancel'])
-
-const close = () => {
-  emit('update:modelValue', false)
-  emit('close')
-}
-
-const onConfirm = () => {
-  emit('confirm')
-}
-
-const onCancel = () => {
-  emit('cancel')
-  close()
 }
 </script>

@@ -37,84 +37,91 @@
   </div>
 </template>
 
-<script setup>
-import { computed, ref } from 'vue'
+<script>
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 
-const props = defineProps({
-  modelValue: {
-    type: [String, Number],
-    default: '',
+export default {
+  name: 'CompBaseInput',
+  components: {
+    EyeIcon,
+    EyeSlashIcon,
   },
-  label: {
-    type: String,
-    default: '',
+  props: {
+    modelValue: {
+      type: [String, Number],
+      default: '',
+    },
+    label: {
+      type: String,
+      default: '',
+    },
+    type: {
+      type: String,
+      default: 'text',
+    },
+    placeholder: {
+      type: String,
+      default: '',
+    },
+    disabled: Boolean,
+    required: Boolean,
+    error: {
+      type: String,
+      default: '',
+    },
+    hint: {
+      type: String,
+      default: '',
+    },
+    autocomplete: {
+      type: String,
+      default: 'off',
+    },
   },
-  type: {
-    type: String,
-    default: 'text',
+  emits: ['update:modelValue', 'blur'],
+  data() {
+    return {
+      showPassword: false,
+      // 使用随机ID
+      inputId: `input-${Math.random().toString(36).substr(2, 9)}`,
+    }
   },
-  placeholder: {
-    type: String,
-    default: '',
+  computed: {
+    currentType() {
+      if (this.type === 'password') {
+        return this.showPassword ? 'text' : 'password'
+      }
+      return this.type
+    },
+    inputClasses() {
+      const baseClasses =
+        'block w-full px-3 py-2 border rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed'
+
+      // 如果是密码框，右侧需要留出图标位置
+      const paddingRight = this.type === 'password' ? 'pr-10' : ''
+
+      let statusClasses = ''
+      if (this.error) {
+        statusClasses =
+          'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-400'
+      } else {
+        statusClasses =
+          'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-primary-500 focus:border-primary-500'
+      }
+
+      return `${baseClasses} ${paddingRight} ${statusClasses}`
+    },
   },
-  disabled: Boolean,
-  required: Boolean,
-  error: {
-    type: String,
-    default: '',
+  methods: {
+    handleInput(event) {
+      this.$emit('update:modelValue', event.target.value)
+    },
+    handleBlur(event) {
+      this.$emit('blur', event)
+    },
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword
+    },
   },
-  hint: {
-    type: String,
-    default: '',
-  },
-  autocomplete: {
-    type: String,
-    default: 'off',
-  },
-})
-
-const emit = defineEmits(['update:modelValue', 'blur'])
-
-const showPassword = ref(false)
-
-const inputId = computed(() => `input-${Math.random().toString(36).substr(2, 9)}`)
-
-const currentType = computed(() => {
-  if (props.type === 'password') {
-    return showPassword.value ? 'text' : 'password'
-  }
-  return props.type
-})
-
-const inputClasses = computed(() => {
-  const baseClasses =
-    'block w-full px-3 py-2 border rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed'
-
-  // 如果是密码框，右侧需要留出图标位置
-  const paddingRight = props.type === 'password' ? 'pr-10' : ''
-
-  let statusClasses = ''
-  if (props.error) {
-    statusClasses =
-      'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-400'
-  } else {
-    statusClasses =
-      'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-primary-500 focus:border-primary-500'
-  }
-
-  return `${baseClasses} ${paddingRight} ${statusClasses}`
-})
-
-const handleInput = (event) => {
-  emit('update:modelValue', event.target.value)
-}
-
-const handleBlur = (event) => {
-  emit('blur', event)
-}
-
-const togglePasswordVisibility = () => {
-  showPassword.value = !showPassword.value
 }
 </script>

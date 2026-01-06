@@ -77,7 +77,7 @@
                     d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
                   />
                 </svg>
-                <p>{{ emptyText }}</p>
+                <p>{{ displayEmptyText }}</p>
               </div>
             </slot>
           </td>
@@ -111,55 +111,66 @@
             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
           ></path>
         </svg>
-        <span class="text-sm text-gray-600 dark:text-gray-400">{{ loadingText }}</span>
+        <span class="text-sm text-gray-600 dark:text-gray-400">{{ displayLoadingText }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  // 列配置
-  columns: {
-    type: Array,
-    required: true,
-    // columns: [{ key: 'name', label: '姓名', headerClass: '', cellClass: '' }]
+<script>
+export default {
+  name: 'CompDataTable',
+  props: {
+    // 列配置
+    columns: {
+      type: Array,
+      required: true,
+      // columns: [{ key: 'name', label: '姓名', headerClass: '', cellClass: '' }]
+    },
+    // 数据
+    data: {
+      type: Array,
+      default: () => [],
+    },
+    // 行唯一标识字段
+    rowKey: {
+      type: String,
+      default: 'id',
+    },
+    // 加载状态
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+    // 空状态文本
+    emptyText: {
+      type: String,
+      default: '',
+    },
+    // 加载文本
+    loadingText: {
+      type: String,
+      default: '',
+    },
   },
-  // 数据
-  data: {
-    type: Array,
-    default: () => [],
+  computed: {
+    displayEmptyText() {
+      return this.emptyText || this.$t('common.noData')
+    },
+    displayLoadingText() {
+      return this.loadingText || this.$t('common.loading')
+    },
   },
-  // 行唯一标识字段
-  rowKey: {
-    type: String,
-    default: 'id',
+  methods: {
+    // 获取行的唯一标识
+    getRowKey(row, index) {
+      return row[this.rowKey] || index
+    },
+    // 获取单元格的值
+    getCellValue(row, key) {
+      // 支持嵌套属性，如 'user.name'
+      return key.split('.').reduce((obj, k) => obj?.[k], row)
+    },
   },
-  // 加载状态
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  // 空状态文本
-  emptyText: {
-    type: String,
-    default: '暂无数据',
-  },
-  // 加载文本
-  loadingText: {
-    type: String,
-    default: '加载中...',
-  },
-})
-
-// 获取行的唯一标识
-const getRowKey = (row, index) => {
-  return row[props.rowKey] || index
-}
-
-// 获取单元格的值
-const getCellValue = (row, key) => {
-  // 支持嵌套属性，如 'user.name'
-  return key.split('.').reduce((obj, k) => obj?.[k], row)
 }
 </script>
