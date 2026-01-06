@@ -12,7 +12,7 @@
 
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         <form class="space-y-6" @submit.prevent="handleLogin">
-          <CompBaseInput
+          <CompInput
             v-model="formData.username"
             :label="$t('login.username')"
             :placeholder="$t('login.usernamePlaceholder')"
@@ -21,7 +21,7 @@
             @blur="validateField('username')"
           />
 
-          <CompBaseInput
+          <CompInput
             v-model="formData.password"
             :label="$t('login.password')"
             type="password"

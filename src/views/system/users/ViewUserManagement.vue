@@ -15,7 +15,7 @@
           {{ $t('edge.common.inputExample') }}
         </h2>
         <div class="space-y-4">
-          <CompBaseInput
+          <CompInput
             v-model="formData.name"
             :label="$t('edge.common.name')"
             :placeholder="$t('edge.common.placeholder')"

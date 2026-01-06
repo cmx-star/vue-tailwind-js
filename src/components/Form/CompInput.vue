@@ -1,15 +1,27 @@
 <template>
   <div class="w-full">
-    <label
-      v-if="label"
-      :for="inputId"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-    >
+    <label v-if="label" :for="inputId" class="block mb-2.5 text-sm font-medium text-heading">
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </label>
     <div class="relative">
+      <!-- Textarea -->
+      <textarea
+        v-if="type === 'textarea'"
+        :id="inputId"
+        :value="modelValue"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :required="required"
+        :rows="rows"
+        :class="textareaClasses"
+        @input="handleInput"
+        @blur="handleBlur"
+      ></textarea>
+
+      <!-- Input -->
       <input
+        v-else
         :id="inputId"
         :type="currentType"
         :value="modelValue"
@@ -21,6 +33,8 @@
         @input="handleInput"
         @blur="handleBlur"
       />
+
+      <!-- Password toggle button -->
       <button
         v-if="type === 'password'"
         type="button"
@@ -41,7 +55,7 @@
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 
 export default {
-  name: 'CompBaseInput',
+  name: 'CompInput',
   components: {
     EyeIcon,
     EyeSlashIcon,
@@ -58,6 +72,7 @@ export default {
     type: {
       type: String,
       default: 'text',
+      // 'text', 'password', 'email', 'number', 'textarea', etc.
     },
     placeholder: {
       type: String,
@@ -77,12 +92,15 @@ export default {
       type: String,
       default: 'off',
     },
+    rows: {
+      type: [Number, String],
+      default: 4,
+    },
   },
   emits: ['update:modelValue', 'blur'],
   data() {
     return {
       showPassword: false,
-      // 使用随机ID
       inputId: `input-${Math.random().toString(36).substr(2, 9)}`,
     }
   },
@@ -93,23 +111,21 @@ export default {
       }
       return this.type
     },
-    inputClasses() {
-      const baseClasses =
-        'block w-full px-3 py-2 border rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed'
-
-      // 如果是密码框，右侧需要留出图标位置
-      const paddingRight = this.type === 'password' ? 'pr-10' : ''
-
-      let statusClasses = ''
+    baseClasses() {
+      return 'block w-full border text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed'
+    },
+    statusClasses() {
       if (this.error) {
-        statusClasses =
-          'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-400'
-      } else {
-        statusClasses =
-          'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-primary-500 focus:border-primary-500'
+        return 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-400'
       }
-
-      return `${baseClasses} ${paddingRight} ${statusClasses}`
+      return 'bg-neutral-secondary-medium border-default-medium text-heading focus:ring-brand focus:border-brand shadow-xs placeholder:text-body'
+    },
+    inputClasses() {
+      const paddingRight = this.type === 'password' ? 'pr-10' : ''
+      return `${this.baseClasses} px-3 py-2 rounded-lg ${paddingRight} ${this.statusClasses}`
+    },
+    textareaClasses() {
+      return `${this.baseClasses} p-3.5 rounded-base ${this.statusClasses} resize-y`
     },
   },
   methods: {
