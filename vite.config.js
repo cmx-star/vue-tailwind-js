@@ -66,25 +66,38 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: (id) => {
             if (id.includes('node_modules')) {
-              // Unovis 图表库
-              if (id.includes('@unovis')) {
+              // 1. 图表库 (uPlot)
+              if (id.includes('uplot')) {
                 return 'chart-vendor'
               }
-              // 2. Vue 核心全家桶（不含图表库）
-              if (id.includes('vue') || id.includes('vue-router') || id.includes('pinia')) {
-                return 'vue-core'
+              // 2. 基础工具类 (必须在 vue-core 之前匹配)
+              if (
+                id.includes('dayjs') ||
+                id.includes('async-validator') ||
+                id.includes('@vueuse')
+              ) {
+                return 'utils-vendor'
               }
-              // 3. 较重的日期选择器独立分包，避免阻塞主包
-              if (id.includes('@vuepic/vue-datepicker')) {
-                return 'datepicker-vendor'
-              }
-              // 4. UI 框架类
-              if (id.includes('flowbite') || id.includes('@heroicons')) {
+
+              // 3. UI 组件与图标 (必须在 vue-core 之前匹配)
+              if (
+                id.includes('flowbite') ||
+                id.includes('@heroicons') ||
+                id.includes('flatpickr') ||
+                id.includes('@floating-ui')
+              ) {
                 return 'ui-vendor'
               }
-              // 5. 国际化与时间处理工具
-              if (id.includes('axios') || id.includes('dayjs') || id.includes('vue-i18n')) {
-                return 'utils-vendor'
+
+              // 4. Vue 核心全家桶 (最后匹配)
+              if (
+                id.includes('vue') ||
+                id.includes('vue-router') ||
+                id.includes('pinia') ||
+                id.includes('axios') ||
+                id.includes('vue-i18n')
+              ) {
+                return 'vue-core'
               }
               // 其他第三方依赖
               return 'vendor'

@@ -8,15 +8,28 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-800;
+  background-color: var(--color-gray-100);
+}
+
+:is(.dark) .custom-scrollbar::-webkit-scrollbar-track {
+  background-color: var(--color-gray-800);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  background-color: var(--color-gray-300);
+  border-radius: 9999px;
+}
+
+:is(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray-600);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background-color: var(--color-gray-400);
+}
+
+:is(.dark) .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-gray-500);
 }
 
 /* 页面容器 */
