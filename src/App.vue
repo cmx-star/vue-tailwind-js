@@ -2,13 +2,18 @@
   <router-view />
 </template>
 
-<script setup>
-import { onMounted } from 'vue'
+<script>
 import { useThemeStore } from '@/stores/theme'
-const themeStore = useThemeStore()
+import { mapStores } from 'pinia'
 
-onMounted(() => {
-  // 初始化主题
-  themeStore.initTheme()
-})
+export default {
+  name: 'App',
+  computed: {
+    ...mapStores(useThemeStore),
+  },
+  mounted() {
+    // 初始化主题
+    this.themeStore.initTheme()
+  },
+}
 </script>

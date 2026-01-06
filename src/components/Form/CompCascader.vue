@@ -117,8 +117,6 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { onClickOutside } from '@vueuse/core'
 import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 
 export default {
@@ -166,30 +164,10 @@ export default {
     },
   },
   emits: ['update:modelValue', 'change'],
-  setup() {
-    const referenceRef = ref(null)
-    const floatingRef = ref(null)
-
-    onClickOutside(
-      floatingRef,
-      () => {
-        isOpen.value = false
-      },
-      { ignore: [referenceRef] },
-    )
-
-    const isOpen = ref(false)
-    const selectedPath = ref([])
-
-    return {
-      referenceRef,
-      floatingRef,
-      isOpen,
-      selectedPath,
-    }
-  },
   data() {
     return {
+      isOpen: false,
+      selectedPath: [],
       inputId: `cascader-${Math.random().toString(36).substr(2, 9)}`,
     }
   },
@@ -240,7 +218,26 @@ export default {
       immediate: true,
     },
   },
+  mounted() {
+    document.addEventListener('click', this.handleOutsideClick)
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleOutsideClick)
+  },
   methods: {
+    handleOutsideClick(event) {
+      if (!this.isOpen) return
+      const referenceEl = this.$refs.referenceRef
+      const floatingEl = this.$refs.floatingRef
+      if (
+        referenceEl &&
+        !referenceEl.contains(event.target) &&
+        floatingEl &&
+        !floatingEl.contains(event.target)
+      ) {
+        this.isOpen = false
+      }
+    },
     toggleDropdown() {
       if (!this.disabled) {
         this.isOpen = !this.isOpen
@@ -259,11 +256,8 @@ export default {
       return this.selectedPath[level] === option
     },
     selectLevel(option, level) {
-      // Update selected path
       this.selectedPath = this.selectedPath.slice(0, level)
       this.selectedPath.push(option)
-
-      // If no children, emit the selection
       if (!this.hasChildren(option)) {
         const values = this.selectedPath.map((item) => this.getValue(item))
         this.$emit('update:modelValue', values)
@@ -274,16 +268,12 @@ export default {
     buildSelectedPath(values) {
       this.selectedPath = []
       let currentOptions = this.options
-
       for (const value of values) {
         const found = currentOptions.find((opt) => this.getValue(opt) === value)
         if (found) {
           this.selectedPath.push(found)
-          if (found.children) {
-            currentOptions = found.children
-          } else {
-            break
-          }
+          if (found.children) currentOptions = found.children
+          else break
         } else {
           break
         }
@@ -294,28 +284,22 @@ export default {
 </script>
 
 <style scoped>
-/* Custom scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 3px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
-
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #4b5563;
 }
-
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
 }

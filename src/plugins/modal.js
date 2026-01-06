@@ -2,9 +2,12 @@ import { createVNode, render } from 'vue'
 import CompModal from '@/components/Feedback/CompModal.vue'
 
 export const ModalPlugin = {
-  install(_app) {
-    // 也可以挂载到全局属性
-    // app.config.globalProperties.$modal = ...
+  install(app) {
+    // 挂载到全局属性，适配 Options API
+    app.config.globalProperties.$modal = {
+      confirm: createModal,
+      alert: (options) => createModal({ ...options, showCancel: false }),
+    }
   },
 }
 

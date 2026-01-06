@@ -99,9 +99,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { useFloating, offset, flip, shift, autoUpdate } from '@floating-ui/vue'
-import { onClickOutside } from '@vueuse/core'
+import { computePosition, offset, flip, shift, autoUpdate } from '@floating-ui/dom'
 import { ChevronDownIcon, CheckIcon } from '@heroicons/vue/24/outline'
 
 export default {
@@ -125,7 +123,7 @@ export default {
     },
     placeholder: {
       type: String,
-      default: '', // Handle default in computed or via i18n
+      default: '',
     },
     disabled: Boolean,
     required: Boolean,
@@ -163,36 +161,18 @@ export default {
     },
   },
   emits: ['update:modelValue', 'change', 'blur'],
-  setup() {
-    const referenceRef = ref(null)
-    const floatingRef = ref(null)
-    const isOpen = ref(false)
-
-    const { floatingStyles } = useFloating(referenceRef, floatingRef, {
-      placement: 'bottom-start',
-      middleware: [offset(4), flip(), shift({ padding: 8 })],
-      whileElementsMounted: autoUpdate,
-    })
-
-    onClickOutside(
-      floatingRef,
-      () => {
-        isOpen.value = false
-      },
-      { ignore: [referenceRef] },
-    )
-
-    return {
-      referenceRef,
-      floatingRef,
-      floatingStyles,
-      isOpen,
-    }
-  },
   data() {
     return {
+      isOpen: false,
       searchQuery: '',
       inputId: `select-${Math.random().toString(36).substr(2, 9)}`,
+      floatingStyles: {
+        position: 'absolute',
+        top: '0',
+        left: '0',
+        width: 'max-content',
+      },
+      cleanup: null,
     }
   },
   computed: {
@@ -200,7 +180,6 @@ export default {
       if (!this.searchable || !this.searchQuery) {
         return this.options
       }
-
       const query = this.searchQuery.toLowerCase()
       return this.options.filter((option) => {
         const label = this.getOptionLabel(option).toLowerCase()
@@ -212,31 +191,21 @@ export default {
         if (!Array.isArray(this.modelValue) || this.modelValue.length === 0) {
           return this.placeholder || this.$t('common.pleaseSelect')
         }
-
         const selectedOptions = this.options.filter((option) => {
           const value = this.getOptionValue(option)
           return this.modelValue.includes(value)
         })
-
-        if (selectedOptions.length === 0) {
-          return this.placeholder || this.$t('common.pleaseSelect')
-        }
-
-        if (selectedOptions.length === 1) {
-          return this.getOptionLabel(selectedOptions[0])
-        }
-
+        if (selectedOptions.length === 0) return this.placeholder || this.$t('common.pleaseSelect')
+        if (selectedOptions.length === 1) return this.getOptionLabel(selectedOptions[0])
         return `${this.$t('common.selected')} ${selectedOptions.length} ${this.$t('common.items')}`
       } else {
         if (this.modelValue === null || this.modelValue === undefined || this.modelValue === '') {
           return this.placeholder || this.$t('common.pleaseSelect')
         }
-
         const selectedOption = this.options.find((option) => {
           const value = this.getOptionValue(option)
           return this.modelValue === value
         })
-
         return selectedOption
           ? this.getOptionLabel(selectedOption)
           : this.placeholder || this.$t('common.pleaseSelect')
@@ -251,25 +220,70 @@ export default {
     buttonClasses() {
       const baseClasses =
         'relative w-full cursor-pointer rounded-lg border py-2 pl-3 pr-10 text-left text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
-
       if (this.error) {
         return `${baseClasses} border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-400`
       }
-
       if (this.disabled) {
         return `${baseClasses} border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed`
       }
-
       return `${baseClasses} border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400`
+    },
+  },
+  watch: {
+    isOpen(newVal) {
+      if (newVal) {
+        this.$nextTick(() => {
+          this.updatePosition()
+        })
+      } else {
+        if (this.cleanup) {
+          this.cleanup()
+          this.cleanup = null
+        }
+      }
     },
   },
   mounted() {
     document.addEventListener('keydown', this.handleKeydown)
+    document.addEventListener('click', this.handleOutsideClick)
   },
   beforeUnmount() {
     document.removeEventListener('keydown', this.handleKeydown)
+    document.removeEventListener('click', this.handleOutsideClick)
+    if (this.cleanup) this.cleanup()
   },
   methods: {
+    async updatePosition() {
+      const referenceEl = this.$refs.referenceRef
+      const floatingEl = this.$refs.floatingRef
+      if (!referenceEl || !floatingEl) return
+
+      this.cleanup = autoUpdate(referenceEl, floatingEl, () => {
+        computePosition(referenceEl, floatingEl, {
+          placement: 'bottom-start',
+          middleware: [offset(4), flip(), shift({ padding: 8 })],
+        }).then(({ x, y }) => {
+          this.floatingStyles = {
+            ...this.floatingStyles,
+            left: `${x}px`,
+            top: `${y}px`,
+          }
+        })
+      })
+    },
+    handleOutsideClick(event) {
+      if (!this.isOpen) return
+      const referenceEl = this.$refs.referenceRef
+      const floatingEl = this.$refs.floatingRef
+      if (
+        referenceEl &&
+        !referenceEl.contains(event.target) &&
+        floatingEl &&
+        !floatingEl.contains(event.target)
+      ) {
+        this.isOpen = false
+      }
+    },
     handleKeydown(event) {
       if (event.key === 'Escape' && this.isOpen) {
         this.isOpen = false
@@ -284,43 +298,28 @@ export default {
       }
     },
     getOptionLabel(option) {
-      if (typeof this.optionLabel === 'function') {
-        return this.optionLabel(option)
-      }
-      if (typeof option === 'object' && option !== null) {
+      if (typeof this.optionLabel === 'function') return this.optionLabel(option)
+      if (typeof option === 'object' && option !== null)
         return option[this.optionLabel] ?? String(option)
-      }
       return String(option)
     },
     getOptionValue(option, index) {
-      if (typeof this.optionValue === 'function') {
-        return this.optionValue(option)
-      }
-      if (typeof option === 'object' && option !== null) {
-        return option[this.optionValue] ?? index
-      }
+      if (typeof this.optionValue === 'function') return this.optionValue(option)
+      if (typeof option === 'object' && option !== null) return option[this.optionValue] ?? index
       return option ?? index
     },
     isSelected(option) {
       const value = this.getOptionValue(option)
-      if (this.multiple) {
-        return Array.isArray(this.modelValue) && this.modelValue.includes(value)
-      }
+      if (this.multiple) return Array.isArray(this.modelValue) && this.modelValue.includes(value)
       return this.modelValue === value
     },
     selectOption(option) {
       const value = this.getOptionValue(option)
-
       if (this.multiple) {
         const currentValue = Array.isArray(this.modelValue) ? [...this.modelValue] : []
         const index = currentValue.indexOf(value)
-
-        if (index > -1) {
-          currentValue.splice(index, 1)
-        } else {
-          currentValue.push(value)
-        }
-
+        if (index > -1) currentValue.splice(index, 1)
+        else currentValue.push(value)
         this.$emit('update:modelValue', currentValue)
         this.$emit('change', currentValue)
       } else {

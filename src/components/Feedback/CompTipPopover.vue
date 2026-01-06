@@ -47,6 +47,7 @@
         <div v-if="title" class="font-semibold mb-1">{{ title }}</div>
 
         <!-- Content -->
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-if="content" v-html="content"></div>
         <slot v-else-if="slotName" :name="slotName"></slot>
 

@@ -9,7 +9,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 /**
  * 核心优化目标：
  * 1. 极致体积控制 (500KB以内)
- * 2. 精致交互支持 (Floating-UI & VueUse 预构建)
+ * 2. 精致交互支持 (原生 Options API 实现)
  * 3. 生产环境清理 (移除所有 Console & Debugger)
  */
 export default defineConfig(({ mode }) => {
@@ -71,11 +71,7 @@ export default defineConfig(({ mode }) => {
                 return 'chart-vendor'
               }
               // 2. 基础工具类 (必须在 vue-core 之前匹配)
-              if (
-                id.includes('dayjs') ||
-                id.includes('async-validator') ||
-                id.includes('@vueuse')
-              ) {
+              if (id.includes('dayjs') || id.includes('async-validator')) {
                 return 'utils-vendor'
               }
 
@@ -145,16 +141,7 @@ export default defineConfig(({ mode }) => {
      * 包含三端适配的核心库，提升开发环境响应速度
      */
     optimizeDeps: {
-      include: [
-        'vue',
-        'vue-router',
-        'pinia',
-        'vue-i18n',
-        'dayjs',
-        'axios',
-        '@floating-ui/vue', // 碰撞检测核心
-        '@vueuse/core', // 三端监听核心
-      ],
+      include: ['vue', 'vue-router', 'pinia', 'vue-i18n', 'dayjs', 'axios', '@floating-ui/dom'],
     },
   }
 })

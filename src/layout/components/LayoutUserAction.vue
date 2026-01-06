@@ -13,7 +13,6 @@
     </button>
     <div
       v-show="showUserDropdown"
-      ref="dropdownRef"
       class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
     >
       <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
@@ -35,32 +34,13 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { onClickOutside } from '@vueuse/core'
 import { useUserStore } from '@/stores/user'
-import { useModal } from '@/composables/useModal'
 
 export default {
   name: 'LayoutUserAction',
-  setup() {
-    const triggerRef = ref(null)
-    const dropdownRef = ref(null)
-    const showUserDropdown = ref(false)
-
-    onClickOutside(
-      dropdownRef,
-      () => {
-        showUserDropdown.value = false
-      },
-      {
-        ignore: [triggerRef],
-      },
-    )
-
+  data() {
     return {
-      triggerRef,
-      dropdownRef,
-      showUserDropdown,
+      showUserDropdown: false,
     }
   },
   computed: {
@@ -69,13 +49,27 @@ export default {
       return userStore.userInfo
     },
   },
+  mounted() {
+    document.addEventListener('click', this.handleOutsideClick)
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleOutsideClick)
+  },
   methods: {
+    handleOutsideClick(event) {
+      if (
+        this.showUserDropdown &&
+        this.$refs.userDropdownRef &&
+        !this.$refs.userDropdownRef.contains(event.target)
+      ) {
+        this.showUserDropdown = false
+      }
+    },
     toggleUserDropdown() {
       this.showUserDropdown = !this.showUserDropdown
     },
     async handleLogout() {
-      const { confirm } = useModal()
-      const isConfirmed = await confirm({
+      const isConfirmed = await this.$modal.confirm({
         title: this.$t('layout.user.confirmLogout'),
         content: this.$t('layout.user.confirmLogoutMessage'),
         confirmText: this.$t('layout.user.logoutButton'),

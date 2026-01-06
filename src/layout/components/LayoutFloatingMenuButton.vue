@@ -21,8 +21,6 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { useEventListener } from '@vueuse/core'
 import { mapStores } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { Bars3Icon } from '@heroicons/vue/24/outline'
@@ -31,18 +29,6 @@ export default {
   name: 'LayoutFloatingMenuButton',
   components: {
     Bars3Icon,
-  },
-  setup() {
-    const floatingBtn = ref(null)
-
-    // Use composable for resize listener
-    useEventListener('resize', () => {
-      // Will be handled by Options API method
-    })
-
-    return {
-      floatingBtn,
-    }
   },
   data() {
     return {
@@ -89,7 +75,6 @@ export default {
     constrainPosition() {
       const btnSize = 48
       const margin = 10
-
       this.position.x = Math.max(
         margin,
         Math.min(window.innerWidth - btnSize - margin, this.position.x),
@@ -113,15 +98,12 @@ export default {
       const touch = e.touches[0]
       const newX = touch.clientX - this.dragStart.x
       const newY = touch.clientY - this.dragStart.y
-
       const distance = Math.sqrt(
         Math.pow(newX - this.dragStart.startX, 2) + Math.pow(newY - this.dragStart.startY, 2),
       )
-
       if (distance > this.clickThreshold) {
         this.isDragging = true
       }
-
       this.position.x = newX
       this.position.y = newY
       this.constrainPosition()
@@ -148,7 +130,6 @@ export default {
 </script>
 
 <style scoped>
-/* 添加脉冲动画提示用户可以拖动 */
 @keyframes pulse {
   0%,
   100% {
@@ -158,8 +139,6 @@ export default {
     transform: scale(1.05);
   }
 }
-
-/* 首次加载时的提示动画 */
 .floating-menu-button-hint {
   animation: pulse 2s ease-in-out 3;
 }

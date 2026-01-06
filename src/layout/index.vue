@@ -51,11 +51,12 @@
 <script>
 import { mapStores } from 'pinia'
 import { useAppStore } from '@/stores/app'
-import { useResizeHandler } from './composables/useResizeHandler'
 import Navbar from './components/LayoutNavbar.vue'
 import Sidebar from './components/LayoutSidebar.vue'
 import AppMain from './components/LayoutMain.vue'
 import FloatingMenuButton from './components/LayoutFloatingMenuButton.vue'
+
+const WIDTH = 992 // refer to Bootstrap's responsive design
 
 export default {
   name: 'AppLayout',
@@ -65,21 +66,51 @@ export default {
     AppMain,
     FloatingMenuButton,
   },
-  setup() {
-    const { isMobile, mobileSidebarOpen } = useResizeHandler()
-
+  data() {
     return {
-      isMobile,
-      mobileSidebarOpen,
+      isMobile: false,
     }
   },
   computed: {
     ...mapStores(useAppStore),
+    mobileSidebarOpen() {
+      return this.appStore.mobileSidebarOpen
+    },
     isAside() {
       if (this.$route.meta && this.$route.meta.aside !== undefined) {
         return this.$route.meta.aside === '1' || this.$route.meta.aside === 1
       }
       return this.$route.path !== '/login' && this.$route.path !== '/404'
+    },
+  },
+  watch: {
+    $route() {
+      if (this.isMobile && this.mobileSidebarOpen) {
+        this.appStore.setMobileSidebarOpen(false)
+      }
+    },
+    isMobile(mobile) {
+      if (mobile) {
+        this.appStore.setSidebarCollapsed(true)
+      }
+    },
+  },
+  mounted() {
+    this.checkMobile()
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize)
+  },
+  methods: {
+    checkMobile() {
+      const rect = document.body.getBoundingClientRect()
+      this.isMobile = rect.width - 1 < WIDTH
+    },
+    handleResize() {
+      if (!document.hidden) {
+        this.checkMobile()
+      }
     },
   },
 }

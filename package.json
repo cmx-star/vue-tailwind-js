@@ -15,9 +15,8 @@
     "commit": "git-cz"
   },
   "dependencies": {
-    "@floating-ui/vue": "^1.1.9",
+    "@floating-ui/dom": "^1.7.4",
     "@heroicons/vue": "^2.2.0",
-    "@vueuse/core": "^14.1.0",
     "async-validator": "^4.2.5",
     "axios": "^1.13.2",
     "dayjs": "^1.11.10",

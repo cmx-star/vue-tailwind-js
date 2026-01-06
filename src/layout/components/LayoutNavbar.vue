@@ -84,7 +84,6 @@
         </button>
         <div
           v-show="showLangDropdown"
-          ref="langDropdownContentRef"
           class="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
         >
           <button
@@ -104,7 +103,7 @@
         </div>
       </div>
 
-      <!-- 主题切换（明暗模式 + 六套主题样式） -->
+      <!-- 主题切换 -->
       <div ref="themeDropdownRef" class="relative">
         <button
           ref="themeTriggerRef"
@@ -116,7 +115,6 @@
         </button>
         <div
           v-show="showThemeDropdown"
-          ref="themeDropdownContentRef"
           class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
         >
           <!-- 明暗模式切换 -->
@@ -155,9 +153,6 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-import { onClickOutside } from '@vueuse/core'
-import { useI18n } from 'vue-i18n'
 import { mapStores } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { useMenuStore } from '@/stores/menu'
@@ -191,50 +186,10 @@ export default {
     CpuChipIcon,
     Cog6ToothIcon,
   },
-  setup() {
-    const { locale } = useI18n()
-
-    // Refs for dropdowns
-    const showLangDropdown = ref(false)
-    const showThemeDropdown = ref(false)
-    const langDropdownRef = ref(null)
-    const themeDropdownRef = ref(null)
-    const langTriggerRef = ref(null)
-    const langDropdownContentRef = ref(null)
-    const themeTriggerRef = ref(null)
-    const themeDropdownContentRef = ref(null)
-
-    // Click outside handlers
-    onClickOutside(
-      langDropdownContentRef,
-      () => {
-        showLangDropdown.value = false
-      },
-      {
-        ignore: [langTriggerRef],
-      },
-    )
-
-    onClickOutside(
-      themeDropdownContentRef,
-      () => {
-        showThemeDropdown.value = false
-      },
-      {
-        ignore: [themeTriggerRef],
-      },
-    )
-
+  data() {
     return {
-      locale,
-      showLangDropdown,
-      showThemeDropdown,
-      langDropdownRef,
-      themeDropdownRef,
-      langTriggerRef,
-      langDropdownContentRef,
-      themeTriggerRef,
-      themeDropdownContentRef,
+      showLangDropdown: false,
+      showThemeDropdown: false,
     }
   },
   computed: {
@@ -255,7 +210,7 @@ export default {
       return this.themeStore.themeStyle
     },
     currentLocale() {
-      return this.locale
+      return this.$i18n.locale
     },
     themeStyleOptions() {
       return [
@@ -280,8 +235,28 @@ export default {
   },
   mounted() {
     this.updateActiveTopNav()
+    document.addEventListener('click', this.handleOutsideClick)
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleOutsideClick)
   },
   methods: {
+    handleOutsideClick(event) {
+      if (
+        this.showLangDropdown &&
+        this.$refs.langDropdownRef &&
+        !this.$refs.langDropdownRef.contains(event.target)
+      ) {
+        this.showLangDropdown = false
+      }
+      if (
+        this.showThemeDropdown &&
+        this.$refs.themeDropdownRef &&
+        !this.$refs.themeDropdownRef.contains(event.target)
+      ) {
+        this.showThemeDropdown = false
+      }
+    },
     getNavIcon(navKey) {
       return this.navIconMap[navKey] || HomeIcon
     },
@@ -290,37 +265,23 @@ export default {
     },
     handleTopNavClick(nav) {
       this.menuStore.setActiveTopNav(nav.key)
-
       if (nav.key === 0) {
         this.$router.push('/dashboard')
         return
       }
-
       const menus = this.menuStore.menuList.filter((menu) => menu.meta?.topNav === nav.key)
       if (menus.length > 0) {
         const firstPath = this.findFirstPath(menus)
-
         if (firstPath) {
-          this.$router
-            .push(firstPath)
-            .then(() => {})
-            .catch((err) => {
-              console.error('路由跳转失败:', firstPath, err)
-              if (nav.uri) {
-                this.$router.push(nav.uri).catch((e) => {
-                  console.error('使用 nav.uri 跳转也失败:', nav.uri, e)
-                })
-              }
-            })
-        } else if (nav.uri) {
-          this.$router.push(nav.uri).catch((err) => {
-            console.error('使用 nav.uri 跳转失败:', nav.uri, err)
+          this.$router.push(firstPath).catch((err) => {
+            console.error('路由跳转失败:', firstPath, err)
+            if (nav.uri) this.$router.push(nav.uri)
           })
+        } else if (nav.uri) {
+          this.$router.push(nav.uri)
         }
       } else if (nav.uri) {
-        this.$router.push(nav.uri).catch((err) => {
-          console.error('使用 nav.uri 跳转失败:', nav.uri, err)
-        })
+        this.$router.push(nav.uri)
       }
     },
     findFirstPath(items) {
@@ -344,7 +305,7 @@ export default {
       this.showLangDropdown = false
     },
     changeLanguage(lang) {
-      this.locale = lang
+      this.$i18n.locale = lang
       this.showLangDropdown = false
     },
     toggleDark() {
@@ -368,11 +329,9 @@ export default {
 </script>
 
 <style scoped>
-/* 激活状态的下拉菜单项 */
 button.active {
   color: var(--color-primary-600);
 }
-
 .dark button.active {
   color: var(--color-primary-400);
 }
