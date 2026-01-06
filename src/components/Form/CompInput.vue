@@ -14,6 +14,7 @@
         :disabled="disabled"
         :required="required"
         :rows="rows"
+        :autocomplete="autocomplete"
         :class="textareaClasses"
         @input="handleInput"
         @blur="handleBlur"
@@ -90,7 +91,7 @@ export default {
     },
     autocomplete: {
       type: String,
-      default: 'off',
+      default: 'new-password', // 使用 new-password 可以更有效地阻止浏览器自动填充
     },
     rows: {
       type: [Number, String],

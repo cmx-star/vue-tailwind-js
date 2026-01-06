@@ -75,7 +75,8 @@
     "personalSettings": "Personal Center",
     "userManagement": "User Management",
     "roleManagement": "Role Management",
-    "settings": "Settings"
+    "settings": "System Settings",
+    "formDemo": "Form Demo"
   },
   "login": {
     "title": "User Login",

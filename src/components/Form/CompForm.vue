@@ -1,5 +1,5 @@
 <template>
-  <form class="CompForm" @submit.prevent="handleSubmit">
+  <form class="CompForm" autocomplete="off" @submit.prevent="handleSubmit">
     <div :class="[inline ? 'flex flex-wrap gap-4' : 'space-y-4', gridClass]">
       <template v-for="(item, index) in formItems" :key="index">
         <!-- Regular form field -->
@@ -11,7 +11,11 @@
               class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               {{ item.label }}
-              <span v-if="item.required" class="text-red-500">*</span>
+              <span
+                v-if="item.required || (item.rules && item.rules.length > 0)"
+                class="text-red-500"
+                >*</span
+              >
 
               <!-- Tip icon -->
               <CompTipPopover
@@ -32,6 +36,7 @@
               :required="item.required"
               :error="getFieldError(item.key)"
               @update:model-value="handleFieldChange($event, item)"
+              @blur="validateField(item.key)"
             />
 
             <!-- Select field -->
@@ -128,9 +133,7 @@
             </div>
 
             <!-- Error message -->
-            <p v-if="getFieldError(item.key)" class="mt-1 text-sm text-red-600 dark:text-red-400">
-              {{ getFieldError(item.key) }}
-            </p>
+            <!-- 错误信息已由各个子组件自己显示,这里不需要重复显示 -->
           </div>
         </div>
 
@@ -144,6 +147,8 @@
 </template>
 
 <script>
+import Schema from 'async-validator'
+
 export default {
   name: 'CompForm',
   props: {
@@ -188,6 +193,24 @@ export default {
     },
     fieldClass() {
       return this.inline ? '' : ''
+    },
+    // 构建验证规则对象
+    validationRules() {
+      const rules = {}
+      this.formItems.forEach((item) => {
+        if (item.rules && item.rules.length > 0) {
+          rules[item.key] = item.rules
+        } else if (item.required) {
+          // 如果只有 required,自动创建规则
+          rules[item.key] = [
+            {
+              required: true,
+              message: `${item.label || item.key} is required`,
+            },
+          ]
+        }
+      })
+      return rules
     },
   },
   methods: {
@@ -263,49 +286,71 @@ export default {
     getFieldError(key) {
       return this.errors[key]
     },
-    validate() {
-      this.errors = {}
-      let isValid = true
-
-      for (const item of this.formItems) {
-        if (item.required) {
-          const value = this.getFieldValue(item.key)
-          if (!value || (Array.isArray(value) && value.length === 0)) {
-            this.errors[item.key] = `${item.label || item.key} is required`
-            isValid = false
-          }
-        }
-
-        // Custom validation rules
-        if (item.rules && Array.isArray(item.rules)) {
-          const value = this.getFieldValue(item.key)
-          for (const rule of item.rules) {
-            if (rule.required && (!value || (Array.isArray(value) && value.length === 0))) {
-              this.errors[item.key] = rule.message || `${item.label} is required`
-              isValid = false
-              break
-            }
-            if (rule.validator && typeof rule.validator === 'function') {
-              const error = rule.validator(value)
-              if (error) {
-                this.errors[item.key] = error
-                isValid = false
-                break
-              }
-            }
-          }
-        }
+    // 验证单个字段
+    async validateField(field) {
+      if (!this.validationRules[field]) {
+        return true
       }
 
-      this.errors = { ...this.errors }
-      return isValid
+      const descriptor = { [field]: this.validationRules[field] }
+      const validator = new Schema(descriptor)
+      const fieldValue = this.getFieldValue(field)
+
+      try {
+        await validator.validate({ [field]: fieldValue })
+        this.errors = { ...this.errors, [field]: '' }
+        return true
+      } catch ({ errors }) {
+        if (errors && errors[0]) {
+          this.errors = { ...this.errors, [field]: errors[0].message }
+        }
+        return false
+      }
+    },
+    // 验证整个表单
+    async validate() {
+      if (Object.keys(this.validationRules).length === 0) {
+        return true
+      }
+
+      const validator = new Schema(this.validationRules)
+
+      // 重置错误
+      this.errors = {}
+
+      // 构建验证数据对象
+      const dataToValidate = {}
+      Object.keys(this.validationRules).forEach((key) => {
+        dataToValidate[key] = this.getFieldValue(key)
+      })
+
+      try {
+        await validator.validate(dataToValidate)
+        return true
+      } catch ({ errors }) {
+        if (errors) {
+          errors.forEach((error) => {
+            this.errors[error.field] = error.message
+          })
+        }
+        this.errors = { ...this.errors }
+        return false
+      }
     },
     resetFields() {
       this.errors = {}
-      // Reset all fields to undefined
-      for (const item of this.formItems) {
-        this.setFieldValue(item.key, undefined)
-      }
+      // Reset all fields to their initial values
+      const resetValue = {}
+      this.formItems.forEach((item) => {
+        if (item.type === 'checkbox' || item.multiple) {
+          resetValue[item.key] = []
+        } else if (item.type === 'switch') {
+          resetValue[item.key] = false
+        } else {
+          resetValue[item.key] = ''
+        }
+      })
+      this.$emit('update:modelValue', resetValue)
     },
     clearValidate(key) {
       if (key) {
@@ -315,9 +360,11 @@ export default {
       }
     },
     handleSubmit() {
-      if (this.validate()) {
-        this.$emit('submit', this.modelValue)
-      }
+      this.validate().then((valid) => {
+        if (valid) {
+          this.$emit('submit', this.modelValue)
+        }
+      })
     },
   },
 }

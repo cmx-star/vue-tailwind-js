@@ -75,7 +75,8 @@
     "personalSettings": "个人中心",
     "userManagement": "用户管理",
     "roleManagement": "角色管理",
-    "settings": "系统设置"
+    "settings": "系统设置",
+    "formDemo": "表单演示"
   },
   "login": {
     "title": "用户登录",
