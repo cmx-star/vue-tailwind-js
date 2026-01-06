@@ -64,7 +64,29 @@
     "forgot": "Forgot password?",
     "login": "Login",
     "usernamePlaceholder": "Enter username",
-    "passwordPlaceholder": "Enter password"
+    "passwordPlaceholder": "Enter password",
+    "loggingIn": "Logging in...",
+    "testAccounts": "Test Accounts (Click to auto-fill)",
+    "rules": {
+      "usernameRequired": "Username is required",
+      "usernameMin": "Username must be at least 4 characters",
+      "passwordRequired": "Password is required",
+      "passwordPattern": "Password must contain number, uppercase and lowercase letters",
+      "passwordMin": "Password must be at least 8 characters"
+    },
+    "testAccountLabels": {
+      "admin": "Super Admin",
+      "adminDesc": "All Menu Permissions",
+      "networkAdmin": "Network Admin",
+      "networkAdminDesc": "Overview + Network + VPN",
+      "systemAdmin": "System Admin",
+      "systemAdminDesc": "Overview + System",
+      "user": "User",
+      "userDesc": "Overview Only"
+    },
+    "toast": {
+      "fail": "Login failed, please try again"
+    }
   },
   "dashboard": {
     "welcome": "Welcome Back",

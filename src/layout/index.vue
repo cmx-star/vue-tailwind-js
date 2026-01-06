@@ -49,20 +49,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useEventListener, useDebounceFn } from '@vueuse/core'
 import { useAppStore } from '@/stores/app'
-import Navbar from './components/Navbar.vue'
-import Sidebar from './components/Sidebar/index.vue'
-import AppMain from './components/AppMain.vue'
-import FloatingMenuButton from './components/FloatingMenuButton.vue'
+import { useResizeHandler } from './composables/useResizeHandler'
+import Navbar from './components/LayoutNavbar.vue'
+import Sidebar from './components/LayoutSidebar.vue'
+import AppMain from './components/LayoutMain.vue'
+import FloatingMenuButton from './components/LayoutFloatingMenuButton.vue'
 
 const route = useRoute()
 const appStore = useAppStore()
-const isMobile = ref(false)
 
-const mobileSidebarOpen = computed(() => appStore.mobileSidebarOpen)
+// 使用 Resize Composable
+const { isMobile, mobileSidebarOpen } = useResizeHandler()
 
 // 根据路由 meta.aside 判断是否显示侧边栏，如果没有设置则默认显示
 const isAside = computed(() => {
@@ -71,44 +71,5 @@ const isAside = computed(() => {
   }
   // 默认显示侧边栏（除了登录和404页）
   return route.path !== '/login' && route.path !== '/404'
-})
-
-const MOBILE_BREAKPOINT = 768
-
-const checkMobile = () => {
-  const width = window.innerWidth
-  const wasMobile = isMobile.value
-  isMobile.value = width < MOBILE_BREAKPOINT
-
-  if (isMobile.value) {
-    appStore.setSidebarCollapse(true)
-  } else {
-    if (wasMobile) {
-      appStore.setSidebarCollapse(false)
-    }
-  }
-}
-
-const debouncedCheckMobile = useDebounceFn(checkMobile, 150)
-
-useEventListener('resize', debouncedCheckMobile)
-
-watch(
-  () => appStore.sidebarCollapse,
-  (collapse) => {
-    if (isMobile.value) {
-      appStore.setMobileSidebarOpen(!collapse)
-    }
-  },
-)
-
-watch(mobileSidebarOpen, (visible) => {
-  if (!visible && isMobile.value) {
-    appStore.setSidebarCollapse(true)
-  }
-})
-
-onMounted(() => {
-  checkMobile()
 })
 </script>

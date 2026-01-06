@@ -1,8 +1,8 @@
 import { h } from 'vue'
 import { RouterView } from 'vue-router'
 
-// 使用相对路径扫描 views 目录下的所有 .vue 文件，确保在 Vite 中路径匹配稳定
-const views = import.meta.glob('../../views/**/*.vue')
+// 使用相对路径扫描 views 目录下的所有 .vue 文件，但排除 components 目录下的组件
+const views = import.meta.glob(['../views/**/*.vue', '!../views/**/components/**'])
 
 /**
  * 动态路由加载核心逻辑
@@ -30,7 +30,7 @@ export function loadRoutes(name) {
 
   // 3. 兜底处理
   console.warn(
-    `[asyncFile] 路由自动导入失败: 未找到与标识符 "${name}" 匹配的组件 (预期文件名: View${name}.vue)`,
+    `[loader] 路由自动导入失败: 未找到与标识符 "${name}" 匹配的组件 (预期文件名: View${name}.vue)`,
   )
 
   return {

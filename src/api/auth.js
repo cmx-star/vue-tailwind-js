@@ -1,5 +1,5 @@
-import httpRequest from '@/http/httpRequest'
-import { menuMock } from '../mock'
+import httpRequest from '@/utils/request'
+import { menuMock } from './mock'
 import { useUserStore } from '@/stores/user'
 
 // 存储当前登录的用户名，用于返回对应的菜单（作为fallback）

@@ -40,7 +40,7 @@
         leave-to-class="opacity-0 max-h-0"
       >
         <ul v-show="isExpanded && !collapsed" class="mt-2 ml-4 space-y-1 overflow-hidden">
-          <SidebarItem
+          <LayoutSidebarItem
             v-for="child in item.children"
             :key="child.path || child.name"
             :item="child"

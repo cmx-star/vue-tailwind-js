@@ -12,13 +12,26 @@ const request = axios.create({
   timeout: 10000,
 })
 
+// 不需要token的url (从 status.js 迁移)
+const notNeedTokenUrl = [
+  '/api/user/login',
+  '/api/auth/refresh',
+  '/api/user/regUser',
+  '/api/user/loginByPhoneNumber',
+]
+
 // 请求拦截器
 request.interceptors.request.use(
   (config) => {
     NProgress.start()
-    const token = getToken()
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`
+    // 判断是否在不需要 Token 的白名单中
+    const isIgnoreToken = notNeedTokenUrl.some((url) => config.url.includes(url))
+
+    if (!isIgnoreToken) {
+      const token = getToken()
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`
+      }
     }
     return config
   },
@@ -34,8 +47,20 @@ request.interceptors.response.use(
     NProgress.done()
     const res = response.data
 
+    // 兼容 status.js 中的 tokenFaildStatus 逻辑，通常是 401
+    // 这里假设后端返回 code=401 代表 token 失效
+    if (res.code === 401) {
+      // TODO: 触发登出操作，例如 store.dispatch('user/resetToken')
+      // 目前简单处理：移除 token 并跳转登录
+      // removeToken()
+      // location.reload()
+    }
+
     // 根据业务逻辑处理错误
     if (res.code && res.code !== 200) {
+      // 允许特定接口自行处理错误 (例如 checkMobile 时的 404)
+      // if (config.skipErrorHandler) return res
+
       // TODO: 统一错误处理，如弹窗提示
       return Promise.reject(new Error(res.message || 'Error'))
     }
@@ -49,7 +74,7 @@ request.interceptors.response.use(
 
 const httpRequest = {
   get(url, params = {}, config = {}) {
-    const mockData = mockApi(url)
+    const mockData = mockApi(url, params)
     if (mockData || (config.mock && config.mockResponse)) {
       return Promise.resolve(config.mockResponse || mockData)
     }
@@ -62,9 +87,12 @@ const httpRequest = {
   },
 
   post(url, data = {}, config = {}) {
-    const mockData = mockApi(url)
+    const mockData = mockApi(url, data)
     // 如果 mock 文件中有该接口，或者显式传入了 mock 标志和数据
     if (mockData || (config.mock && config.mockResponse)) {
+      if (mockData.code && mockData.code !== 200) {
+        return Promise.reject(new Error(mockData.message || 'Error'))
+      }
       return Promise.resolve(config.mockResponse || mockData)
     }
 

@@ -1,6 +1,7 @@
 import { useMenuStore } from '@/stores/menu'
-import { loadRoutes } from '@/router/origin/asyncFile'
-import { getMenuList } from '@/api/origin'
+import { loadRoutes } from './loader'
+import { topNavConfig } from './constants'
+import { getMenuList } from '@/api'
 
 /**
  * 递归转换菜单数据为侧边栏所需的嵌套结构
@@ -43,10 +44,6 @@ function getMenuTree(menus, parentPath = '', parentAside = 1, parentTopNav = '')
 
 /**
  * 递归提取所有叶子节点，并将其路径打平，准备挂载到 Layout 下
- * @param {Array} menus - 菜单列表
- * @param {String} parentPath - 父路径（相对于父路由的路径，不以 / 开头）
- * @param {String|Number} parentAside - 父 aside 值
- * @param {Number} parentTopNav - 父 topNav 值
  */
 function getFlatRoutes(menus, parentPath = '', parentAside = 1, parentTopNav = 0) {
   let routes = []
@@ -58,19 +55,15 @@ function getFlatRoutes(menus, parentPath = '', parentAside = 1, parentTopNav = 0
       menu.topNav !== undefined && menu.topNav !== null ? menu.topNav : parentTopNav
 
     // 对于子路由，直接使用 uri（已经是相对路径，不以 / 开头）
-    // Vue Router 会自动将子路由路径拼接到父路由路径后面
     const menuUri = menu.uri.startsWith('/') ? menu.uri.slice(1) : menu.uri
     const currentPath = menuUri
 
     if (menu.subMenu && menu.subMenu.length > 0) {
       // 如果是目录，继续递归提取子项
-      // 对于嵌套子路由，需要拼接路径：parentPath/currentPath
       const nestedParentPath = parentPath ? `${parentPath}/${currentPath}` : currentPath
       routes.push(...getFlatRoutes(menu.subMenu, nestedParentPath, currentAside, currentTopNav))
     } else {
       // 如果是叶子节点，生成路由配置
-      // Vue Router 的子路由路径应该是相对于父路由的
-      // 如果 parentPath 存在，需要拼接完整路径，但不要以 / 开头（Vue Router 会将其视为绝对路径）
       let routePath
       if (parentPath) {
         routePath = `${parentPath}/${currentPath}`
@@ -105,34 +98,12 @@ export async function handleLoginMenus(next, to, router) {
   let menuList = res.data || []
 
   // 2. 提取顶部导航列表（按 topNav 数字排序）
-
-  // 统计每个 topNav 的菜单数量
   const topNavCounts = {}
   menuList.forEach((menu) => {
     if (menu.topNav !== undefined && menu.topNav !== null) {
       topNavCounts[menu.topNav] = (topNavCounts[menu.topNav] || 0) + 1
     }
   })
-
-  // 固定的顶部导航配置
-  const topNavConfig = [
-    { key: 0, name: 'menu.topNav.overview', uri: '/dashboard', icon: 'house' },
-    {
-      key: 1,
-      name: 'menu.topNav.network',
-      uri: '/network/overview',
-      icon: 'network-wired',
-    },
-    { key: 2, name: 'menu.topNav.vpn', uri: '/vpn', icon: 'shield-virus' },
-    { key: 3, name: 'menu.topNav.edge', uri: '/edge', icon: 'microchip' },
-    {
-      key: 4,
-      name: 'menu.topNav.wizard',
-      uri: '/wizard',
-      icon: 'wand-magic-sparkles',
-    },
-    { key: 5, name: 'menu.topNav.system', uri: '/system', icon: 'gears' },
-  ]
 
   // 根据菜单数据过滤出有菜单的顶部导航
   const topNavList = topNavConfig.filter((nav) => {
@@ -150,8 +121,6 @@ export async function handleLoginMenus(next, to, router) {
     let topMenu
     if (menu.subMenu && menu.subMenu.length > 0) {
       // 顶级目录
-      // 关键点：这里调用 getFlatRoutes，将子孙节点全部拉平
-      // 对于子路由，不需要传入 parentPath，因为子路由路径应该是相对于父路由的
       topMenu = {
         path: menu.uri.startsWith('/') ? menu.uri : '/' + menu.uri,
         component: loadRoutes('Layout'),
@@ -172,9 +141,7 @@ export async function handleLoginMenus(next, to, router) {
       }
     } else {
       // 独立一级页面 (没有子菜单)
-      // 确保路由的完整路径与 menu.uri 一致，以便侧边栏正确跳转
       const menuUri = menu.uri.startsWith('/') ? menu.uri : '/' + menu.uri
-      // 对于 /dashboard 这种路径，直接作为 Layout 的子路由
       topMenu = {
         path: menuUri,
         component: loadRoutes('Layout'),
@@ -188,7 +155,7 @@ export async function handleLoginMenus(next, to, router) {
         },
         children: [
           {
-            path: '', // 空路径表示父路由的默认子路由
+            path: '',
             name: menu.permissionValue,
             component: loadRoutes(menu.permissionValue),
             meta: {
@@ -217,7 +184,6 @@ export async function handleLoginMenus(next, to, router) {
   addRoutesArr.forEach((route) => {
     router.addRoute(route)
   })
-  // 验证路由是否注册成功
 
   // 6. 将嵌套树存入 store 给侧边栏用
   const menuTree = getMenuTree(menuList)
@@ -225,11 +191,9 @@ export async function handleLoginMenus(next, to, router) {
 
   // 7. 设置当前激活的顶部导航（根据当前路由）
   let currentTopNav = to.meta?.topNav
-  // 如果访问 /dashboard 且没有 topNav，默认设置为 0（概览）
   if (to.path === '/dashboard' && (currentTopNav === undefined || currentTopNav === null)) {
     currentTopNav = 0
   } else if (currentTopNav === undefined || currentTopNav === null) {
-    // 否则使用菜单列表中的第一个 topNav，或默认使用第一个顶部导航的 key
     currentTopNav =
       menuList.find((m) => m.topNav !== undefined && m.topNav !== null)?.topNav ??
       topNavList[0]?.key ??

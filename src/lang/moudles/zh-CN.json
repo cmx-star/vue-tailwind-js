@@ -64,7 +64,29 @@
     "forgot": "忘记密码?",
     "login": "登录",
     "usernamePlaceholder": "请输入用户名",
-    "passwordPlaceholder": "请输入密码"
+    "passwordPlaceholder": "请输入密码",
+    "loggingIn": "登录中...",
+    "testAccounts": "测试账号 (点击自动填充)",
+    "rules": {
+      "usernameRequired": "请输入用户名",
+      "usernameMin": "用户名至少4位",
+      "passwordRequired": "请输入密码",
+      "passwordPattern": "密码需包含数字、大小写字母",
+      "passwordMin": "密码至少8位"
+    },
+    "testAccountLabels": {
+      "admin": "超级管理员",
+      "adminDesc": "所有菜单权限",
+      "networkAdmin": "网络管理员",
+      "networkAdminDesc": "概览+网络+VPN",
+      "systemAdmin": "系统管理员",
+      "systemAdminDesc": "概览+系统",
+      "user": "普通用户",
+      "userDesc": "仅概览"
+    },
+    "toast": {
+      "fail": "登录失败，请重试"
+    }
   },
   "dashboard": {
     "title": "系统概览",

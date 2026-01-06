@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { login as loginApi, getUserInfo } from '@/api/origin'
+import { login as loginApi, getUserInfo } from '@/api'
 import { setToken, removeToken, getToken, getUserLogin } from '@/utils/auth'
 import { useAppStore } from './app'
 import { useMenuStore } from './menu'

@@ -14,7 +14,7 @@
 
 <script setup>
 import { useRoute } from 'vue-router'
-import Breadcrumb from './Breadcrumb.vue'
+import Breadcrumb from './LayoutBreadcrumb.vue'
 
 const route = useRoute()
 </script>

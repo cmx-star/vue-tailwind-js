@@ -18,7 +18,7 @@
 import { computed } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useMenuStore } from '@/stores/menu'
-import SidebarItem from './SidebarItem.vue'
+import SidebarItem from './LayoutSidebarItem.vue'
 
 const appStore = useAppStore()
 const menuStore = useMenuStore()

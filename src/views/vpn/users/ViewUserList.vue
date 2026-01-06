@@ -26,8 +26,11 @@
       >
         <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">交互示例</h2>
         <div class="flex flex-wrap gap-3">
-          <CompBaseButton @click="handleAction('主要')">主要操作</CompBaseButton>
-          <CompBaseButton type="secondary" @click="handleAction('辅助')">辅助操作</CompBaseButton>
+          <CompBaseButton type="success" @click="showToast('success')">成功 Toast</CompBaseButton>
+          <CompBaseButton type="warning" @click="showToast('warning')">警告 Toast</CompBaseButton>
+          <CompBaseButton type="danger" @click="showToast('error')">错误 Toast</CompBaseButton>
+          <CompBaseButton type="secondary" @click="showToast('info')">信息 Toast</CompBaseButton>
+          <CompBaseButton type="danger" @click="showToast('danger')">危险 Toast</CompBaseButton>
         </div>
       </div>
     </div>
@@ -43,7 +46,12 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
+import { useToast } from '@/composables/useToast'
+
+const { success, warning, error, info, danger } = useToast()
 const pageTitle = ref('UserList 模块展示')
+// ... (rest of variables same as before, skipping for brevity but need to keep context)
+// Re-declaring for replacement logic:
 const formData = reactive({ name: '', type: '', date: null })
 const typeOptions = [
   { label: '基础业务', value: 'basic' },
@@ -58,7 +66,24 @@ const tableData = ref([
   { id: 101, title: '系统架构升级', status: '进行中' },
   { id: 102, title: '组件库适配', status: '已完成' },
 ])
-const handleAction = (msg) => {
-  alert('您点击了: ' + msg)
+
+const showToast = (type) => {
+  switch (type) {
+    case 'success':
+      success('操作成功！这是一条成功消息。')
+      break
+    case 'warning':
+      warning('注意！系统检测到潜在风险。')
+      break
+    case 'error':
+      error('错误！无法连接到服务器。')
+      break
+    case 'info':
+      info('提示：您收到了一条新消息。')
+      break
+    case 'danger':
+      danger('危险！该操作不可撤销。')
+      break
+  }
 }
 </script>

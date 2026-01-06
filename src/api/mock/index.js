@@ -1,15 +1,3 @@
-const loginMock = {
-  code: 200,
-  data: {
-    token: 'mock-token-abc-123',
-    userInfo: {
-      username: 'admin',
-      role: 'admin',
-    },
-  },
-  message: 'success',
-}
-
 const menuMock = {
   code: 200,
   data: [
@@ -251,17 +239,42 @@ const userInfoMock = {
   message: 'success',
 }
 
+const validUsers = ['admin', 'network_admin', 'system_admin', 'user']
+
+function handleLogin(data) {
+  const { username } = data || {}
+  if (validUsers.includes(username)) {
+    return {
+      code: 200,
+      data: {
+        token: `mock-token-${username}-${Date.now()}`,
+        userInfo: {
+          username,
+          role: username === 'admin' ? 'admin' : 'user',
+          nickname: username,
+        },
+      },
+      message: 'success',
+    }
+  }
+  return {
+    code: 400,
+    message: '账号或密码错误',
+  }
+}
+
 /**
  * mockApi 函数：根据 URL 判断是否有对应的 mock 数据
  * @param {string} url - 请求的 URL
+ * @param {object} payload - 请求参数 (params 或 data)
  * @returns {object|null} - 返回 mock 数据或 null
- *
- * 注意：/api/menu/list 不在这里处理，因为需要根据用户角色过滤菜单
- * 该接口由 src/api/origin/index.js 的 getMenuList 函数处理
  */
-export default function mockApi(url) {
+export default function mockApi(url, payload) {
+  if (url === '/api/login') {
+    return handleLogin(payload)
+  }
+
   const mockMap = {
-    '/api/login': loginMock,
     '/api/menu/list': menuMock,
     '/api/user/info': userInfoMock,
   }
@@ -270,4 +283,4 @@ export default function mockApi(url) {
 }
 
 // 同时导出具名导出，供其他文件使用
-export { loginMock, menuMock }
+export { menuMock }

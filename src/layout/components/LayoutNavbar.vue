@@ -180,7 +180,7 @@ import {
   CpuChipIcon,
   Cog6ToothIcon,
 } from '@heroicons/vue/24/outline'
-import UserAction from './UserAction.vue'
+import UserAction from './LayoutUserAction.vue'
 
 const route = useRoute()
 const router = useRouter()

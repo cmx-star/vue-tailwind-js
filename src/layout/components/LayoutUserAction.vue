@@ -38,10 +38,12 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { useModal } from '@/composables/useModal'
 import { onClickOutside } from '@vueuse/core'
 
 const router = useRouter()
 const userStore = useUserStore()
+const { confirm } = useModal()
 
 const userInfo = computed(() => userStore.userInfo)
 const showUserDropdown = ref(false)
@@ -53,9 +55,17 @@ const toggleUserDropdown = () => {
   showUserDropdown.value = !showUserDropdown.value
 }
 
-const handleLogout = () => {
-  userStore.logout()
-  router.push('/login')
+const handleLogout = async () => {
+  const isConfirmed = await confirm({
+    title: '确认退出',
+    content: '您确定要退出当前账号吗？',
+    confirmText: '退出',
+  })
+
+  if (isConfirmed) {
+    userStore.logout()
+    router.push('/login')
+  }
 }
 
 // 使用 @vueuse/core 的 onClickOutside 优化点击外部关闭逻辑

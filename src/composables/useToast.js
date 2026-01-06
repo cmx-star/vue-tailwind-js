@@ -1,36 +1,37 @@
-import { ref } from 'vue'
-
-const toastInstance = ref(null)
+import { getToastInstance } from '@/plugins/toast'
 
 export function useToast() {
-  const success = (message, duration = 3000, title = null) => {
-    if (toastInstance.value) {
-      toastInstance.value.success(message, duration, title)
+  const getInstance = () => {
+    const instance = getToastInstance()
+    if (!instance) {
+      console.warn('Toast plugin not installed or not mounted yet.')
     }
+    return instance
+  }
+
+  const success = (message, duration = 3000, title = null) => {
+    getInstance()?.success(message, duration, title)
   }
 
   const error = (message, duration = 3000, title = null) => {
-    if (toastInstance.value) {
-      toastInstance.value.error(message, duration, title)
-    }
+    getInstance()?.error(message, duration, title)
   }
 
   const danger = (message, duration = 3000, title = null) => {
-    if (toastInstance.value) {
-      toastInstance.value.danger(message, duration, title)
-    }
+    getInstance()?.danger(message, duration, title)
   }
 
   const warning = (message, duration = 3000, title = null) => {
-    if (toastInstance.value) {
-      toastInstance.value.warning(message, duration, title)
-    }
+    getInstance()?.warning(message, duration, title)
   }
 
   const info = (message, duration = 3000, title = null) => {
-    if (toastInstance.value) {
-      toastInstance.value.info(message, duration, title)
-    }
+    getInstance()?.info(message, duration, title)
+  }
+
+  // 直接暴露 show 方法
+  const show = (message, type, duration, title) => {
+    getInstance()?.show(message, type, duration, title)
   }
 
   return {
@@ -39,9 +40,6 @@ export function useToast() {
     danger,
     warning,
     info,
+    show,
   }
-}
-
-export function setToastInstance(instance) {
-  toastInstance.value = instance
 }

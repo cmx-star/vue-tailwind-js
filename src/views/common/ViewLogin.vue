@@ -12,37 +12,24 @@
 
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         <form class="space-y-6" @submit.prevent="handleLogin">
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              {{ $t('login.username') }}
-            </label>
-            <input
-              v-model="formData.username"
-              type="text"
-              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              :class="errors.username ? 'border-red-500 ring-1 ring-red-500' : ''"
-              :placeholder="$t('login.usernamePlaceholder')"
-            />
-            <p v-if="errors.username" class="mt-1 text-xs text-red-500">
-              {{ errors.username }}
-            </p>
-          </div>
+          <CompBaseInput
+            v-model="formData.username"
+            :label="$t('login.username')"
+            :placeholder="$t('login.usernamePlaceholder')"
+            :error="errors.username"
+            autocomplete="off"
+            @blur="validateField('username')"
+          />
 
-          <div>
-            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              {{ $t('login.password') }}
-            </label>
-            <input
-              v-model="formData.password"
-              type="password"
-              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              :class="errors.password ? 'border-red-500 ring-1 ring-red-500' : ''"
-              :placeholder="$t('login.passwordPlaceholder')"
-            />
-            <p v-if="errors.password" class="mt-1 text-xs text-red-500">
-              {{ errors.password }}
-            </p>
-          </div>
+          <CompBaseInput
+            v-model="formData.password"
+            :label="$t('login.password')"
+            type="password"
+            :placeholder="$t('login.passwordPlaceholder')"
+            :error="errors.password"
+            autocomplete="new-password"
+            @blur="validateField('password')"
+          />
 
           <div class="flex items-center justify-between">
             <label class="flex items-center">
@@ -60,20 +47,15 @@
             </a>
           </div>
 
-          <button
-            type="submit"
-            :disabled="loading"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <span v-if="loading">登录中...</span>
-            <span v-else>{{ $t('login.login') }}</span>
-          </button>
+          <CompBaseButton type="primary" native-type="submit" :loading="loading" class="w-full">
+            {{ loading ? $t('login.loggingIn') : $t('login.login') }}
+          </CompBaseButton>
         </form>
 
         <!-- 测试账号快速填充 -->
         <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 text-center">
-            测试账号 (点击自动填充)
+            {{ $t('login.testAccounts') }}
           </p>
           <div class="grid grid-cols-2 gap-2">
             <button
@@ -84,10 +66,10 @@
               @click="fillAccount(account)"
             >
               <div class="font-medium text-gray-900 dark:text-white">
-                {{ account.label }}
+                {{ $t(account.labelKey) }}
               </div>
               <div class="text-gray-500 dark:text-gray-400 mt-0.5">
-                {{ account.description }}
+                {{ $t(account.descKey) }}
               </div>
             </button>
           </div>
@@ -97,77 +79,154 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+<script>
+import { mapStores } from 'pinia'
+import Schema from 'async-validator'
 import { useUserStore } from '@/stores/user'
-import { useFormValidation } from '@/composables/useFormValidation'
 import { validators } from '@/utils/validators'
+import { storage } from '@/utils/storage'
 
-const router = useRouter()
-const userStore = useUserStore()
-
-const loading = ref(false)
-const formData = reactive({
-  username: 'admin',
-  password: 'password',
-  remember: false,
-})
-
-const { rules, validate, errors } = useFormValidation(formData)
-rules.value = {
-  username: [validators.required('请输入用户名')],
-  password: [validators.required('请输入密码')],
-}
-
-const testAccounts = [
-  {
-    username: 'admin',
-    password: 'password',
-    label: '超级管理员',
-    description: '所有菜单权限',
-  },
-  {
-    username: 'network_admin',
-    password: 'password',
-    label: '网络管理员',
-    description: '概览+网络+VPN',
-  },
-  {
-    username: 'system_admin',
-    password: 'password',
-    label: '系统管理员',
-    description: '概览+系统',
-  },
-  {
-    username: 'user',
-    password: 'password',
-    label: '普通用户',
-    description: '仅概览',
-  },
-]
-
-const fillAccount = (account) => {
-  formData.username = account.username
-  formData.password = account.password
-}
-
-const handleLogin = async () => {
-  if (loading.value) return
-
-  const isValid = await validate()
-  if (!isValid) return
-
-  loading.value = true
-  try {
-    const res = await userStore.login(formData)
-    if (res && res.code === 200) {
-      router.push('/')
+export default {
+  name: 'ViewLogin',
+  data() {
+    return {
+      loading: false,
+      formData: {
+        username: '',
+        password: '',
+        remember: false,
+      },
+      errors: {
+        username: '',
+        password: '',
+      },
+      testAccounts: [
+        {
+          username: 'admin',
+          password: '123456Aa',
+          labelKey: 'login.testAccountLabels.admin',
+          descKey: 'login.testAccountLabels.adminDesc',
+        },
+        {
+          username: 'network_admin',
+          password: '123456Aa',
+          labelKey: 'login.testAccountLabels.networkAdmin',
+          descKey: 'login.testAccountLabels.networkAdminDesc',
+        },
+        {
+          username: 'system_admin',
+          password: '123456Aa',
+          labelKey: 'login.testAccountLabels.systemAdmin',
+          descKey: 'login.testAccountLabels.systemAdminDesc',
+        },
+        {
+          username: 'user',
+          password: '123456Aa',
+          labelKey: 'login.testAccountLabels.user',
+          descKey: 'login.testAccountLabels.userDesc',
+        },
+      ],
+      // 定义验证规则
+      rules: {
+        username: [
+          validators.required(this.$t('login.rules.usernameRequired')),
+          validators.minLength(4, this.$t('login.rules.usernameMin')),
+        ],
+        password: [
+          validators.required(this.$t('login.rules.passwordRequired')),
+          validators.pattern(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+            this.$t('login.rules.passwordPattern'),
+          ),
+          validators.minLength(8, this.$t('login.rules.passwordMin')),
+        ],
+      },
     }
-  } catch (error) {
-    console.error('Login error:', error)
-  } finally {
-    loading.value = false
-  }
+  },
+  computed: {
+    ...mapStores(useUserStore),
+  },
+  mounted() {
+    this.initPage()
+  },
+  methods: {
+    initPage() {
+      const loginInfo = storage.get('login_info')
+      if (loginInfo) {
+        this.formData.username = loginInfo.username
+        this.formData.password = loginInfo.password ? window.atob(loginInfo.password) : ''
+        this.formData.remember = true
+      }
+    },
+    fillAccount(account) {
+      this.formData.username = account.username
+      this.formData.password = account.password
+      // 填充后自动清除错误提示
+      this.errors.username = ''
+      this.errors.password = ''
+    },
+    async validateField(field) {
+      const descriptor = { [field]: this.rules[field] }
+      const validator = new Schema(descriptor)
+
+      try {
+        await validator.validate({ [field]: this.formData[field] })
+        this.errors[field] = ''
+        return true
+      } catch ({ errors }) {
+        if (errors && errors[0]) {
+          this.errors[field] = errors[0].message
+        }
+        return false
+      }
+    },
+    async validate() {
+      const validator = new Schema(this.rules)
+
+      // 重置错误
+      this.errors = { username: '', password: '' }
+
+      try {
+        await validator.validate(this.formData)
+        return true
+      } catch ({ errors }) {
+        if (errors) {
+          errors.forEach((error) => {
+            this.errors[error.field] = error.message
+          })
+        }
+        return false
+      }
+    },
+    async handleLogin() {
+      if (this.loading) return
+
+      const isValid = await this.validate()
+      if (!isValid) return
+
+      this.loading = true
+      try {
+        // 注意：mapStores 映射后，store 实例名为 userStore (storeId + 'Store')
+        const res = await this.userStore.login(this.formData)
+        if (res && res.code === 200) {
+          // 处理记住密码
+          if (this.formData.remember) {
+            storage.set('login_info', {
+              username: this.formData.username,
+              password: window.btoa(this.formData.password),
+            })
+          } else {
+            storage.remove('login_info')
+          }
+          this.$router.push('/')
+        }
+      } catch (error) {
+        console.error('Login error:', error)
+        this.$toast.error(error.message || this.$t('login.toast.fail'))
+      } finally {
+        this.loading = false
+      }
+    },
+  },
 }
 </script>
