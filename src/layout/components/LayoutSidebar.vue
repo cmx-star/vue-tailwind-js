@@ -14,35 +14,38 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script>
+import { mapStores } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { useMenuStore } from '@/stores/menu'
 import SidebarItem from './LayoutSidebarItem.vue'
 
-const appStore = useAppStore()
-const menuStore = useMenuStore()
+export default {
+  name: 'LayoutSidebar',
+  components: {
+    SidebarItem,
+  },
+  computed: {
+    ...mapStores(useAppStore, useMenuStore),
+    currentTopNavMenus() {
+      const activeTopNav = this.menuStore.activeTopNav
+      if (activeTopNav === undefined || activeTopNav === null) return []
 
-// 获取当前顶部导航对应的菜单列表
-const currentTopNavMenus = computed(() => {
-  const activeTopNav = menuStore.activeTopNav
-  if (activeTopNav === undefined || activeTopNav === null) return []
+      const menus = this.menuStore.menuList.filter((menu) => menu.meta?.topNav === activeTopNav)
 
-  // 过滤出当前 topNav 对应的菜单
-  const menus = menuStore.menuList.filter((menu) => menu.meta?.topNav === activeTopNav)
-
-  // 如果菜单列表为空，返回默认菜单（用于开发阶段）
-  if (menus.length === 0) {
-    return [
-      {
-        title: 'nav.dashboard',
-        path: '/dashboard',
-        name: 'Dashboard',
-      },
-    ]
-  }
-  return menus
-})
+      if (menus.length === 0) {
+        return [
+          {
+            title: 'nav.dashboard',
+            path: '/dashboard',
+            name: 'Dashboard',
+          },
+        ]
+      }
+      return menus
+    },
+  },
+}
 </script>
 
 <style scoped>

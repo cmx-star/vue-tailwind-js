@@ -79,116 +79,110 @@
   </li>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
+<script>
 import { ChevronDownIcon } from '@heroicons/vue/24/outline'
 import { getIcon } from '@/utils/icons'
 
-const props = defineProps({
-  item: {
-    type: Object,
-    required: true,
+export default {
+  name: 'LayoutSidebarItem',
+  components: {
+    ChevronDownIcon,
   },
-  collapsed: {
-    type: Boolean,
-    default: false,
+  props: {
+    item: {
+      type: Object,
+      required: true,
+    },
+    collapsed: {
+      type: Boolean,
+      default: false,
+    },
+    level: {
+      type: Number,
+      default: 0,
+    },
   },
-  level: {
-    type: Number,
-    default: 0,
+  data() {
+    return {
+      isExpanded: false,
+    }
   },
-})
-
-const route = useRoute()
-const { t } = useI18n()
-const isExpanded = ref(false)
-
-const isActive = computed(() => {
-  if (!props.item.path) return false
-  return route.path === props.item.path
-})
-
-const formatMenuTitle = (item) => {
-  // 优先使用 meta.titleKey（i18n key）
-  if (item.meta?.titleKey) {
-    return t(item.meta.titleKey)
-  }
-  // 其次使用 meta.title（可能是 i18n key 或直接是文本）
-  if (item.meta?.title) {
-    // 如果 title 看起来像 i18n key（包含点号），尝试翻译
-    if (typeof item.meta.title === 'string' && item.meta.title.includes('.')) {
-      try {
-        return t(item.meta.title)
-      } catch {
-        // 如果翻译失败，直接返回原文本
+  computed: {
+    isActive() {
+      if (!this.item.path) return false
+      return this.$route.path === this.item.path
+    },
+  },
+  watch: {
+    '$route.path': {
+      handler() {
+        this.checkAndExpandActive()
+      },
+      immediate: false,
+    },
+  },
+  mounted() {
+    this.checkAndExpandActive()
+  },
+  methods: {
+    getIcon,
+    formatMenuTitle(item) {
+      // 优先使用 meta.titleKey（i18n key）
+      if (item.meta?.titleKey) {
+        return this.$t(item.meta.titleKey)
+      }
+      // 其次使用 meta.title（可能是 i18n key 或直接是文本）
+      if (item.meta?.title) {
+        // 如果 title 看起来像 i18n key（包含点号），尝试翻译
+        if (typeof item.meta.title === 'string' && item.meta.title.includes('.')) {
+          try {
+            return this.$t(item.meta.title)
+          } catch {
+            // 如果翻译失败，直接返回原文本
+            return item.meta.title
+          }
+        }
         return item.meta.title
       }
-    }
-    return item.meta.title
-  }
-  // 最后使用 name
-  return item.name || ''
-}
-
-const toggleExpand = () => {
-  isExpanded.value = !isExpanded.value
-}
-
-// 检查路径是否匹配（支持精确匹配和前缀匹配）
-const isPathMatch = (itemPath, currentPath) => {
-  if (!itemPath) return false
-  // 精确匹配
-  if (itemPath === currentPath) return true
-  // 前缀匹配（确保是完整路径段）
-  if (currentPath.startsWith(itemPath + '/') || currentPath.startsWith(itemPath + '?')) {
-    return true
-  }
-  return false
-}
-
-// 自动展开包含当前路由的菜单
-const checkAndExpandActive = () => {
-  if (props.item.children && props.item.children.length > 0) {
-    const hasActiveChild = props.item.children.some((child) => {
-      // 检查子菜单路径是否匹配当前路由
-      if (isPathMatch(child.path, route.path)) return true
-      // 递归检查子菜单的子菜单
-      if (child.children && child.children.length > 0) {
-        return checkChildrenActive(child.children)
+      // 最后使用 name
+      return item.name || ''
+    },
+    toggleExpand() {
+      this.isExpanded = !this.isExpanded
+    },
+    isPathMatch(itemPath, currentPath) {
+      if (!itemPath) return false
+      if (itemPath === currentPath) return true
+      if (currentPath.startsWith(itemPath + '/') || currentPath.startsWith(itemPath + '?')) {
+        return true
       }
       return false
-    })
-    // 如果当前路由路径以父菜单路径开头，也应该展开
-    if (props.item.path && isPathMatch(props.item.path, route.path)) {
-      isExpanded.value = true
-    } else if (hasActiveChild) {
-      isExpanded.value = true
-    }
-  }
-}
-
-const checkChildrenActive = (children) => {
-  return children.some((child) => {
-    if (isPathMatch(child.path, route.path)) return true
-    if (child.children && child.children.length > 0) {
-      return checkChildrenActive(child.children)
-    }
-    return false
-  })
-}
-
-// 初始化时检查
-onMounted(() => {
-  checkAndExpandActive()
-})
-
-// 监听路由变化，重新检查展开状态
-watch(
-  () => route.path,
-  () => {
-    checkAndExpandActive()
+    },
+    checkAndExpandActive() {
+      if (this.item.children && this.item.children.length > 0) {
+        const hasActiveChild = this.item.children.some((child) => {
+          if (this.isPathMatch(child.path, this.$route.path)) return true
+          if (child.children && child.children.length > 0) {
+            return this.checkChildrenActive(child.children)
+          }
+          return false
+        })
+        if (this.item.path && this.isPathMatch(this.item.path, this.$route.path)) {
+          this.isExpanded = true
+        } else if (hasActiveChild) {
+          this.isExpanded = true
+        }
+      }
+    },
+    checkChildrenActive(children) {
+      return children.some((child) => {
+        if (this.isPathMatch(child.path, this.$route.path)) return true
+        if (child.children && child.children.length > 0) {
+          return this.checkChildrenActive(child.children)
+        }
+        return false
+      })
+    },
   },
-)
+}
 </script>

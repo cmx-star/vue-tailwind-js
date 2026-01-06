@@ -48,9 +48,8 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+<script>
+import { mapStores } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { useResizeHandler } from './composables/useResizeHandler'
 import Navbar from './components/LayoutNavbar.vue'
@@ -58,18 +57,30 @@ import Sidebar from './components/LayoutSidebar.vue'
 import AppMain from './components/LayoutMain.vue'
 import FloatingMenuButton from './components/LayoutFloatingMenuButton.vue'
 
-const route = useRoute()
-const appStore = useAppStore()
+export default {
+  name: 'AppLayout',
+  components: {
+    Navbar,
+    Sidebar,
+    AppMain,
+    FloatingMenuButton,
+  },
+  setup() {
+    const { isMobile, mobileSidebarOpen } = useResizeHandler()
 
-// 使用 Resize Composable
-const { isMobile, mobileSidebarOpen } = useResizeHandler()
-
-// 根据路由 meta.aside 判断是否显示侧边栏，如果没有设置则默认显示
-const isAside = computed(() => {
-  if (route.meta && route.meta.aside !== undefined) {
-    return route.meta.aside === '1' || route.meta.aside === 1
-  }
-  // 默认显示侧边栏（除了登录和404页）
-  return route.path !== '/login' && route.path !== '/404'
-})
+    return {
+      isMobile,
+      mobileSidebarOpen,
+    }
+  },
+  computed: {
+    ...mapStores(useAppStore),
+    isAside() {
+      if (this.$route.meta && this.$route.meta.aside !== undefined) {
+        return this.$route.meta.aside === '1' || this.$route.meta.aside === 1
+      }
+      return this.$route.path !== '/login' && this.$route.path !== '/404'
+    },
+  },
+}
 </script>

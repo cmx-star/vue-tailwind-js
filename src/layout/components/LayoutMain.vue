@@ -6,17 +6,21 @@
     <!-- 页面内容 -->
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
-        <component :is="Component" :key="route.fullPath" />
+        <component :is="Component" :key="$route.fullPath" />
       </transition>
     </router-view>
   </div>
 </template>
 
-<script setup>
-import { useRoute } from 'vue-router'
+<script>
 import Breadcrumb from './LayoutBreadcrumb.vue'
 
-const route = useRoute()
+export default {
+  name: 'LayoutMain',
+  components: {
+    Breadcrumb,
+  },
+}
 </script>
 
 <style scoped>

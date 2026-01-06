@@ -28,50 +28,54 @@
   </nav>
 </template>
 
-<script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
+<script>
 import { HomeIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
 
-const route = useRoute()
-const { t } = useI18n()
+export default {
+  name: 'LayoutBreadcrumb',
+  components: {
+    HomeIcon,
+    ChevronRightIcon,
+  },
+  computed: {
+    breadcrumbList() {
+      const matched = this.$route.matched.filter(
+        (item) => item.meta && (item.meta.title || item.meta.titleKey),
+      )
+      const list = []
 
-const breadcrumbList = computed(() => {
-  const matched = route.matched.filter(
-    (item) => item.meta && (item.meta.title || item.meta.titleKey),
-  )
-  const list = []
+      matched.forEach((item) => {
+        list.push({
+          title: item.meta.title,
+          titleKey: item.meta.titleKey,
+          path: item.path,
+        })
+      })
 
-  matched.forEach((item) => {
-    list.push({
-      title: item.meta.title,
-      titleKey: item.meta.titleKey,
-      path: item.path,
-    })
-  })
-
-  return list
-})
-
-const formatTitle = (item) => {
-  // 优先使用 titleKey（i18n key）
-  if (item.titleKey) {
-    return t(item.titleKey)
-  }
-  // 其次使用 title（可能是 i18n key 或直接是文本）
-  if (item.title) {
-    // 如果 title 看起来像 i18n key（包含点号），尝试翻译
-    if (typeof item.title === 'string' && item.title.includes('.')) {
-      try {
-        return t(item.title)
-      } catch {
-        // 如果翻译失败，直接返回原文本
+      return list
+    },
+  },
+  methods: {
+    formatTitle(item) {
+      // 优先使用 titleKey（i18n key）
+      if (item.titleKey) {
+        return this.$t(item.titleKey)
+      }
+      // 其次使用 title（可能是 i18n key 或直接是文本）
+      if (item.title) {
+        // 如果 title 看起来像 i18n key（包含点号），尝试翻译
+        if (typeof item.title === 'string' && item.title.includes('.')) {
+          try {
+            return this.$t(item.title)
+          } catch {
+            // 如果翻译失败，直接返回原文本
+            return item.title
+          }
+        }
         return item.title
       }
-    }
-    return item.title
-  }
-  return ''
+      return ''
+    },
+  },
 }
 </script>

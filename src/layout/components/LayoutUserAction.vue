@@ -18,10 +18,10 @@
     >
       <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
         <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-          {{ userInfo?.nickname || userInfo?.username || '未登录用户' }}
+          {{ userInfo?.nickname || userInfo?.username || $t('layout.user.notLoggedIn') }}
         </p>
         <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
-          {{ userInfo?.email || '暂无邮箱信息' }}
+          {{ userInfo?.email || $t('layout.user.noEmail') }}
         </p>
       </div>
       <button
@@ -34,48 +34,59 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+<script>
+import { ref } from 'vue'
+import { onClickOutside } from '@vueuse/core'
 import { useUserStore } from '@/stores/user'
 import { useModal } from '@/composables/useModal'
-import { onClickOutside } from '@vueuse/core'
 
-const router = useRouter()
-const userStore = useUserStore()
-const { confirm } = useModal()
+export default {
+  name: 'LayoutUserAction',
+  setup() {
+    const triggerRef = ref(null)
+    const dropdownRef = ref(null)
+    const showUserDropdown = ref(false)
 
-const userInfo = computed(() => userStore.userInfo)
-const showUserDropdown = ref(false)
-const userDropdownRef = ref(null)
-const triggerRef = ref(null)
-const dropdownRef = ref(null)
+    onClickOutside(
+      dropdownRef,
+      () => {
+        showUserDropdown.value = false
+      },
+      {
+        ignore: [triggerRef],
+      },
+    )
 
-const toggleUserDropdown = () => {
-  showUserDropdown.value = !showUserDropdown.value
-}
-
-const handleLogout = async () => {
-  const isConfirmed = await confirm({
-    title: '确认退出',
-    content: '您确定要退出当前账号吗？',
-    confirmText: '退出',
-  })
-
-  if (isConfirmed) {
-    userStore.logout()
-    router.push('/login')
-  }
-}
-
-// 使用 @vueuse/core 的 onClickOutside 优化点击外部关闭逻辑
-onClickOutside(
-  dropdownRef,
-  () => {
-    showUserDropdown.value = false
+    return {
+      triggerRef,
+      dropdownRef,
+      showUserDropdown,
+    }
   },
-  {
-    ignore: [triggerRef],
+  computed: {
+    userInfo() {
+      const userStore = useUserStore()
+      return userStore.userInfo
+    },
   },
-)
+  methods: {
+    toggleUserDropdown() {
+      this.showUserDropdown = !this.showUserDropdown
+    },
+    async handleLogout() {
+      const { confirm } = useModal()
+      const isConfirmed = await confirm({
+        title: this.$t('layout.user.confirmLogout'),
+        content: this.$t('layout.user.confirmLogoutMessage'),
+        confirmText: this.$t('layout.user.logoutButton'),
+      })
+
+      if (isConfirmed) {
+        const userStore = useUserStore()
+        userStore.logout()
+        this.$router.push('/login')
+      }
+    },
+  },
+}
 </script>

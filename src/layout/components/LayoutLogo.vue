@@ -4,14 +4,18 @@
       class="w-10 h-10 flex items-center justify-center rounded-lg text-white text-lg font-bold flex-shrink-0"
       style="background-color: var(--color-primary-600)"
     >
-      后
+      {{ $t('layout.appNameShort') }}
     </div>
-    <h1 class="text-lg font-bold text-gray-900 dark:text-white whitespace-nowrap">后台管理</h1>
+    <h1 class="text-lg font-bold text-gray-900 dark:text-white whitespace-nowrap">
+      {{ $t('layout.appName') }}
+    </h1>
   </div>
 </template>
 
-<script setup>
-// Logo 组件，在 Navbar 中使用
+<script>
+export default {
+  name: 'LayoutLogo',
+}
 </script>
 
 <style scoped>
