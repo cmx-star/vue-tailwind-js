@@ -303,6 +303,19 @@
     "personalSettings": {
       "title": "个人设置模块",
       "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    },
+    "logs": {
+      "title": "操作日志",
+      "description": "系统操作记录与安全审计日志。",
+      "table": {
+        "time": "操作时间",
+        "user": "操作人",
+        "action": "操作行为",
+        "ip": "IP 地址"
+      },
+      "mock": {
+        "loginSuccess": "登录成功"
+      }
     }
   },
   "wizard": {
@@ -370,7 +383,7 @@
       "description": "请输入个人简介",
       "textInput": "普通文本输入",
       "textarea": "多行文本输入",
-      "emailInput": "example@email.com",
+      "emailInput": "example{'@'}email.com",
       "passwordInput": "请输入密码",
       "numberInput": "请输入数字",
       "select": "请选择",

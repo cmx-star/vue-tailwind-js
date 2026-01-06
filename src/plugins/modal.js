@@ -1,8 +1,11 @@
 import { createVNode, render } from 'vue'
 import CompModal from '@/components/Feedback/CompModal.vue'
 
+let _context = null
+
 export const ModalPlugin = {
   install(app) {
+    _context = app._context
     // 挂载到全局属性，适配 Options API
     app.config.globalProperties.$modal = {
       confirm: createModal,
@@ -63,6 +66,7 @@ export function createModal(options = {}) {
 
     // 4. 创建 VNode
     const vnode = createVNode(CompModal, props)
+    vnode.appContext = _context
 
     // 5. 渲染
     render(vnode, container)

@@ -298,6 +298,19 @@
     "personalSettings": {
       "title": "Personal Settings Module",
       "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    },
+    "logs": {
+      "title": "Operation Log",
+      "description": "System operation records and security audit logs.",
+      "table": {
+        "time": "Time",
+        "user": "User",
+        "action": "Action",
+        "ip": "IP Address"
+      },
+      "mock": {
+        "loginSuccess": "Login Success"
+      }
     }
   },
   "wizard": {
@@ -365,7 +378,7 @@
       "description": "Please enter description",
       "textInput": "Plain text input",
       "textarea": "Multi-line text input",
-      "emailInput": "example@email.com",
+      "emailInput": "example{'@'}email.com",
       "passwordInput": "Please enter password",
       "numberInput": "Please enter number",
       "select": "Please select",

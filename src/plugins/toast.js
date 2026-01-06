@@ -12,6 +12,7 @@ export const ToastPlugin = {
 
     // 2. 创建虚拟节点
     const vnode = createVNode(CompToast)
+    vnode.appContext = app._context
 
     // 3. 渲染组件到挂载点
     render(vnode, container)
