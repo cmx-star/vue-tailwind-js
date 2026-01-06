@@ -3,9 +3,11 @@
     <!-- 页面标题 -->
     <div class="mb-6">
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-        {{ $t('dashboard.title') }}
+        {{ $t('overview.dashboard.title') }}
       </h1>
-      <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">欢迎回来，这里是您的数据概览</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+        {{ $t('overview.dashboard.welcome') }}
+      </p>
     </div>
 
     <!-- 统计卡片 -->
@@ -31,7 +33,9 @@
               >
                 {{ stat.trend > 0 ? '↑' : '↓' }} {{ Math.abs(stat.trend) }}%
               </span>
-              <span class="text-xs text-gray-500 dark:text-gray-400 ml-2"> 较上月 </span>
+              <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">{{
+                $t('overview.dashboard.comparedToLastMonth')
+              }}</span>
             </div>
           </div>
           <div
@@ -58,7 +62,9 @@
         class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
       >
         <div class="flex items-center justify-between mb-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">数据趋势</h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+            {{ $t('overview.dashboard.dataTrend') }}
+          </h2>
           <div class="flex items-center space-x-3">
             <!-- 日期选择器 -->
             <CompDatePicker v-model="selectedDateRange" :clearable="true" />
@@ -66,7 +72,7 @@
             <CompSelect
               v-model="selectedPeriod"
               :options="periodOptions"
-              placeholder="选择时间段"
+              :placeholder="$t('overview.dashboard.selectTimePeriod')"
             />
           </div>
         </div>
@@ -79,7 +85,9 @@
         <div
           class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
         >
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">快捷操作</h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            {{ $t('overview.dashboard.quickActions') }}
+          </h2>
           <div class="space-y-2">
             <button
               v-for="action in quickActions"
@@ -103,7 +111,9 @@
         <div
           class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
         >
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">最近活动</h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            {{ $t('overview.dashboard.recentActivity') }}
+          </h2>
           <div class="space-y-4">
             <div
               v-for="activity in recentActivities"
@@ -148,7 +158,9 @@
       <div
         class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">折线图</h3>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          {{ $t('overview.dashboard.lineChart') }}
+        </h3>
         <CompLineChart :data="lineChartData" :height="300" color="#3B82F6" :smooth="true" />
       </div>
 
@@ -156,7 +168,9 @@
       <div
         class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">面积图</h3>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          {{ $t('overview.dashboard.areaChart') }}
+        </h3>
         <CompAreaChart
           :data="areaChartData"
           :height="300"
@@ -169,7 +183,9 @@
       <div
         class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
       >
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">柱状图</h3>
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          {{ $t('overview.dashboard.barChart') }}
+        </h3>
         <CompBarChart :data="barChartData" :height="300" :colors="['#F59E0B', '#EF4444']" />
       </div>
     </div>
@@ -179,78 +195,112 @@
       <div
         class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6"
       >
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">封装组件展示</h2>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">
+          {{ $t('overview.dashboard.componentDemo') }}
+        </h2>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- 下拉选择器 -->
           <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-              下拉选择器 (CompSelect)
+              {{ $t('overview.dashboard.selectDemo') }}
             </h3>
             <div class="space-y-3">
               <CompSelect
                 v-model="demoSelect"
                 :options="selectOptions"
-                placeholder="请选择选项"
+                :placeholder="$t('overview.dashboard.selectOption')"
                 label="label"
               />
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                已选择: {{ demoSelect || '无' }}
+                {{ $t('overview.dashboard.selected')
+                }}{{ demoSelect || $t('overview.dashboard.none') }}
               </p>
             </div>
           </div>
 
           <!-- 日期选择器 -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">日期选择器</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              {{ $t('overview.dashboard.datePicker') }}
+            </h3>
             <div class="space-y-3">
-              <CompDatePicker v-model="demoDate" label="选择日期" mode="date" />
+              <CompDatePicker
+                v-model="demoDate"
+                :label="$t('overview.dashboard.selectDate')"
+                mode="date"
+              />
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                已选择: {{ demoDate ? new Date(demoDate).toLocaleDateString() : '无' }}
+                {{ $t('overview.dashboard.selected')
+                }}{{
+                  demoDate ? new Date(demoDate).toLocaleDateString() : $t('overview.dashboard.none')
+                }}
               </p>
             </div>
           </div>
 
           <!-- 时间选择器 -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">时间选择器</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              {{ $t('overview.dashboard.timePicker') }}
+            </h3>
             <div class="space-y-3">
-              <CompDatePicker v-model="demoTime" label="选择时间" mode="time" />
+              <CompDatePicker
+                v-model="demoTime"
+                :label="$t('overview.dashboard.selectTime')"
+                mode="time"
+              />
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                已选择: {{ demoTime ? new Date(demoTime).toLocaleTimeString() : '无' }}
+                {{ $t('overview.dashboard.selected')
+                }}{{
+                  demoTime ? new Date(demoTime).toLocaleTimeString() : $t('overview.dashboard.none')
+                }}
               </p>
             </div>
           </div>
 
           <!-- 日期时间选择器 -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">日期时间选择器</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              {{ $t('overview.dashboard.dateTimePicker') }}
+            </h3>
             <div class="space-y-3">
-              <CompDatePicker v-model="demoDateTime" label="选择日期时间" mode="dateTime" />
+              <CompDatePicker
+                v-model="demoDateTime"
+                :label="$t('overview.dashboard.selectDateTime')"
+                mode="dateTime"
+              />
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                已选择: {{ demoDateTime ? new Date(demoDateTime).toLocaleString() : '无' }}
+                {{ $t('overview.dashboard.selected')
+                }}{{
+                  demoDateTime
+                    ? new Date(demoDateTime).toLocaleString()
+                    : $t('overview.dashboard.none')
+                }}
               </p>
             </div>
           </div>
 
           <!-- 日期范围选择器 -->
           <div class="lg:col-span-2">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">日期范围选择器</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              {{ $t('overview.dashboard.dateRangePicker') }}
+            </h3>
             <div class="space-y-3">
               <CompDatePicker
                 v-model="demoDateRange"
-                label="选择日期范围"
+                :label="$t('overview.dashboard.selectDateRange')"
                 mode="date"
                 :range="true"
               />
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                已选择:
+                {{ $t('overview.dashboard.selected') }}
                 <span v-if="demoDateRange && demoDateRange.start && demoDateRange.end">
                   {{ new Date(demoDateRange.start).toLocaleDateString() }}
-                  至
+                  {{ $t('overview.dashboard.to') }}
                   {{ new Date(demoDateRange.end).toLocaleDateString() }}
                 </span>
-                <span v-else>无</span>
+                <span v-else>{{ $t('overview.dashboard.none') }}</span>
               </p>
             </div>
           </div>
@@ -269,9 +319,9 @@ export default {
       selectedPeriod: 'week',
       selectedDateRange: null,
       periodOptions: [
-        { label: '本周', value: 'week' },
-        { label: '本月', value: 'month' },
-        { label: '本季度', value: 'quarter' },
+        { label: this.$t('overview.dashboard.thisWeek'), value: 'week' },
+        { label: this.$t('overview.dashboard.thisMonth'), value: 'month' },
+        { label: this.$t('overview.dashboard.thisQuarter'), value: 'quarter' },
       ],
       chartData: [
         { x: '周一', y: 30 },

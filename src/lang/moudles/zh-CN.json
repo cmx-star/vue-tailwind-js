@@ -44,6 +44,16 @@
       "alphanumeric": "仅支持字母和数字"
     }
   },
+  "menu": {
+    "topNav": {
+      "overview": "概览",
+      "network": "网络",
+      "vpn": "VPN",
+      "edge": "边缘计算",
+      "wizard": "向导",
+      "system": "系统"
+    }
+  },
   "nav": {
     "dashboard": "控制台",
     "edgeComputing": "边缘计算",
@@ -216,6 +226,91 @@
       "confirmLogout": "确认退出",
       "confirmLogoutMessage": "您确定要退出当前账号吗?",
       "logoutButton": "退出"
+    }
+  },
+  "network": {
+    "manager": {
+      "title": "网络管理模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    },
+    "interface": {
+      "title": "接口配置模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    },
+    "firewall": {
+      "title": "防火墙设置模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    }
+  },
+  "overview": {
+    "dashboard": {
+      "title": "系统概览",
+      "welcome": "欢迎回来,这里是您的数据概览",
+      "dataTrend": "数据趋势",
+      "quickActions": "快捷操作",
+      "recentActivity": "最近活动",
+      "lineChart": "折线图",
+      "areaChart": "面积图",
+      "barChart": "柱状图",
+      "componentDemo": "封装组件展示",
+      "selectDemo": "下拉选择器 (CompSelect)",
+      "datePicker": "日期选择器",
+      "timePicker": "时间选择器",
+      "dateTimePicker": "日期时间选择器",
+      "dateRangePicker": "日期范围选择器",
+      "selectTimePeriod": "选择时间段",
+      "selectOption": "请选择选项",
+      "selectDate": "选择日期",
+      "selectTime": "选择时间",
+      "selectDateTime": "选择日期时间",
+      "selectDateRange": "选择日期范围",
+      "selected": "已选择: ",
+      "none": "无",
+      "to": "至",
+      "comparedToLastMonth": "较上月",
+      "thisWeek": "本周",
+      "thisMonth": "本月",
+      "thisQuarter": "本季度"
+    }
+  },
+  "system": {
+    "settings": {
+      "title": "系统设置模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    },
+    "users": {
+      "title": "用户管理模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    },
+    "roles": {
+      "title": "角色管理模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    },
+    "personalSettings": {
+      "title": "个人设置模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    }
+  },
+  "wizard": {
+    "quick": {
+      "title": "快速配置模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+    }
+  },
+  "vpn": {
+    "users": {
+      "title": "VPN用户列表模块",
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。",
+      "successToast": "成功 Toast",
+      "warningToast": "警告 Toast",
+      "errorToast": "错误 Toast",
+      "infoToast": "信息 Toast",
+      "dangerToast": "危险 Toast",
+      "successMessage": "操作成功！这是一条成功消息。",
+      "warningMessage": "注意！系统检测到潜在风险。",
+      "errorMessage": "错误！无法连接到服务器。",
+      "infoMessage": "提示：您收到了一条新消息。",
+      "dangerMessage": "危险！该操作不可撤销。"
     }
   }
 }

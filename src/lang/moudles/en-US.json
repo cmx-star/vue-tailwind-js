@@ -44,6 +44,16 @@
       "alphanumeric": "Only letters and numbers are allowed"
     }
   },
+  "menu": {
+    "topNav": {
+      "overview": "Overview",
+      "network": "Network",
+      "vpn": "VPN",
+      "edge": "Edge Computing",
+      "wizard": "Wizard",
+      "system": "System"
+    }
+  },
   "nav": {
     "dashboard": "Dashboard",
     "edgeComputing": "Edge Computing",
@@ -211,6 +221,91 @@
       "confirmLogout": "Confirm Logout",
       "confirmLogoutMessage": "Are you sure you want to logout?",
       "logoutButton": "Logout"
+    }
+  },
+  "network": {
+    "manager": {
+      "title": "Network Management Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    },
+    "interface": {
+      "title": "Interface Configuration Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    },
+    "firewall": {
+      "title": "Firewall Settings Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    }
+  },
+  "overview": {
+    "dashboard": {
+      "title": "System Overview",
+      "welcome": "Welcome back, here is your data overview",
+      "dataTrend": "Data Trend",
+      "quickActions": "Quick Actions",
+      "recentActivity": "Recent Activity",
+      "lineChart": "Line Chart",
+      "areaChart": "Area Chart",
+      "barChart": "Bar Chart",
+      "componentDemo": "Component Showcase",
+      "selectDemo": "Select Dropdown (CompSelect)",
+      "datePicker": "Date Picker",
+      "timePicker": "Time Picker",
+      "dateTimePicker": "DateTime Picker",
+      "dateRangePicker": "Date Range Picker",
+      "selectTimePeriod": "Select Time Period",
+      "selectOption": "Please select an option",
+      "selectDate": "Select Date",
+      "selectTime": "Select Time",
+      "selectDateTime": "Select DateTime",
+      "selectDateRange": "Select Date Range",
+      "selected": "Selected: ",
+      "none": "None",
+      "to": "to",
+      "comparedToLastMonth": "Compared to last month",
+      "thisWeek": "This Week",
+      "thisMonth": "This Month",
+      "thisQuarter": "This Quarter"
+    }
+  },
+  "system": {
+    "settings": {
+      "title": "System Settings Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    },
+    "users": {
+      "title": "User Management Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    },
+    "roles": {
+      "title": "Role Management Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    },
+    "personalSettings": {
+      "title": "Personal Settings Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    }
+  },
+  "wizard": {
+    "quick": {
+      "title": "Quick Setup Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
+    }
+  },
+  "vpn": {
+    "users": {
+      "title": "VPN User List Module",
+      "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities.",
+      "successToast": "Success Toast",
+      "warningToast": "Warning Toast",
+      "errorToast": "Error Toast",
+      "infoToast": "Info Toast",
+      "dangerToast": "Danger Toast",
+      "successMessage": "Success! This is a success message.",
+      "warningMessage": "Warning! System detected potential risks.",
+      "errorMessage": "Error! Unable to connect to server.",
+      "infoMessage": "Info: You have received a new message.",
+      "dangerMessage": "Danger! This operation cannot be undone."
     }
   }
 }

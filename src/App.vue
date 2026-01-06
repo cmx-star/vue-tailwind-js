@@ -1,7 +1,5 @@
 <template>
   <router-view />
-
-  <!-- Toast 通知 -->
 </template>
 
 <script setup>
