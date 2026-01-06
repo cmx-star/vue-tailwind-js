@@ -27,7 +27,7 @@
               <input
                 v-model="leftSearch"
                 type="text"
-                placeholder="搜索..."
+                :placeholder="$t('common.searchPlaceholder')"
                 class="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
@@ -36,7 +36,7 @@
           <!-- List -->
           <div class="max-h-60 overflow-auto custom-scrollbar">
             <div v-if="filteredLeftData.length === 0" class="px-4 py-8 text-center">
-              <p class="text-sm text-gray-500 dark:text-gray-400">暂无数据</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('common.noData') }}</p>
             </div>
             <label
               v-for="item in filteredLeftData"
@@ -123,7 +123,7 @@
               <input
                 v-model="rightSearch"
                 type="text"
-                placeholder="搜索..."
+                :placeholder="$t('common.searchPlaceholder')"
                 class="w-full px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
@@ -132,7 +132,7 @@
           <!-- List -->
           <div class="max-h-60 overflow-auto custom-scrollbar">
             <div v-if="filteredRightData.length === 0" class="px-4 py-8 text-center">
-              <p class="text-sm text-gray-500 dark:text-gray-400">暂无数据</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{{ $t('common.noData') }}</p>
             </div>
             <label
               v-for="item in filteredRightData"

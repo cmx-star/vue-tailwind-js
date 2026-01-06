@@ -11,7 +11,6 @@
     "submit": "提交",
     "back": "返回",
     "loading": "加载中...",
-    "noData": "暂无数据",
     "data": "数据",
     "series": "系列",
     "operation": "操作",
@@ -21,6 +20,32 @@
     "items": "项",
     "pleaseSelect": "请选择...",
     "noOptions": "无选项",
+    "noData": "暂无数据",
+    "searchPlaceholder": "搜索...",
+    "validation": {
+      "required": "此字段为必填项",
+      "email": "请输入有效的邮箱地址",
+      "phone": "请输入有效的手机号码",
+      "url": "请输入有效的URL地址",
+      "password": "密码至少6位,需包含字母和数字",
+      "strongPassword": "密码至少8位,需包含大小写字母和数字",
+      "username": "用户名4-20位,只能包含字母数字下划线",
+      "minLength": "最少需要 {min} 个字符",
+      "maxLength": "最多允许 {max} 个字符",
+      "lengthRange": "长度必须在 {min} 到 {max} 个字符之间",
+      "pattern": "格式不正确",
+      "ip": "请输入有效的IP地址",
+      "number": "请输入有效的数字",
+      "integer": "请输入整数",
+      "range": "数值必须在 {min} 到 {max} 之间",
+      "idCard": "请输入有效的身份证号码",
+      "chinese": "只能输入中文字符",
+      "english": "只能输入英文字符",
+      "alphanumeric": "只能输入字母和数字",
+      "confirmPassword": "两次输入的密码不一致",
+      "arrayNotEmpty": "请至少选择一项",
+      "custom": "验证失败"
+    },
     "date": {
       "range": "选择日期范围",
       "time": "选择时间",
@@ -30,19 +55,7 @@
     "tip": "提示",
     "pageNotFound": "页面未找到",
     "pageNotFoundDesc": "抱歉，您访问的页面不存在",
-    "backHome": "返回首页",
-    "validation": {
-      "required": "此项为必填项",
-      "email": "请输入有效的邮箱地址",
-      "phone": "请输入有效的手机号",
-      "url": "请输入有效的 URL",
-      "password": "密码至少 6 位，需包含字母和数字",
-      "username": "用户名 4-20 位，仅支持字母、数字、下划线",
-      "minLength": "长度不能少于 {min} 位",
-      "maxLength": "长度不能超过 {max} 位",
-      "pattern": "格式不正确",
-      "alphanumeric": "仅支持字母和数字"
-    }
+    "backHome": "返回首页"
   },
   "menu": {
     "topNav": {

@@ -11,7 +11,6 @@
     "submit": "Submit",
     "back": "Back",
     "loading": "Loading...",
-    "noData": "No Data",
     "data": "Data",
     "series": "Series",
     "operation": "Operation",
@@ -21,6 +20,32 @@
     "items": "items",
     "pleaseSelect": "Please select...",
     "noOptions": "No options",
+    "noData": "No data",
+    "searchPlaceholder": "Search...",
+    "validation": {
+      "required": "This field is required",
+      "email": "Please enter a valid email address",
+      "phone": "Please enter a valid phone number",
+      "url": "Please enter a valid URL",
+      "password": "Password must be at least 6 characters with letters and numbers",
+      "strongPassword": "Password must be at least 8 characters with uppercase, lowercase and numbers",
+      "username": "Username must be 4-20 characters, letters, numbers and underscores only",
+      "minLength": "Minimum {min} characters required",
+      "maxLength": "Maximum {max} characters allowed",
+      "lengthRange": "Length must be between {min} and {max} characters",
+      "pattern": "Invalid format",
+      "ip": "Please enter a valid IP address",
+      "number": "Please enter a valid number",
+      "integer": "Please enter an integer",
+      "range": "Value must be between {min} and {max}",
+      "idCard": "Please enter a valid ID card number",
+      "chinese": "Only Chinese characters allowed",
+      "english": "Only English characters allowed",
+      "alphanumeric": "Only letters and numbers allowed",
+      "confirmPassword": "Passwords do not match",
+      "arrayNotEmpty": "Please select at least one item",
+      "custom": "Validation failed"
+    },
     "date": {
       "range": "Select date range",
       "time": "Select time",
@@ -30,19 +55,7 @@
     "tip": "Tip",
     "pageNotFound": "Page Not Found",
     "pageNotFoundDesc": "Sorry, the page you are looking for does not exist",
-    "backHome": "Back Home",
-    "validation": {
-      "required": "This field is required",
-      "email": "Please enter a valid email address",
-      "phone": "Please enter a valid phone number",
-      "url": "Please enter a valid URL",
-      "password": "Password must be at least 6 characters with letters and numbers",
-      "username": "Username must be 4-20 characters, letters, numbers and underscores only",
-      "minLength": "Minimum length is {min}",
-      "maxLength": "Maximum length is {max}",
-      "pattern": "Invalid format",
-      "alphanumeric": "Only letters and numbers are allowed"
-    }
+    "backHome": "Back Home"
   },
   "menu": {
     "topNav": {

@@ -1,9 +1,9 @@
 /**
- * 表单验证规则
+ * Form validation rules
  */
 
 /**
- * 验证邮箱
+ * Validate email
  */
 export function validateEmail(value) {
   const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -11,7 +11,7 @@ export function validateEmail(value) {
 }
 
 /**
- * 验证手机号 (中国大陆)
+ * Validate phone number (China mainland)
  */
 export function validatePhone(value) {
   const pattern = /^1[3-9]\d{9}$/
@@ -19,7 +19,7 @@ export function validatePhone(value) {
 }
 
 /**
- * 验证 URL
+ * Validate URL
  */
 export function validateURL(value) {
   try {
@@ -31,8 +31,8 @@ export function validateURL(value) {
 }
 
 /**
- * 验证密码强度
- * 至少 6 位，包含字母和数字
+ * Validate password strength
+ * At least 6 characters, including letters and numbers
  */
 export function validatePassword(value) {
   const pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
@@ -40,8 +40,8 @@ export function validatePassword(value) {
 }
 
 /**
- * 验证用户名
- * 4-20 位，字母、数字、下划线
+ * Validate username
+ * 4-20 characters, letters, numbers, underscores
  */
 export function validateUsername(value) {
   const pattern = /^[a-zA-Z0-9_]{4,20}$/
@@ -49,7 +49,7 @@ export function validateUsername(value) {
 }
 
 /**
- * 验证 IP 地址
+ * Validate IP address
  */
 export function validateIP(value) {
   const pattern = /^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/
@@ -57,16 +57,16 @@ export function validateIP(value) {
 }
 
 /**
- * 通用验证规则工厂 (适配 async-validator)
- * 使用示例:
+ * Validation rule factory (compatible with async-validator)
+ * Usage example:
  * rules: [
- *   validators.required('用户名不能为空'),
- *   validators.minLength(4, '用户名至少4个字符')
+ *   validators.required(this.$t('common.validation.required')),
+ *   validators.minLength(4, this.$t('common.validation.minLength', { min: 4 }))
  * ]
  */
 export const validators = {
-  // 必填验证
-  required(message = '此字段为必填项') {
+  // Required validation
+  required(message = 'This field is required') {
     return {
       required: true,
       message,
@@ -74,97 +74,99 @@ export const validators = {
     }
   },
 
-  // 邮箱验证
-  email(message = '请输入有效的邮箱地址') {
+  // Email validation
+  email(message = 'Please enter a valid email address') {
     return {
       type: 'email',
       message,
     }
   },
 
-  // 手机号验证 (中国)
-  phone(message = '请输入有效的手机号码') {
+  // Phone validation (China)
+  phone(message = 'Please enter a valid phone number') {
     return {
       pattern: /^1[3-9]\d{9}$/,
       message,
     }
   },
 
-  // URL 验证
-  url(message = '请输入有效的URL地址') {
+  // URL validation
+  url(message = 'Please enter a valid URL') {
     return {
       type: 'url',
       message,
     }
   },
 
-  // 密码强度验证 (至少6位,包含字母和数字)
-  password(message = '密码至少6位,需包含字母和数字') {
+  // Password strength validation (at least 6 characters with letters and numbers)
+  password(message = 'Password must be at least 6 characters with letters and numbers') {
     return {
       pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
       message,
     }
   },
 
-  // 强密码验证 (至少8位,包含大小写字母和数字)
-  strongPassword(message = '密码至少8位,需包含大小写字母和数字') {
+  // Strong password validation (at least 8 characters with uppercase, lowercase and numbers)
+  strongPassword(
+    message = 'Password must be at least 8 characters with uppercase, lowercase and numbers',
+  ) {
     return {
       pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
       message,
     }
   },
 
-  // 用户名验证 (4-20位,字母数字下划线)
-  username(message = '用户名4-20位,只能包含字母数字下划线') {
+  // Username validation (4-20 characters, letters, numbers, underscores)
+  username(message = 'Username must be 4-20 characters, letters, numbers and underscores only') {
     return {
       pattern: /^[a-zA-Z0-9_]{4,20}$/,
       message,
     }
   },
 
-  // 最小长度验证
+  // Minimum length validation
   minLength(min, message) {
     return {
       min,
-      message: message || `最少需要 ${min} 个字符`,
+      message: message || `Minimum ${min} characters required`,
     }
   },
 
-  // 最大长度验证
+  // Maximum length validation
   maxLength(max, message) {
     return {
       max,
-      message: message || `最多允许 ${max} 个字符`,
+      message: message || `Maximum ${max} characters allowed`,
     }
   },
 
-  // 长度范围验证
+  // Length range validation
   lengthRange(min, max, message) {
     return {
       min,
       max,
-      message: message || `长度必须在 ${min} 到 ${max} 个字符之间`,
+      message: message || `Length must be between ${min} and ${max} characters`,
     }
   },
 
-  // 正则表达式验证
-  pattern(regex, message = '格式不正确') {
+  // Regular expression validation
+  pattern(regex, message = 'Invalid format') {
     return {
       pattern: regex,
       message,
     }
   },
 
-  // IP地址验证
-  ip(message = '请输入有效的IP地址') {
+  // IP address validation
+  ip(message = 'Please enter a valid IP address') {
     return {
       pattern: /^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/,
       message,
     }
   },
 
-  // 数字验证
-  number(message = '请输入有效的数字') {
+  // Number validation
+  number(message = 'Please enter a valid number') {
     return {
       type: 'number',
       message,
@@ -175,8 +177,8 @@ export const validators = {
     }
   },
 
-  // 整数验证
-  integer(message = '请输入整数') {
+  // Integer validation
+  integer(message = 'Please enter an integer') {
     return {
       type: 'integer',
       message,
@@ -187,51 +189,51 @@ export const validators = {
     }
   },
 
-  // 数字范围验证
+  // Number range validation
   range(min, max, message) {
     return {
       type: 'number',
       min,
       max,
-      message: message || `数值必须在 ${min} 到 ${max} 之间`,
+      message: message || `Value must be between ${min} and ${max}`,
       transform: (value) => Number(value),
     }
   },
 
-  // 身份证号验证 (中国)
-  idCard(message = '请输入有效的身份证号码') {
+  // ID card validation (China)
+  idCard(message = 'Please enter a valid ID card number') {
     return {
       pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
       message,
     }
   },
 
-  // 仅中文验证
-  chinese(message = '只能输入中文字符') {
+  // Chinese characters only
+  chinese(message = 'Only Chinese characters allowed') {
     return {
       pattern: /^[\u4e00-\u9fa5]+$/,
       message,
     }
   },
 
-  // 仅英文验证
-  english(message = '只能输入英文字符') {
+  // English characters only
+  english(message = 'Only English characters allowed') {
     return {
       pattern: /^[a-zA-Z]+$/,
       message,
     }
   },
 
-  // 字母和数字组合
-  alphanumeric(message = '只能输入字母和数字') {
+  // Alphanumeric validation
+  alphanumeric(message = 'Only letters and numbers allowed') {
     return {
       pattern: /^[a-zA-Z0-9]+$/,
       message,
     }
   },
 
-  // 确认密码验证
-  confirmPassword(passwordField, message = '两次输入的密码不一致') {
+  // Confirm password validation
+  confirmPassword(passwordField, message = 'Passwords do not match') {
     return {
       validator: (rule, value, callback, source) => {
         return new Promise((resolve, reject) => {
@@ -245,8 +247,8 @@ export const validators = {
     }
   },
 
-  // 数组非空验证
-  arrayNotEmpty(message = '请至少选择一项') {
+  // Array not empty validation
+  arrayNotEmpty(message = 'Please select at least one item') {
     return {
       type: 'array',
       min: 1,
@@ -254,8 +256,8 @@ export const validators = {
     }
   },
 
-  // 自定义验证器
-  custom(validator, message = '验证失败') {
+  // Custom validator
+  custom(validator, message = 'Validation failed') {
     return {
       validator: (rule, value) => {
         return new Promise((resolve, reject) => {
