@@ -92,7 +92,7 @@
     >
       <div class="flex items-center space-x-2">
         <svg
-          class="animate-spin h-5 w-5 text-blue-600"
+          class="animate-spin h-5 w-5 text-primary-600"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

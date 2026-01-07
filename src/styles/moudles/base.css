@@ -7,13 +7,19 @@ body {
     sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+/* 全局文字颜色 */
+body {
+  color: var(--color-text-body);
+  background-color: var(--color-bg-primary);
+}
+
 /* 平滑滚动 */
 html {
   scroll-behavior: smooth;
 }
 
-/* 禁用选中文本的默认样式 */
+/* 文本选中样式 - 使用主题品牌色 */
 ::selection {
-  background-color: rgba(59, 130, 246, 0.3);
-  color: inherit;
+  background-color: var(--color-primary-200);
+  color: var(--color-primary-900);
 }

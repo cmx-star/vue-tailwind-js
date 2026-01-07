@@ -29,8 +29,8 @@
         >
           <!-- 自定义插槽示例 -->
           <template #customField>
-            <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <p class="text-sm text-blue-600 dark:text-blue-400">
+            <div class="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
+              <p class="text-sm text-primary-600 dark:text-primary-400">
                 {{ $t('formDemo.customSlot') }}
               </p>
             </div>

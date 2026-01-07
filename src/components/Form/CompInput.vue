@@ -2,7 +2,7 @@
   <div class="w-full">
     <label v-if="label" :for="inputId" class="block mb-2.5 text-sm font-medium text-heading">
       {{ label }}
-      <span v-if="required" class="text-red-500">*</span>
+      <span v-if="required" class="text-danger">*</span>
     </label>
     <div class="relative">
       <!-- Textarea -->
@@ -47,7 +47,7 @@
         <EyeSlashIcon v-else class="h-5 w-5" aria-hidden="true" />
       </button>
     </div>
-    <p v-if="error" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ error }}</p>
+    <p v-if="error" class="mt-1 text-sm text-danger">{{ error }}</p>
     <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ hint }}</p>
   </div>
 </template>
@@ -117,9 +117,9 @@ export default {
     },
     statusClasses() {
       if (this.error) {
-        return 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-400'
+        return 'border-danger/50 text-danger placeholder-danger/60 focus:ring-danger/50 focus:border-danger dark:border-danger/70 dark:text-danger'
       }
-      return 'bg-neutral-secondary-medium border-default-medium text-heading focus:ring-brand focus:border-brand shadow-xs placeholder:text-body'
+      return 'bg-neutral-secondary-medium border-default-medium text-heading focus:ring-primary-500 focus:border-primary-500 shadow-xs placeholder:text-body'
     },
     inputClasses() {
       const paddingRight = this.type === 'password' ? 'pr-10' : ''

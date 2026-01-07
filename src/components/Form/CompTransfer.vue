@@ -2,7 +2,7 @@
   <div class="CompTransfer w-full">
     <label v-if="label" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
       {{ label }}
-      <span v-if="required" class="text-red-500">*</span>
+      <span v-if="required" class="text-danger">*</span>
     </label>
 
     <div class="flex items-center gap-4">
@@ -155,7 +155,7 @@
       </div>
     </div>
 
-    <p v-if="error" class="mt-2 text-sm text-red-600 dark:text-red-400">
+    <p v-if="error" class="mt-2 text-sm text-danger">
       {{ error }}
     </p>
     <p v-else-if="hint" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -286,19 +286,16 @@ export default {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--color-scrollbar-thumb);
   border-radius: 3px;
 }
-
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--color-scrollbar-thumb-hover);
 }
-
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: var(--color-scrollbar-thumb-dark);
 }
-
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: var(--color-scrollbar-thumb-hover-dark);
 }
 </style>

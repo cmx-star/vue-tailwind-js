@@ -69,9 +69,9 @@ export default {
           'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 dark:bg-primary-600 dark:hover:bg-primary-700',
         secondary:
           'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600',
-        success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500',
-        danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-        warning: 'bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500',
+        success: 'bg-success text-white hover:bg-success/90 focus:ring-success/50',
+        danger: 'bg-danger text-white hover:bg-danger/90 focus:ring-danger/50',
+        warning: 'bg-warning text-white hover:bg-warning/90 focus:ring-warning/50',
       }
 
       return `${baseClasses} ${sizeClasses[this.size]} ${typeClasses[this.type]}`

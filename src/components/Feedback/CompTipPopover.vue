@@ -114,7 +114,7 @@ export default {
       if (this.venusStyle) {
         return 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
       }
-      return 'text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300'
+      return 'text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300'
     },
     tooltipClasses() {
       if (this.tooltipStyle === 'light') {

@@ -13,7 +13,7 @@
               {{ item.label }}
               <span
                 v-if="item.required || (item.rules && item.rules.length > 0)"
-                class="text-red-500"
+                class="text-danger"
                 >*</span
               >
 
@@ -63,74 +63,34 @@
             />
 
             <!-- Radio group -->
-            <div v-else-if="item.type === 'radio'" class="space-y-2">
-              <label
-                v-for="(option, optIndex) in item.options"
-                :key="optIndex"
-                class="flex items-center space-x-2 cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  :name="item.key"
-                  :value="option.value"
-                  :checked="getFieldValue(item.key) === option.value"
-                  :disabled="option.disabled || item.disabled"
-                  class="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                  @change="handleFieldChange(option.value, item)"
-                />
-                <span class="text-sm text-gray-700 dark:text-gray-300">
-                  {{ option.label }}
-                </span>
-              </label>
-            </div>
+            <CompRadio
+              v-else-if="item.type === 'radio'"
+              :model-value="getFieldValue(item.key)"
+              :options="item.options || []"
+              :name="item.key"
+              :disabled="item.disabled"
+              @update:model-value="handleFieldChange($event, item)"
+            />
 
             <!-- Checkbox group -->
-            <div v-else-if="item.type === 'checkbox'" class="space-y-2">
-              <label
-                v-for="(option, optIndex) in item.options"
-                :key="optIndex"
-                class="flex items-center space-x-2 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  :value="option.value"
-                  :checked="isChecked(item.key, option.value)"
-                  :disabled="option.disabled || item.disabled"
-                  class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                  @change="handleCheckboxChange($event, item, option.value)"
-                />
-                <span class="text-sm text-gray-700 dark:text-gray-300">
-                  {{ option.label }}
-                </span>
-              </label>
-            </div>
+            <CompCheckbox
+              v-else-if="item.type === 'checkbox'"
+              :model-value="getFieldValue(item.key)"
+              :options="item.options || []"
+              :name="item.key"
+              :disabled="item.disabled"
+              @update:model-value="handleFieldChange($event, item)"
+            />
 
             <!-- Switch -->
-            <div v-else-if="item.type === 'switch'" class="flex items-center space-x-3">
-              <button
-                type="button"
-                :disabled="item.disabled"
-                :class="[
-                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-                  getFieldValue(item.key) ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700',
-                  item.disabled ? 'opacity-50 cursor-not-allowed' : '',
-                ]"
-                @click="handleFieldChange(!getFieldValue(item.key), item)"
-              >
-                <span
-                  :class="[
-                    'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                    getFieldValue(item.key) ? 'translate-x-5' : 'translate-x-0',
-                  ]"
-                />
-              </button>
-              <span
-                v-if="item.activeText || item.inactiveText"
-                class="text-sm text-gray-700 dark:text-gray-300"
-              >
-                {{ getFieldValue(item.key) ? item.activeText : item.inactiveText }}
-              </span>
-            </div>
+            <CompSwitch
+              v-else-if="item.type === 'switch'"
+              :model-value="getFieldValue(item.key)"
+              :disabled="item.disabled"
+              :active-text="item.activeText"
+              :inactive-text="item.inactiveText"
+              @update:model-value="handleFieldChange($event, item)"
+            />
 
             <!-- Error message -->
             <!-- 错误信息已由各个子组件自己显示,这里不需要重复显示 -->
@@ -263,25 +223,6 @@ export default {
       if (item.emit) {
         this.$emit(item.emit, value)
       }
-    },
-    handleCheckboxChange(event, item, value) {
-      const currentValue = this.getFieldValue(item.key) || []
-      let newValue
-
-      if (event.target.checked) {
-        newValue = [...currentValue, value]
-      } else {
-        newValue = currentValue.filter((v) => v !== value)
-      }
-
-      this.handleFieldChange(newValue, item)
-    },
-    isChecked(key, value) {
-      const fieldValue = this.getFieldValue(key)
-      if (Array.isArray(fieldValue)) {
-        return fieldValue.includes(value)
-      }
-      return false
     },
     getFieldError(key) {
       return this.errors[key]

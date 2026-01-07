@@ -6,7 +6,7 @@
       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
     >
       {{ label }}
-      <span v-if="required" class="text-red-500">*</span>
+      <span v-if="required" class="text-danger">*</span>
     </label>
     <div ref="referenceRef" class="relative">
       <button
@@ -89,7 +89,7 @@
         </div>
       </Transition>
     </div>
-    <p v-if="error" class="mt-1 text-sm text-red-600 dark:text-red-400">
+    <p v-if="error" class="mt-1 text-sm text-danger">
       {{ error }}
     </p>
     <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -221,7 +221,7 @@ export default {
       const baseClasses =
         'relative w-full cursor-pointer rounded-lg border py-2 pl-3 pr-10 text-left text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
       if (this.error) {
-        return `${baseClasses} border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500 dark:border-red-600 dark:text-red-400`
+        return `${baseClasses} border-danger/50 text-danger placeholder-danger/60 focus:ring-danger/50 focus:border-danger dark:border-danger/70 dark:text-danger`
       }
       if (this.disabled) {
         return `${baseClasses} border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed`

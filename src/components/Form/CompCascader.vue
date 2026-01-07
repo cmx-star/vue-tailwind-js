@@ -6,7 +6,7 @@
       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
     >
       {{ label }}
-      <span v-if="required" class="text-red-500">*</span>
+      <span v-if="required" class="text-danger">*</span>
     </label>
     <div ref="referenceRef" class="relative">
       <button
@@ -291,16 +291,16 @@ export default {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: var(--color-scrollbar-thumb);
   border-radius: 3px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  background: var(--color-scrollbar-thumb-hover);
 }
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: var(--color-scrollbar-thumb-dark);
 }
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: var(--color-scrollbar-thumb-hover-dark);
 }
 </style>

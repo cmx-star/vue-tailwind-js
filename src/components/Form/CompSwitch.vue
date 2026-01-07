@@ -11,7 +11,7 @@
       @change="toggle"
     />
     <div
-      class="relative w-9 h-5 rounded-full peer transition-colors peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-soft dark:peer-focus:ring-brand-soft peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand"
+      class="relative w-9 h-5 rounded-full peer transition-colors peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-500/50 dark:peer-focus:ring-primary-600/40 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600"
       :class="backgroundClass"
     ></div>
     <span
@@ -50,11 +50,11 @@ export default {
     },
     activeColor: {
       type: String,
-      default: '#3B82F6',
+      default: '',
     },
     inactiveColor: {
       type: String,
-      default: '#D1D5DB',
+      default: '',
     },
   },
   emits: ['update:modelValue', 'change'],
@@ -88,5 +88,12 @@ export default {
 </script>
 
 <style scoped>
-/* Additional switch styles if needed */
+/* Additional switch styles */
+.peer:checked ~ div {
+  background-color: var(--color-primary-600) !important;
+}
+
+.peer:focus ~ div {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary-600), transparent 60%) !important;
+}
 </style>

@@ -10,7 +10,7 @@
           :value="option.value"
           :checked="modelValue === option.value"
           :disabled="disabled || option.disabled"
-          class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none"
+          class="w-4 h-4 text-primary-600 border-default-medium bg-neutral-secondary-medium rounded-full focus:ring-2 focus:outline-none focus:ring-primary-500/50 border border-default appearance-none transition-all"
           @change="handleChange(option.value)"
         />
         <label
@@ -37,7 +37,7 @@
           :value="option.value"
           :checked="modelValue === option.value"
           :disabled="disabled || option.disabled"
-          class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none"
+          class="w-4 h-4 text-primary-600 border-default-medium bg-neutral-secondary-medium rounded-full focus:ring-2 focus:outline-none focus:ring-primary-500/50 border border-default appearance-none transition-all"
           @change="handleChange(option.value)"
         />
         <label
@@ -70,7 +70,7 @@
               :value="option.value"
               :checked="modelValue === option.value"
               :disabled="disabled || option.disabled"
-              class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none"
+              class="w-4 h-4 text-primary-600 border-default-medium bg-neutral-secondary-medium rounded-full focus:ring-2 focus:outline-none focus:ring-primary-500/50 border border-default appearance-none transition-all"
               @change="handleChange(option.value)"
             />
             <label
@@ -106,7 +106,7 @@
               :value="option.value"
               :checked="modelValue === option.value"
               :disabled="disabled || option.disabled"
-              class="w-4 h-4 text-neutral-primary border-default-medium bg-neutral-secondary-medium rounded-full checked:border-brand focus:ring-2 focus:outline-none focus:ring-brand-subtle border border-default appearance-none"
+              class="w-4 h-4 text-primary-600 border-default-medium bg-neutral-secondary-medium rounded-full focus:ring-2 focus:outline-none focus:ring-primary-500/50 border border-default appearance-none transition-all"
               @change="handleChange(option.value)"
             />
             <label
@@ -167,6 +167,19 @@ input[type='radio']:checked {
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: var(--color-primary-600) !important;
+  border-color: var(--color-primary-600) !important;
+}
+
+input[type='radio']:focus {
+  outline: none;
+  border-color: var(--color-primary-600) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary-600), transparent 50%) !important;
+}
+
+/* 兼容性处理：强制去除默认蓝色 */
+input[type='radio'] {
+  accent-color: var(--color-primary-600);
 }
 
 input[type='radio']:disabled {
@@ -176,5 +189,9 @@ input[type='radio']:disabled {
 
 input[type='radio']:disabled + label {
   cursor: not-allowed;
+}
+input[type='radio']:checked:before,
+input[type='radio']:disabled:checked:before {
+  background-color: var(--color-primary-600);
 }
 </style>

@@ -9,7 +9,7 @@
           :value="option.value"
           :checked="isChecked(option.value)"
           :disabled="disabled || option.disabled"
-          class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft"
+          class="w-4 h-4 border border-default-medium rounded-none bg-neutral-secondary-medium focus:ring-2 focus:ring-primary-500/50 appearance-none transition-all"
           :class="colorClass"
           @change="handleChange($event, option.value)"
         />
@@ -32,7 +32,7 @@
           :value="option.value"
           :checked="isChecked(option.value)"
           :disabled="disabled || option.disabled"
-          class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft"
+          class="w-4 h-4 border border-default-medium rounded-none bg-neutral-secondary-medium focus:ring-2 focus:ring-primary-500/50 appearance-none transition-all"
           :class="colorClass"
           @change="handleChange($event, option.value)"
         />
@@ -59,7 +59,7 @@
           :value="option.value"
           :checked="isChecked(option.value)"
           :disabled="disabled || option.disabled"
-          class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft"
+          class="w-4 h-4 border border-default-medium rounded-none bg-neutral-secondary-medium focus:ring-2 focus:ring-primary-500/50 appearance-none transition-all"
           :class="colorClass"
           @change="handleChange($event, option.value)"
         />
@@ -94,7 +94,7 @@
               :value="option.value"
               :checked="isChecked(option.value)"
               :disabled="disabled || option.disabled"
-              class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft"
+              class="w-4 h-4 border border-default-medium rounded-none bg-neutral-secondary-medium focus:ring-2 focus:ring-primary-500/50 appearance-none transition-all"
               :class="colorClass"
               @change="handleChange($event, option.value)"
             />
@@ -130,7 +130,7 @@
               :value="option.value"
               :checked="isChecked(option.value)"
               :disabled="disabled || option.disabled"
-              class="w-4 h-4 border border-default-medium rounded-xs bg-neutral-secondary-medium focus:ring-2 focus:ring-brand-soft"
+              class="w-4 h-4 border border-default-medium rounded-none bg-neutral-secondary-medium focus:ring-2 focus:ring-primary-500/50 appearance-none transition-all"
               :class="colorClass"
               @change="handleChange($event, option.value)"
             />
@@ -186,13 +186,13 @@ export default {
   computed: {
     colorClass() {
       const colors = {
-        blue: '',
-        red: 'text-red-600 focus:ring-red-500 dark:focus:ring-red-600',
-        green: 'text-green-600 focus:ring-green-500 dark:focus:ring-green-600',
-        purple: 'text-purple-600 focus:ring-purple-500 dark:focus:ring-purple-600',
-        teal: 'text-teal-600 focus:ring-teal-500 dark:focus:ring-teal-600',
-        yellow: 'text-yellow-400 focus:ring-yellow-500 dark:focus:ring-yellow-600',
-        orange: 'text-orange-500 focus:ring-orange-500 dark:focus:ring-orange-600',
+        blue: 'text-primary-600 focus:ring-primary-500/50 dark:focus:ring-primary-600/40',
+        red: 'text-danger focus:ring-danger/50 dark:focus:ring-danger/40',
+        green: 'text-success focus:ring-success/50 dark:focus:ring-success/40',
+        purple: 'text-primary-600 focus:ring-primary-500/50 dark:focus:ring-primary-600/40',
+        teal: 'text-primary-500 focus:ring-primary-400/50 dark:focus:ring-primary-500/40',
+        yellow: 'text-warning focus:ring-warning/50 dark:focus:ring-warning/40',
+        orange: 'text-warning focus:ring-warning/50 dark:focus:ring-warning/40',
       }
       return colors[this.color] || ''
     },
@@ -217,13 +217,23 @@ export default {
 
 <style scoped>
 /* Custom checkbox styles */
+input[type='checkbox'] {
+  border-radius: 0 !important; /* 强制方块 */
+  accent-color: var(--color-primary-600);
+}
+
 input[type='checkbox']:checked {
   background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: currentColor;
-  border-color: currentColor;
+  background-color: var(--color-primary-600) !important;
+  border-color: var(--color-primary-600) !important;
+}
+
+input[type='checkbox']:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary-600), transparent 50%) !important;
 }
 
 input[type='checkbox']:disabled {

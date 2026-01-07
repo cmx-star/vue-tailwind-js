@@ -6,7 +6,7 @@
       class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
     >
       {{ label }}
-      <span v-if="required" class="text-red-500">*</span>
+      <span v-if="required" class="text-danger">*</span>
     </label>
 
     <div class="relative group">
@@ -165,7 +165,7 @@ export default {
       if (this.error) {
         return `${baseClasses} ${darkClasses} border-red-500 focus:ring-red-500`
       }
-      return `${baseClasses} ${darkClasses} focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed`
+      return `${baseClasses} ${darkClasses} focus:ring-primary-500 focus:border-primary-500 disabled:opacity-50 disabled:cursor-not-allowed`
     },
   },
   watch: {
