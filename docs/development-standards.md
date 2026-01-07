@@ -109,7 +109,7 @@ graph TD
 
 1. **高频复用组件** (标准按钮、输入框、卡片)
 2. **复杂交互** (伪元素、动画、类名堆叠 >8 个)
-3. **第三方库覆盖** (Element Plus / Ant Design)
+3. **第三方库覆盖**
 
 **规则:**
 
@@ -243,39 +243,7 @@ graph TD
 
 **重构方案:**
 
-#### 方案A: 提取为 Vue 子组件
-
-```vue
-<!-- ❌ 坏实践: 类名堆砌 -->
-<div
-  class="flex items-center justify-between p-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-all"
->
-  ...
-</div>
-
-<!-- ✅ 好实践: 提取为组件 -->
-<CardContainer>
-  ...
-</CardContainer>
-
-<!-- CardContainer.vue -->
-<template>
-  <div
-    class="flex items-center justify-between p-6 rounded-xl shadow-sm hover:shadow-md transition-all custom-card"
-  >
-    <slot />
-  </div>
-</template>
-
-<style scoped>
-.custom-card {
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-}
-</style>
-```
-
-#### 方案B: 使用 @apply
+#### 方案: 使用 @apply
 
 ```css
 @layer components {
