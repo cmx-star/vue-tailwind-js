@@ -11,6 +11,7 @@
     "create": "node scripts/create-page.js",
     "check:classes": "node scripts/check-duplicate-classes.js",
     "lint": "eslint src --fix",
+    "lint:style": "node scripts/lint-style.js",
     "format": "prettier --write \"src/**/*.{js,vue,css,html}\"",
     "prepare": "husky install",
     "commit": "git-cz"
