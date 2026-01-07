@@ -1,7 +1,7 @@
 html[data-theme='playful']:not(.dark) {
   --typography-font-size-text-xxs: 8;
   --typography-line-height-leading-none: 1;
-  --typography-line-height-leading-heading(none): 60;
+  --typography-line-height-leading-heading-none: 60;
   --container-xs: 380;
   --border-border-radius-rounded-0: var(--spacing-0);
   --border-border-radius-rounded-xxs: var(--border-border-radius-rounded-sm);
