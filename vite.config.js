@@ -4,7 +4,6 @@ import tailwindcss from '@tailwindcss/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { fileURLToPath, URL } from 'node:url'
 import Components from 'unplugin-vue-components/vite'
-import AutoImport from 'unplugin-auto-import/vite'
 
 /**
  * 核心优化目标：
@@ -23,11 +22,6 @@ export default defineConfig(({ mode }) => {
         extensions: ['vue'],
         deep: true,
         dts: false, // 如果需要 TS 支持可以开启，JS 项目建议关闭或按需开启
-      }),
-      // 自动导入 Vue 常用函数
-      AutoImport({
-        imports: ['vue', 'vue-router', 'pinia', 'vue-i18n'],
-        dts: false,
       }),
       // 打包分析工具 (仅在 analyze 模式下启用: npm run build:report)
       mode === 'analyze' &&

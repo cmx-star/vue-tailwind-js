@@ -1,4 +1,7 @@
-/* 工具类样式 */
+/**
+ * 通用工具类
+ * 来源: 从 moudles/utilities.css 迁移
+ */
 
 /* NProgress 样式自定义 */
 #nprogress .bar {

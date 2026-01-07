@@ -1,0 +1,15 @@
+/**
+ * 卡片全局类
+ * 负责人: 待分配
+ * 
+ * 示例:
+ * .card-base {
+ *   @apply p-6 rounded-xl shadow-sm;
+ *   background-color: var(--color-bg-secondary);
+ *   border: 1px solid var(--color-border);
+ * }
+ */
+
+@layer components {
+  /* 在此处定义卡片相关的全局类 */
+}

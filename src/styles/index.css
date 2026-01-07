@@ -13,7 +13,9 @@
 /* 导入功能样式模块 */
 @import './moudles/base.css';
 @import './moudles/theme.css';
-@import './moudles/utilities.css';
 
 /* Flatpickr 深度适配 - CSS 变量方案 */
 @import './moudles/Flatpickr.css';
+
+/* 导入全局工具类 (使用 @apply 封装) */
+@import './utilities/index.css';
