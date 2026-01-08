@@ -283,12 +283,42 @@ const CompLineChart = defineAsyncComponent(() => import('@/components/Charts/Com
 
 ### 关键指标
 
-| 指标         | 目标值  | 当前值 | 说明                   |
-| :----------- | :------ | :----- | :--------------------- |
-| **总体积**   | < 500KB | ~200KB | Gzip 后                |
-| **首屏时间** | < 2s    | ~1.5s  | 3G 网络                |
-| **FCP**      | < 1.5s  | ~1.2s  | First Contentful Paint |
-| **TTI**      | < 3s    | ~2.5s  | Time to Interactive    |
+| 指标         | 真实值 | 说明                   |
+| :----------- | :----- | :--------------------- |
+| **总体积**   | 750 KB | 原始大小 (2026-01-08)  |
+| **主 CSS**   | 167 KB | 原始大小               |
+| **Vue 核心** | 196 KB | 原始大小               |
+| **首屏时间** | ~1.5s  | 3G 网络                |
+| **FCP**      | ~1.2s  | First Contentful Paint |
+| **TTI**      | ~2.5s  | Time to Interactive    |
+
+### 最新构建详情 (2026-01-08)
+
+**CSS 文件 (原始大小):**
+
+- `index-a7uGSAs3.css`: 167.29 KB
+- `ui-vendor-BsM4JrO0.css`: 15.75 KB
+- `ViewFormDemo-rbzfNHqn.css`: 2.44 KB
+- `chart-vendor-Saz_VHki.css`: 1.63 KB
+- `vue-core-BgDCIyLK.css`: 1.09 KB
+- 其他: ~2 KB
+- **CSS 总计:** ~190 KB
+
+**JS 文件 (原始大小):**
+
+- `vue-core-zTHklZeB.js`: 195.60 KB
+- `ui-vendor-_SGqh4MC.js`: 79.93 KB
+- `chart-vendor-Cyqqj8nj.js`: 51.71 KB
+- `index-QZqpZioX.js`: 49.88 KB
+- `ViewFormDemo-BXqjZgCn.js`: 31.93 KB
+- `ViewDashboard-DU9Iuc2d.js`: 25.33 KB
+- `index-gxPMA4j1.js`: 21.74 KB
+- `utils-vendor-j0i5Y79Y.js`: 16.44 KB
+- `CompSelect-Dgq4UAb3.js`: 12.99 KB
+- 其他路由组件: ~50 KB
+- **JS 总计:** ~536 KB
+
+**总计 (原始大小):** 750 KB
 
 ### 监控命令
 

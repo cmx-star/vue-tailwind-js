@@ -11,7 +11,7 @@ import Components from 'unplugin-vue-components/vite'
  * 2. 精致交互支持 (原生 Options API 实现)
  * 3. 生产环境清理 (移除所有 Console & Debugger)
  */
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
   return {
     plugins: [
       vue(),
@@ -23,8 +23,8 @@ export default defineConfig(({ mode }) => {
         deep: true,
         dts: false, // 如果需要 TS 支持可以开启，JS 项目建议关闭或按需开启
       }),
-      // 打包分析工具 (仅在 analyze 模式下启用: npm run build:report)
-      mode === 'analyze' &&
+      // 打包分析工具 (通过环境变量启用: ANALYZE=true pnpm run build)
+      process.env.ANALYZE &&
         visualizer({
           open: true,
           gzipSize: true,
