@@ -1,22 +1,2 @@
-/**
- * 全局工具类目录
- * 
- * 用途: 存放所有使用 @apply 封装的全局类
- * 
- * 规则:
- * 1. 每个文件负责一个功能模块 (如 buttons.css, cards.css)
- * 2. 类名必须遵循 {类型}-{变体} 格式
- * 3. 提交前运行 `pnpm run check:classes` 检查重复
- * 
- * 示例:
- * - buttons.css: .btn-primary, .btn-secondary
- * - cards.css: .card-base, .card-elevated
- * - inputs.css: .input-base, .input-error
- */
-
 /* 导入所有工具类模块 */
-@import './buttons.css';
-@import './cards.css';
-@import './inputs.css';
-@import './badges.css';
 @import './common.css';

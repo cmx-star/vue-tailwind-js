@@ -89,7 +89,8 @@
     "userManagement": "User Management",
     "roleManagement": "Role Management",
     "settings": "System Settings",
-    "formDemo": "Form Demo"
+    "formDemo": "Form Demo",
+    "componentDemo": "Component Demo"
   },
   "login": {
     "title": "User Login",

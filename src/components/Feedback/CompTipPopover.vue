@@ -81,12 +81,6 @@ export default {
       default: 'top',
       validator: (value) => ['top', 'right', 'bottom', 'left'].includes(value),
     },
-    // Styling
-    tooltipStyle: {
-      type: String,
-      default: 'dark',
-      validator: (value) => ['light', 'dark'].includes(value),
-    },
     width: {
       type: [String, Number],
       default: 'auto',
@@ -97,11 +91,6 @@ export default {
       default: 'hover',
       validator: (value) => ['hover', 'click'].includes(value),
     },
-    // Icon style (for backward compatibility)
-    venusStyle: {
-      type: Boolean,
-      default: false,
-    },
   },
   emits: ['show', 'hide'],
   data() {
@@ -111,16 +100,10 @@ export default {
   },
   computed: {
     iconClass() {
-      if (this.venusStyle) {
-        return 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
-      }
-      return 'text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300'
+      return 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
     },
     tooltipClasses() {
-      if (this.tooltipStyle === 'light') {
-        return 'text-heading bg-neutral-primary-medium border border-default'
-      }
-      return 'text-white bg-dark'
+      return 'text-white bg-gray-900 dark:bg-gray-700'
     },
     positionClasses() {
       // These will be dynamically adjusted based on placement
@@ -225,13 +208,12 @@ export default {
 }
 
 /* Dark theme arrow */
-.bg-dark + .tooltip-arrow {
+.bg-gray-900 + .tooltip-arrow,
+.dark .bg-gray-700 + .tooltip-arrow {
   background: rgb(17 24 39);
 }
 
-/* Light theme arrow */
-.bg-neutral-primary-medium + .tooltip-arrow {
-  background: rgb(243 244 246);
-  border: 1px solid rgb(229 231 235);
+.dark .bg-gray-700 + .tooltip-arrow {
+  background: rgb(55 65 81);
 }
 </style>

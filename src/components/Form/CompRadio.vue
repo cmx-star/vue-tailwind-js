@@ -1,5 +1,11 @@
 <template>
   <div class="CompRadio">
+    <!-- Label -->
+    <label v-if="label" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      {{ label }}
+      <span v-if="required" class="text-danger">*</span>
+    </label>
+
     <!-- Radio group wrapper -->
     <div v-if="variant === 'default'" class="space-y-4">
       <div v-for="(option, index) in options" :key="index" class="flex items-center">
@@ -120,6 +126,15 @@
         </li>
       </ul>
     </div>
+
+    <!-- Error message -->
+    <p v-if="error" class="mt-1 text-sm text-red-600 dark:text-red-400">
+      {{ error }}
+    </p>
+    <!-- Hint message -->
+    <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      {{ hint }}
+    </p>
   </div>
 </template>
 
@@ -148,6 +163,22 @@ export default {
       type: String,
       default: 'default',
       validator: (value) => ['default', 'bordered', 'list', 'list-horizontal'].includes(value),
+    },
+    label: {
+      type: String,
+      default: '',
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    error: {
+      type: String,
+      default: '',
+    },
+    hint: {
+      type: String,
+      default: '',
     },
   },
   emits: ['update:modelValue', 'change'],

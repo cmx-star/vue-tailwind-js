@@ -1,305 +1,195 @@
 # 组件系统文档
 
-## 1. 组件目录结构
+> **最后更新:** 2026-01-08  
+> **状态:** ✅ 已验证所有组件 API 与实际代码一致
 
-项目组件位于 `src/components/` 目录下,按功能分类:
-
-```
-src/components/
-├── Basic/          # 基础组件
-│   └── CompBaseButton.vue
-├── Charts/         # 图表组件
-│   ├── CompAreaChart.vue
-│   ├── CompBarChart.vue
-│   ├── CompLineChart.vue
-│   └── CompPieChart.vue
-├── Data/           # 数据展示组件
-│   └── CompDataTable.vue
-├── Feedback/       # 反馈组件
-│   ├── CompModal.vue
-│   ├── CompToast.vue
-│   └── CompLoading.vue
-└── Form/           # 表单组件
-    ├── CompForm.vue
-    ├── CompInput.vue
-    ├── CompSelect.vue
-    ├── CompDatePicker.vue
-    ├── CompCascader.vue
-    ├── CompCheckbox.vue
-    ├── CompRadio.vue
-    ├── CompSwitch.vue
-    └── CompTextarea.vue
-```
+本文档详细说明了项目中所有可复用组件的 API、使用方法和最佳实践。
 
 ---
 
-## 2. 组件自动注册机制
+## 📋 目录
 
-### 2.1 自动注册配置
+### 基础组件
 
-项目**已启用**全局自动注册,使用 `unplugin-vue-components`:
+- [CompBaseButton](#compbasebutton) - 按钮组件
 
-```javascript
-// vite.config.js
-import Components from 'unplugin-vue-components/vite'
+### 表单组件
 
-export default defineConfig({
-  plugins: [
-    Components({
-      dirs: ['src/components'], // 扫描目录
-      extensions: ['vue'], // 文件类型
-      deep: true, // 深度扫描子目录
-      dts: false, // JS项目关闭TS类型生成
-    }),
-  ],
-})
-```
+- [CompInput](#compinput) - 输入框
+- [CompSelect](#compselect) - 下拉选择器
+- [CompDatePicker](#compdatepicker) - 日期选择器
+- [CompRadio](#compradio) - 单选框组
+- [CompCheckbox](#compcheckbox) - 多选框组
+- [CompSwitch](#compswitch) - 开关
+- [CompCascader](#compcascader) - 级联选择器
+- [CompTransfer](#comptransfer) - 穿梭框
+- [CompForm](#compform) - 表单容器
 
-**工作原理:**
+### 数据展示
 
-1. Vite 启动时自动扫描 `src/components/` 目录
-2. 将所有 `.vue` 组件注册为全局组件
-3. 在模板中直接使用,无需手动 `import`
+- [CompDataTable](#compdatatable) - 数据表格
 
----
+### 反馈组件
 
-### 2.2 使用方式(无需导入)
+- [CompModal](#compmodal) - 模态框
+- [CompToast](#comptoast) - 消息提示
+- [CompTipPopover](#comptippopover) - 提示气泡
 
-**项目使用 Options API,组件自动注册后可直接在模板使用:**
+### 图表组件
 
-```vue
-<template>
-  <!-- ✅ 直接使用,无需 import -->
-  <CompSelect v-model="selectedValue" :options="options" />
-  <CompDatePicker v-model="date" mode="date" />
-  <CompLineChart :data="chartData" :height="300" />
-</template>
-
-<script>
-export default {
-  name: 'MyPage',
-  data() {
-    return {
-      selectedValue: '',
-      date: null,
-      chartData: [
-        { x: '周一', y: 30 },
-        { x: '周二', y: 45 },
-      ],
-      options: [
-        { label: '选项一', value: '1' },
-        { label: '选项二', value: '2' },
-      ],
-    }
-  },
-}
-</script>
-```
-
-**优点:**
-
-- ✅ 开发体验极佳,无需手动导入
-- ✅ 代码更简洁
-- ✅ 自动按需打包(见 2.3 节)
+- [CompLineChart](#complinechart) - 折线图
+- [CompAreaChart](#compareachart) - 面积图
+- [CompBarChart](#compbarchart) - 柱状图
 
 ---
 
-### 2.3 按需打包机制
+## 基础组件
 
-虽然是全局注册,但 **Vite 会自动按需打包**:
+### CompBaseButton
 
-1. **编译时分析:** `unplugin-vue-components` 扫描模板,识别实际使用的组件
-2. **Tree-shaking:** 未使用的组件不会被打包
-3. **代码分割:** 大型组件(如图表)会被分割成独立 chunk
+**用途:** 通用按钮组件,支持多种样式和状态
+
+**Props:**
+
+| 属性         | 类型    | 默认值      | 说明                                                             |
+| :----------- | :------ | :---------- | :--------------------------------------------------------------- |
+| `type`       | String  | `'primary'` | 按钮类型: `primary`, `secondary`, `success`, `danger`, `warning` |
+| `size`       | String  | `'md'`      | 尺寸: `sm`, `md`, `lg`                                           |
+| `nativeType` | String  | `'button'`  | 原生 type 属性: `button`, `submit`, `reset`                      |
+| `disabled`   | Boolean | `false`     | 禁用状态                                                         |
+| `loading`    | Boolean | `false`     | 加载状态                                                         |
+
+**Events:**
+
+- `@click` - 点击事件
+
+**Slots:**
+
+- `default` - 按钮内容
 
 **示例:**
 
 ```vue
 <template>
-  <!-- 仅使用了 CompSelect -->
-  <CompSelect v-model="value" />
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      value: '',
-    }
-  },
-}
-</script>
-```
-
-**打包结果:**
-
-- ✅ `CompSelect.vue` → 被打包
-- ❌ `CompDatePicker.vue` → 不被打包
-- ❌ `CompLineChart.vue` → 不被打包
-
----
-
-## 3. 按需打包配置
-
-### 3.1 组件按需打包
-
-项目使用 `unplugin-vue-components` 实现**真正的按需打包**:
-
-**工作流程:**
-
-```mermaid
-graph LR
-    A[编写模板] --> B[编译时扫描]
-    B --> C[识别使用的组件]
-    C --> D[仅打包使用的组件]
-    D --> E[未使用组件被移除]
-```
-
-**示例对比:**
-
-```vue
-<!-- 页面A: 仅使用 CompSelect -->
-<template>
-  <CompSelect v-model="value" />
+  <CompBaseButton type="primary" size="md" @click="handleClick"> 提交 </CompBaseButton>
+  <CompBaseButton type="danger" :loading="isLoading"> 删除 </CompBaseButton>
 </template>
 ```
 
+---
+
+## 表单组件
+
+### CompInput
+
+**用途:** 文本输入框,支持多行文本和验证
+
+**Props:**
+
+| 属性           | 类型    | 默认值   | 说明                                                        |
+| :------------- | :------ | :------- | :---------------------------------------------------------- |
+| `modelValue`   | String  | -        | v-model 绑定值                                              |
+| `label`        | String  | -        | 标签文本                                                    |
+| `type`         | String  | `'text'` | 输入类型: `text`, `textarea`, `password`, `email`, `number` |
+| `placeholder`  | String  | -        | 占位符                                                      |
+| `disabled`     | Boolean | `false`  | 禁用状态                                                    |
+| `required`     | Boolean | `false`  | 必填标记                                                    |
+| `error`        | String  | -        | 错误提示                                                    |
+| `hint`         | String  | -        | 辅助文本                                                    |
+| `autocomplete` | String  | `'off'`  | 自动完成属性                                                |
+| `rows`         | Number  | `4`      | 多行文本行数 (type='textarea' 时有效)                       |
+| `maxlength`    | Number  | -        | 最大字符长度                                                |
+
+**Events:**
+
+- `@update:modelValue` - 值变化
+- `@blur` - 失焦事件
+
+**示例:**
+
 ```vue
-<!-- 页面B: 使用多个组件 -->
 <template>
-  <CompSelect v-model="value" />
-  <CompDatePicker v-model="date" />
-  <CompLineChart :data="chartData" />
+  <CompInput
+    v-model="username"
+    label="用户名"
+    placeholder="请输入用户名"
+    :required="true"
+    :error="usernameError"
+    :maxlength="20"
+  />
+
+  <CompInput v-model="description" type="textarea" label="描述" :rows="6" hint="最多200字" />
 </template>
 ```
 
-**打包结果:**
-
-- 页面 A 的 chunk: 仅包含 `CompSelect`
-- 页面 B 的 chunk: 包含 `CompSelect` + `CompDatePicker` + `CompLineChart`
-
 ---
 
-### 3.2 代码分割策略
+### CompSelect
 
-项目在 `vite.config.js` 中配置了精细的代码分割:
+**用途:** 下拉选择器,支持搜索和多选
 
-```javascript
-// vite.config.js
-build: {
-  rollupOptions: {
-    output: {
-      manualChunks: (id) => {
-        if (id.includes('node_modules')) {
-          // 图表库单独分割
-          if (id.includes('uplot')) {
-            return 'chart-vendor'
-          }
-          // 工具库分割
-          if (id.includes('dayjs') || id.includes('async-validator')) {
-            return 'utils-vendor'
-          }
-          // UI组件库分割
-          if (id.includes('flowbite') || id.includes('@heroicons')) {
-            return 'ui-vendor'
-          }
-          // Vue核心库分割
-          if (id.includes('vue') || id.includes('pinia')) {
-            return 'vue-core'
-          }
-          return 'vendor'
-        }
-      }
-    }
-  }
-}
-```
+**Props:**
 
-**分割结果:**
+| 属性                | 类型                       | 默认值    | 说明                           |
+| :------------------ | :------------------------- | :-------- | :----------------------------- |
+| `modelValue`        | String/Number/Array/Object | -         | v-model 绑定值                 |
+| `options`           | Array                      | `[]`      | 选项数组: `[{ label, value }]` |
+| `label`             | String                     | -         | 标签文本                       |
+| `placeholder`       | String                     | -         | 占位符                         |
+| `disabled`          | Boolean                    | `false`   | 禁用状态                       |
+| `required`          | Boolean                    | `false`   | 必填标记                       |
+| `error`             | String                     | -         | 错误提示                       |
+| `hint`              | String                     | -         | 辅助文本                       |
+| `searchable`        | Boolean                    | `false`   | 是否可搜索                     |
+| `searchPlaceholder` | String                     | -         | 搜索占位符                     |
+| `noOptionsText`     | String                     | -         | 无选项时的提示文本             |
+| `optionLabel`       | String/Function            | `'label'` | 选项显示字段或函数             |
+| `optionValue`       | String/Function            | `'value'` | 选项值字段或函数               |
+| `multiple`          | Boolean                    | `false`   | 是否多选                       |
 
-| Chunk 名称     | 包含内容                    | 大小估算 |
-| :------------- | :-------------------------- | :------- |
-| `vue-core`     | Vue + Router + Pinia + I18n | ~80KB    |
-| `chart-vendor` | uPlot 图表库                | ~40KB    |
-| `ui-vendor`    | Flowbite + Heroicons        | ~30KB    |
-| `utils-vendor` | dayjs + async-validator     | ~20KB    |
-| `vendor`       | 其他第三方库                | ~30KB    |
+**Events:**
 
-**优势:**
+- `@update:modelValue` - 值变化
+- `@change` - 选择变化
 
-- ✅ 首屏加载更快(核心库优先)
-- ✅ 浏览器缓存更高效(库文件不常变)
-- ✅ 按需加载非核心功能
-
----
-
-### 3.3 动态导入进阶优化
-
-对于大型组件,可以使用动态导入进一步优化:
+**示例:**
 
 ```vue
 <template>
-  <component :is="asyncChart" :data="chartData" />
-</template>
+  <!-- 基础用法 -->
+  <CompSelect v-model="selectedCity" :options="cities" label="城市" placeholder="请选择城市" />
 
-<script>
-export default {
-  data() {
-    return {
-      asyncChart: null,
-      chartData: [],
-    }
-  },
-  mounted() {
-    // ✅ 懒加载图表组件(仅在需要时加载)
-    import('@/components/Charts/CompLineChart.vue').then((module) => {
-      this.asyncChart = module.default
-    })
-  },
-}
-</script>
-```
-
-**适用场景:**
-
-- 图表组件(CompLineChart, CompBarChart)
-- 富文本编辑器
-- 大型表单组件
-
----
-
-## 4. 组件命名规范
-
-### 4.1 文件命名
-
-- **格式:** `Comp{功能名}.vue`
-- **示例:** `CompSelect.vue`, `CompDatePicker.vue`
-- **原因:** 避免与原生 HTML 标签冲突,提高可识别性
-
-### 4.2 组件使用
-
-```vue
-<!-- ✅ 推荐:PascalCase -->
-<CompSelect v-model="value" />
-
-<!-- ❌ 不推荐:kebab-case -->
-<comp-select v-model="value" />
-```
-
----
-
-## 5. 常用组件 API
-
-### 5.1 CompSelect (下拉选择器)
-
-```vue
-<template>
+  <!-- 可搜索下拉框 -->
   <CompSelect
-    v-model="selectedValue"
-    :options="options"
-    :placeholder="'请选择'"
-    :clearable="true"
-    label="label"
+    v-model="selectedProvince"
+    :options="provinces"
+    label="省份"
+    placeholder="请选择省份"
+    searchable
+    searchPlaceholder="输入省份名称搜索"
+    noOptionsText="未找到匹配的省份"
+  />
+
+  <!-- 多选下拉框 -->
+  <CompSelect
+    v-model="selectedTags"
+    :options="tags"
+    label="标签"
+    placeholder="请选择标签"
+    multiple
+    hint="可选择多个标签"
+  />
+
+  <!-- 可搜索 + 多选 -->
+  <CompSelect
+    v-model="selectedSkills"
+    :options="skills"
+    label="技能"
+    placeholder="请选择技能"
+    searchable
+    multiple
+    searchPlaceholder="搜索技能"
+    hint="支持搜索和多选"
   />
 </template>
 
@@ -307,10 +197,32 @@ export default {
 export default {
   data() {
     return {
-      selectedValue: '',
-      options: [
-        { label: '选项一', value: '1' },
-        { label: '选项二', value: '2' },
+      selectedCity: '',
+      selectedProvince: '',
+      selectedTags: [],
+      selectedSkills: [],
+      cities: [
+        { label: '北京', value: 'beijing' },
+        { label: '上海', value: 'shanghai' },
+        { label: '广州', value: 'guangzhou' },
+      ],
+      provinces: [
+        { label: '广东省', value: 'guangdong' },
+        { label: '浙江省', value: 'zhejiang' },
+        { label: '江苏省', value: 'jiangsu' },
+        { label: '四川省', value: 'sichuan' },
+      ],
+      tags: [
+        { label: 'Vue', value: 'vue' },
+        { label: 'React', value: 'react' },
+        { label: 'Angular', value: 'angular' },
+      ],
+      skills: [
+        { label: 'JavaScript', value: 'js' },
+        { label: 'TypeScript', value: 'ts' },
+        { label: 'Python', value: 'python' },
+        { label: 'Java', value: 'java' },
+        { label: 'Go', value: 'go' },
       ],
     }
   },
@@ -318,180 +230,457 @@ export default {
 </script>
 ```
 
-**Props:**
-
-- `modelValue` - 绑定值
-- `options` - 选项数组
-- `placeholder` - 占位文本
-- `clearable` - 是否可清空
-- `label` - 选项显示字段名
-
 ---
 
-### 5.2 CompDatePicker (日期选择器)
+### CompDatePicker
 
-```vue
-<template>
-  <CompDatePicker v-model="date" mode="date" :range="false" :clearable="true" />
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      date: null,
-    }
-  },
-}
-</script>
-```
+**用途:** 日期时间选择器,基于 Flatpickr
 
 **Props:**
 
-- `modelValue` - 绑定值
-- `mode` - 模式: `'date'` | `'time'` | `'dateTime'`
-- `range` - 是否为范围选择
-- `clearable` - 是否可清空
+| 属性          | 类型              | 默认值   | 说明                                      |
+| :------------ | :---------------- | :------- | :---------------------------------------- |
+| `modelValue`  | String/Date/Array | -        | v-model 绑定值                            |
+| `label`       | String            | -        | 标签文本                                  |
+| `mode`        | String            | `'date'` | 模式: `date`, `time`, `dateTime`, `range` |
+| `format`      | String            | -        | 日期格式                                  |
+| `placeholder` | String            | -        | 占位符                                    |
+| `disabled`    | Boolean           | `false`  | 禁用状态                                  |
+| `required`    | Boolean           | `false`  | 必填标记                                  |
+| `error`       | String            | -        | 错误提示                                  |
+| `hint`        | String            | -        | 辅助文本                                  |
 
----
+**Events:**
 
-### 5.3 CompLineChart (折线图)
-
-```vue
-<template>
-  <CompLineChart :data="chartData" :height="300" color="#3B82F6" :smooth="true" />
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      chartData: [
-        { x: '周一', y: 30 },
-        { x: '周二', y: 45 },
-        { x: '周三', y: 35 },
-      ],
-    }
-  },
-}
-</script>
-```
-
-**Props:**
-
-- `data` - 图表数据
-- `height` - 图表高度
-- `color` - 线条颜色
-- `smooth` - 是否平滑曲线
-
----
-
-## 6. 性能优化建议
-
-### 6.1 懒加载大型组件
-
-对于图表、富文本编辑器等大型组件,建议使用动态导入:
-
-```vue
-<script>
-export default {
-  data() {
-    return {
-      ChartComponent: null,
-    }
-  },
-  mounted() {
-    // 仅在需要时加载
-    import('@/components/Charts/CompLineChart.vue').then((module) => {
-      this.ChartComponent = module.default
-    })
-  },
-}
-</script>
-
-<template>
-  <component v-if="ChartComponent" :is="ChartComponent" :data="chartData" />
-</template>
-```
-
-### 6.2 组件缓存
-
-对于频繁切换的组件,使用 `<KeepAlive>`:
-
-```vue
-<template>
-  <KeepAlive>
-    <component :is="currentComponent" />
-  </KeepAlive>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      currentComponent: 'CompSelect',
-    }
-  },
-}
-</script>
-```
-
----
-
-## 7. 扩展组件库
-
-### 7.1 添加新组件
-
-1. 在对应分类目录下创建 `.vue` 文件
-2. 遵循命名规范: `Comp{功能名}.vue`
-3. 自动注册,无需手动配置
+- `@update:modelValue` - 值变化
 
 **示例:**
 
-```bash
-# 创建新组件
-touch src/components/Form/CompUpload.vue
+```vue
+<template>
+  <CompDatePicker v-model="birthday" label="生日" mode="date" placeholder="选择日期" />
+
+  <CompDatePicker v-model="dateRange" label="日期范围" mode="range" />
+</template>
 ```
 
+---
+
+### CompRadio
+
+**用途:** 单选框组
+
+**Props:**
+
+| 属性         | 类型                  | 默认值      | 说明                                                       |
+| :----------- | :-------------------- | :---------- | :--------------------------------------------------------- |
+| `modelValue` | String/Number/Boolean | -           | v-model 绑定值                                             |
+| `options`    | Array                 | `[]`        | 选项数组: `[{ label, value, disabled }]`                   |
+| `name`       | String                | -           | name 属性 (必填)                                           |
+| `disabled`   | Boolean               | `false`     | 禁用状态                                                   |
+| `variant`    | String                | `'default'` | 样式变体: `default`, `bordered`, `list`, `list-horizontal` |
+| `label`      | String                | -           | 标签文本                                                   |
+| `required`   | Boolean               | `false`     | 必填标记                                                   |
+| `error`      | String                | -           | 错误提示                                                   |
+| `hint`       | String                | -           | 辅助文本                                                   |
+
+**Events:**
+
+- `@update:modelValue` - 值变化
+- `@change` - 选择变化
+
+**示例:**
+
 ```vue
-<!-- src/components/Form/CompUpload.vue -->
 <template>
-  <div class="upload-wrapper">
-    <input type="file" @change="handleChange" />
-  </div>
+  <CompRadio v-model="gender" :options="genderOptions" name="gender" variant="bordered" />
 </template>
 
 <script>
 export default {
-  name: 'CompUpload',
-  props: {
-    modelValue: [String, Array],
-    accept: String,
-    multiple: Boolean,
+  data() {
+    return {
+      gender: 'male',
+      genderOptions: [
+        { label: '男', value: 'male' },
+        { label: '女', value: 'female' },
+      ],
+    }
+  },
+}
+</script>
+```
+
+---
+
+### CompCheckbox
+
+**用途:** 多选框组
+
+**Props:**
+
+| 属性         | 类型    | 默认值      | 说明                                                                   |
+| :----------- | :------ | :---------- | :--------------------------------------------------------------------- |
+| `modelValue` | Array   | `[]`        | v-model 绑定值(数组)                                                   |
+| `options`    | Array   | `[]`        | 选项数组: `[{ label, value, disabled }]`                               |
+| `name`       | String  | -           | name 属性 (必填)                                                       |
+| `disabled`   | Boolean | `false`     | 禁用状态                                                               |
+| `variant`    | String  | `'default'` | 样式变体: `default`, `inline`, `bordered`, `list`, `list-horizontal`   |
+| `color`      | String  | `'blue'`    | 颜色主题: `blue`, `red`, `green`, `purple`, `teal`, `yellow`, `orange` |
+
+> **注意:** 此组件不支持 `label`、`required`、`error`、`hint` 等表单验证属性。如需表单验证,请使用 `CompForm` 组件包裹。
+
+**Events:**
+
+- `@update:modelValue` - 值变化
+- `@change` - 选择变化
+
+**示例:**
+
+```vue
+<template>
+  <CompCheckbox v-model="selectedHobbies" :options="hobbies" name="hobbies" variant="list" />
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      selectedHobbies: [],
+      hobbies: [
+        { label: '阅读', value: 'reading' },
+        { label: '运动', value: 'sports' },
+        { label: '音乐', value: 'music' },
+      ],
+    }
+  },
+}
+</script>
+```
+
+---
+
+### CompSwitch
+
+**用途:** 开关切换
+
+**Props:**
+
+| 属性            | 类型    | 默认值  | 说明                               |
+| :-------------- | :------ | :------ | :--------------------------------- |
+| `modelValue`    | Boolean | `false` | v-model 绑定值                     |
+| `disabled`      | Boolean | `false` | 禁用状态                           |
+| `label`         | String  | -       | 标签文本(固定显示)                 |
+| `activeText`    | String  | -       | 开启时文本(与 `inactiveText` 配合) |
+| `inactiveText`  | String  | -       | 关闭时文本(与 `activeText` 配合)   |
+| `activeColor`   | String  | -       | 开启时颜色                         |
+| `inactiveColor` | String  | -       | 关闭时颜色                         |
+
+> **注意:** 此组件不支持 `required`、`error`、`hint` 等表单验证属性。如需表单验证,请使用 `CompForm` 组件包裹。
+
+**Events:**
+
+- `@update:modelValue` - 值变化
+
+**示例:**
+
+```vue
+<template>
+  <CompSwitch v-model="isEnabled" label="启用通知" activeText="开" inactiveText="关" />
+</template>
+```
+
+---
+
+### CompCascader
+
+**用途:** 级联选择器,支持多级选择
+
+**Props:**
+
+| 属性          | 类型    | 默认值            | 说明                   |
+| :------------ | :------ | :---------------- | :--------------------- |
+| `modelValue`  | Array   | `[]`              | v-model 绑定值(值数组) |
+| `options`     | Array   | `[]`              | 选项数组(树形结构)     |
+| `placeholder` | String  | `'Please select'` | 占位符                 |
+| `disabled`    | Boolean | `false`           | 禁用状态               |
+| `label`       | String  | -                 | 标签文本               |
+| `required`    | Boolean | `false`           | 必填标记               |
+| `error`       | String  | -                 | 错误提示               |
+| `hint`        | String  | -                 | 辅助文本               |
+| `separator`   | String  | `' / '`           | 显示值分隔符           |
+
+**Events:**
+
+- `@update:modelValue` - 值变化
+- `@change` - 选择变化
+
+**示例:**
+
+```vue
+<template>
+  <CompCascader v-model="selectedRegion" :options="regions" label="地区" placeholder="请选择地区" />
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      selectedRegion: [],
+      regions: [
+        {
+          label: '广东省',
+          value: 'guangdong',
+          children: [
+            {
+              label: '广州市',
+              value: 'guangzhou',
+              children: [
+                { label: '天河区', value: 'tianhe' },
+                { label: '海珠区', value: 'haizhu' },
+              ],
+            },
+          ],
+        },
+      ],
+    }
+  },
+}
+</script>
+```
+
+---
+
+### CompTransfer
+
+**用途:** 穿梭框,用于在两个列表间移动数据
+
+**Props:**
+
+| 属性         | 类型    | 默认值                           | 说明                              |
+| :----------- | :------ | :------------------------------- | :-------------------------------- |
+| `modelValue` | Array   | `[]`                             | v-model 绑定值(已选中的 key 数组) |
+| `data`       | Array   | `[]`                             | 数据源: `[{ key, label }]`        |
+| `titles`     | Array   | `['Source', 'Target']`           | 左右列表标题                      |
+| `props`      | Object  | `{ key: 'key', label: 'label' }` | 数据字段映射                      |
+| `label`      | String  | -                                | 标签文本                          |
+| `required`   | Boolean | `false`                          | 必填标记                          |
+| `error`      | String  | -                                | 错误提示                          |
+| `hint`       | String  | -                                | 辅助文本                          |
+| `searchable` | Boolean | `false`                          | 是否可搜索                        |
+
+**Events:**
+
+- `@update:modelValue` - 值变化
+- `@change` - 选择变化
+
+**示例:**
+
+```vue
+<template>
+  <CompTransfer
+    v-model="selectedUsers"
+    :data="allUsers"
+    :titles="['可选用户', '已选用户']"
+    label="选择用户"
+    searchable
+  />
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      selectedUsers: [],
+      allUsers: [
+        { key: '1', label: '张三' },
+        { key: '2', label: '李四' },
+        { key: '3', label: '王五' },
+      ],
+    }
+  },
+}
+</script>
+```
+
+---
+
+### CompForm
+
+**用途:** 表单容器,支持验证和布局
+
+**Props:**
+
+| 属性         | 类型    | 默认值    | 说明                     |
+| :----------- | :------ | :-------- | :----------------------- |
+| `modelValue` | Object  | `{}`      | 表单数据对象             |
+| `formItems`  | Array   | `[]`      | 表单项配置数组           |
+| `labelWidth` | String  | `'120px'` | 标签宽度                 |
+| `inline`     | Boolean | `false`   | 是否行内表单             |
+| `columns`    | Number  | `1`       | 列数: `1`, `2`, `3`, `4` |
+
+**Events:**
+
+- `@update:modelValue` - 表单数据变化
+- `@submit` - 表单提交(验证通过后)
+
+**Slots:**
+
+- 动态插槽 - 通过 `formItems` 中的 `slot` 字段定义
+
+**Methods:**
+
+- `validate()` - 验证整个表单
+- `validateField(field)` - 验证单个字段
+- `resetFields()` - 重置表单
+- `clearValidate(key)` - 清除验证
+
+**formItems 配置:**
+
+```javascript
+{
+  key: 'username',        // 字段名
+  label: '用户名',        // 标签
+  type: 'input',          // 类型: input, select, datepicker, radio, checkbox, switch
+  placeholder: '请输入',  // 占位符
+  required: true,         // 是否必填
+  rules: [],              // async-validator 规则
+  disabled: false,        // 是否禁用
+  show: true,             // 是否显示(可以是函数)
+  options: [],            // select/radio/checkbox 的选项
+  slot: 'customSlot',     // 自定义插槽名
+}
+```
+
+**示例:**
+
+```vue
+<template>
+  <CompForm
+    ref="formRef"
+    v-model="formData"
+    :form-items="formItems"
+    :columns="2"
+    @submit="handleSubmit"
+  >
+    <template #customSlot>
+      <div>自定义内容</div>
+    </template>
+  </CompForm>
+
+  <CompBaseButton @click="submitForm">提交</CompBaseButton>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      formData: {
+        username: '',
+        email: '',
+        gender: '',
+      },
+      formItems: [
+        {
+          key: 'username',
+          label: '用户名',
+          type: 'input',
+          required: true,
+          rules: [
+            { required: true, message: '请输入用户名' },
+            { min: 3, max: 20, message: '长度在 3 到 20 个字符' },
+          ],
+        },
+        {
+          key: 'email',
+          label: '邮箱',
+          type: 'input',
+          subType: 'email',
+          required: true,
+        },
+        {
+          key: 'gender',
+          label: '性别',
+          type: 'radio',
+          options: [
+            { label: '男', value: 'male' },
+            { label: '女', value: 'female' },
+          ],
+        },
+      ],
+    }
   },
   methods: {
-    handleChange(event) {
-      const files = event.target.files
-      this.$emit('update:modelValue', files)
+    async submitForm() {
+      const valid = await this.$refs.formRef.validate()
+      if (valid) {
+        console.log('表单数据:', this.formData)
+      }
+    },
+    handleSubmit(data) {
+      console.log('提交:', data)
     },
   },
 }
 </script>
 ```
 
-### 7.2 使用新组件
+---
+
+## 数据展示
+
+### CompDataTable
+
+**用途:** 数据表格,支持自定义列和插槽
+
+**Props:**
+
+| 属性          | 类型    | 默认值  | 说明                                               |
+| :------------ | :------ | :------ | :------------------------------------------------- |
+| `columns`     | Array   | `[]`    | 列配置: `[{ key, label, headerClass, cellClass }]` |
+| `data`        | Array   | `[]`    | 表格数据                                           |
+| `rowKey`      | String  | `'id'`  | 行唯一标识字段                                     |
+| `loading`     | Boolean | `false` | 加载状态                                           |
+| `emptyText`   | String  | -       | 空状态文本                                         |
+| `loadingText` | String  | -       | 加载文本                                           |
+
+**Slots:**
+
+- `cell-{columnKey}` - 自定义列内容,参数: `{ row, column, index }`
+- `empty` - 自定义空状态
+
+**示例:**
 
 ```vue
 <template>
-  <!-- ✅ 自动注册,直接使用 -->
-  <CompUpload v-model="files" accept="image/*" :multiple="true" />
+  <CompDataTable :columns="columns" :data="tableData" :loading="isLoading" row-key="id">
+    <template #cell-status="{ row }">
+      <span :class="row.status === 'active' ? 'text-success' : 'text-danger'">
+        {{ row.status }}
+      </span>
+    </template>
+
+    <template #cell-actions="{ row }">
+      <CompBaseButton size="sm" @click="handleEdit(row)">编辑</CompBaseButton>
+    </template>
+  </CompDataTable>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      files: [],
+      columns: [
+        { key: 'name', label: '姓名' },
+        { key: 'email', label: '邮箱' },
+        { key: 'status', label: '状态' },
+        { key: 'actions', label: '操作' },
+      ],
+      tableData: [
+        { id: 1, name: '张三', email: 'zhang@example.com', status: 'active' },
+        { id: 2, name: '李四', email: 'li@example.com', status: 'inactive' },
+      ],
+      isLoading: false,
     }
   },
 }
@@ -500,27 +689,404 @@ export default {
 
 ---
 
-## 8. 总结
+## 反馈组件
 
-| 特性         | 实现方式     | 说明                            |
-| :----------- | :----------- | :------------------------------ |
-| **注册方式** | ✅ 自动注册  | `unplugin-vue-components`       |
-| **使用方式** | 无需导入     | 模板中直接使用组件名            |
-| **按需打包** | ✅ 自动      | 编译时分析,仅打包使用的组件     |
-| **代码分割** | ✅ 精细配置  | 5 个 vendor chunks + 动态导入   |
-| **API 风格** | Options API  | `data()`, `methods`, `computed` |
-| **命名规范** | `Comp{Name}` | 避免与原生标签冲突              |
+### CompModal
 
-**核心优势:**
+**用途:** 模态框,支持自定义内容和按钮
 
-- ✅ 开发体验极佳(无需手动导入)
-- ✅ 打包体积最优(自动按需)
-- ✅ 代码分割精细(5 层 vendor 分离)
-- ✅ 首屏加载快速(核心库优先)
+**Props:**
 
-**推荐做法:**
+| 属性          | 类型    | 默认值          | 说明             |
+| :------------ | :------ | :-------------- | :--------------- |
+| `modelValue`  | Boolean | `false`         | v-model 显示状态 |
+| `title`       | String  | `'Modal Title'` | 标题             |
+| `content`     | String  | -               | 内容文本         |
+| `showFooter`  | Boolean | `false`         | 是否显示底部     |
+| `showConfirm` | Boolean | `true`          | 是否显示确认按钮 |
+| `showCancel`  | Boolean | `true`          | 是否显示取消按钮 |
+| `confirmText` | String  | -               | 确认按钮文本     |
+| `cancelText`  | String  | -               | 取消按钮文本     |
 
-- 常规组件 → 直接在模板使用(自动注册)
-- 大型组件 → 使用动态 `import()` 懒加载
-- 保持 `Comp{Name}` 命名规范
-- 使用 Options API 编写组件逻辑
+**Events:**
+
+- `@update:modelValue` - 显示状态变化
+- `@close` - 关闭
+- `@confirm` - 确认
+- `@cancel` - 取消
+
+**Slots:**
+
+- `default` - 主体内容
+- `footer` - 底部内容
+
+**示例:**
+
+```vue
+<template>
+  <CompBaseButton @click="showModal = true">打开模态框</CompBaseButton>
+
+  <CompModal
+    v-model="showModal"
+    title="确认删除"
+    show-footer
+    @confirm="handleConfirm"
+    @cancel="showModal = false"
+  >
+    <p>确定要删除这条记录吗?</p>
+  </CompModal>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      showModal: false,
+    }
+  },
+  methods: {
+    handleConfirm() {
+      console.log('确认删除')
+      this.showModal = false
+    },
+  },
+}
+</script>
+```
+
+---
+
+### CompToast
+
+**用途:** 消息提示,全局单例组件
+
+**使用方式:**
+
+通过全局方法调用,无需手动添加组件
+
+**API:**
+
+```javascript
+// 成功提示
+this.$toast.success('操作成功')
+
+// 错误提示
+this.$toast.error('操作失败')
+
+// 警告提示
+this.$toast.warning('请注意')
+
+// 普通提示
+this.$toast.info('提示信息')
+
+// 自定义
+this.$toast.show({
+  type: 'success',
+  title: '成功',
+  message: '操作完成',
+  duration: 3000,
+})
+```
+
+**示例:**
+
+```vue
+<script>
+export default {
+  methods: {
+    handleSave() {
+      // 保存逻辑
+      this.$toast.success('保存成功')
+    },
+    handleError() {
+      this.$toast.error('网络错误,请重试')
+    },
+  },
+}
+</script>
+```
+
+---
+
+### CompTipPopover
+
+**用途:** 提示气泡,用于显示帮助信息
+
+**Props:**
+
+| 属性           | 类型          | 默认值    | 说明                                   |
+| :------------- | :------------ | :-------- | :------------------------------------- |
+| `title`        | String        | -         | 标题                                   |
+| `content`      | String        | -         | 内容(支持 HTML)                        |
+| `slotName`     | String        | -         | 插槽名称                               |
+| `placement`    | String        | `'top'`   | 位置: `top`, `right`, `bottom`, `left` |
+| `tooltipStyle` | String        | `'dark'`  | 样式: `light`, `dark`                  |
+| `width`        | String/Number | `'auto'`  | 宽度                                   |
+| `trigger`      | String        | `'hover'` | 触发方式: `hover`, `click`             |
+| `venusStyle`   | Boolean       | `false`   | 使用 Venus 风格图标                    |
+
+**Events:**
+
+- `@show` - 显示时触发
+- `@hide` - 隐藏时触发
+
+**Slots:**
+
+- `trigger` - 自定义触发元素
+
+**示例:**
+
+```vue
+<template>
+  <label>
+    用户名
+    <CompTipPopover content="用户名长度为 3-20 个字符" placement="right" />
+  </label>
+
+  <CompTipPopover title="高级功能" content="<ul><li>功能1</li><li>功能2</li></ul>" trigger="click">
+    <template #trigger>
+      <button>查看详情</button>
+    </template>
+  </CompTipPopover>
+</template>
+```
+
+---
+
+## 图表组件
+
+### CompLineChart
+
+**用途:** 折线图,基于 uPlot
+
+**Props:**
+
+| 属性     | 类型         | 默认值                              | 说明         |
+| :------- | :----------- | :---------------------------------- | :----------- |
+| `data`   | Array/Object | `[]`                                | 图表数据     |
+| `height` | Number       | `320`                               | 图表高度(px) |
+| `colors` | Array        | `['#3B82F6', '#10B981', '#F59E0B']` | 颜色数组     |
+| `smooth` | Boolean      | `true`                              | 是否平滑曲线 |
+
+**数据格式:**
+
+```javascript
+// 格式1: 对象格式(推荐)
+{
+  labels: ['1月', '2月', '3月'],
+  datasets: [
+    { name: '销售额', values: [100, 200, 150] },
+    { name: '利润', values: [50, 80, 70] },
+  ],
+}
+
+// 格式2: 数组格式
+[
+  { x: '1月', y: 100 },
+  { x: '2月', y: 200 },
+]
+```
+
+**示例:**
+
+```vue
+<template>
+  <CompLineChart :data="chartData" :height="400" :colors="['#3B82F6', '#10B981']" smooth />
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      chartData: {
+        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+        datasets: [
+          {
+            name: '销售额',
+            values: [120, 200, 150, 180, 220, 250],
+          },
+          {
+            name: '利润',
+            values: [60, 100, 75, 90, 110, 125],
+          },
+        ],
+      },
+    }
+  },
+}
+</script>
+```
+
+---
+
+### CompAreaChart
+
+**用途:** 面积图,基于 uPlot
+
+**Props:**
+
+| 属性     | 类型         | 默认值                              | 说明         |
+| :------- | :----------- | :---------------------------------- | :----------- |
+| `data`   | Array/Object | `[]`                                | 图表数据     |
+| `height` | Number       | `320`                               | 图表高度(px) |
+| `colors` | Array        | `['#3B82F6', '#10B981', '#F59E0B']` | 颜色数组     |
+| `smooth` | Boolean      | `true`                              | 是否平滑曲线 |
+
+**数据格式:** 与 CompLineChart 相同
+
+**示例:**
+
+```vue
+<template>
+  <CompAreaChart :data="areaData" :height="350" />
+</template>
+```
+
+---
+
+### CompBarChart
+
+**用途:** 柱状图,基于 uPlot
+
+**Props:**
+
+| 属性     | 类型         | 默认值                              | 说明         |
+| :------- | :----------- | :---------------------------------- | :----------- |
+| `data`   | Array/Object | `[]`                                | 图表数据     |
+| `height` | Number       | `320`                               | 图表高度(px) |
+| `colors` | Array        | `['#3B82F6', '#10B981', '#F59E0B']` | 颜色数组     |
+
+**数据格式:** 与 CompLineChart 相同
+
+**示例:**
+
+```vue
+<template>
+  <CompBarChart :data="barData" :height="300" :colors="['#3B82F6', '#10B981', '#F59E0B']" />
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      barData: {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [
+          { name: '2023', values: [100, 120, 140, 160] },
+          { name: '2024', values: [110, 130, 150, 180] },
+        ],
+      },
+    }
+  },
+}
+</script>
+```
+
+---
+
+## 最佳实践
+
+### 1. 表单验证
+
+使用 `CompForm` 配合 `async-validator` 进行表单验证:
+
+```javascript
+import { emailRule, phoneRule } from '@/utils/validators'
+
+formItems: [
+  {
+    key: 'email',
+    label: '邮箱',
+    type: 'input',
+    rules: [emailRule()],
+  },
+  {
+    key: 'phone',
+    label: '手机号',
+    type: 'input',
+    rules: [phoneRule()],
+  },
+]
+```
+
+### 2. 组件自动注册
+
+所有组件通过 `unplugin-vue-components` 自动注册,无需手动导入:
+
+```vue
+<template>
+  <!-- 直接使用,无需 import -->
+  <CompInput v-model="value" />
+  <CompBaseButton @click="handleClick">提交</CompBaseButton>
+</template>
+```
+
+### 3. 国际化
+
+组件内部已集成 `vue-i18n`,支持多语言:
+
+```javascript
+// 组件内部使用
+this.$t('common.confirm')
+this.$t('common.cancel')
+```
+
+### 4. 主题适配
+
+所有组件自动适配暗色模式,使用 Tailwind 的 `dark:` 前缀:
+
+```vue
+<div class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+  内容
+</div>
+```
+
+---
+
+## 常见问题
+
+### Q: 如何自定义表单验证规则?
+
+A: 在 `src/utils/validators.js` 中添加自定义规则:
+
+```javascript
+export const customRule = (message = '验证失败') => ({
+  validator: (rule, value) => {
+    // 自定义验证逻辑
+    return value.length > 5
+  },
+  message,
+})
+```
+
+### Q: 如何全局配置 Toast 默认参数?
+
+A: 在 `src/main.js` 中配置:
+
+```javascript
+app.config.globalProperties.$toast.config({
+  duration: 5000,
+  position: 'top-right',
+})
+```
+
+### Q: 图表组件如何响应式调整大小?
+
+A: 图表组件已内置 `ResizeObserver`,会自动响应容器大小变化。
+
+---
+
+## 更新日志
+
+### 2026-01-08
+
+- ✅ 验证所有 17 个组件的 API 与实际代码一致
+- ✅ 修复 `CompDatePicker` 文档错误(删除不存在的 props)
+- ✅ 补充 `CompSelect`, `CompSwitch`, `CompCheckbox` 缺失的 props
+- ✅ 新增 `CompCascader` 和 `CompTransfer` 完整文档
+
+### 2026-01-07
+
+- ✅ 修复 `CompInput` 的 `maxlength` 属性
+- ✅ 修正 `CompBaseButton` 的 `type` 可选值
+- ✅ 新增所有组件的完整 API 文档

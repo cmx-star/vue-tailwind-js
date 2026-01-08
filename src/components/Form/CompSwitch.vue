@@ -1,27 +1,39 @@
 <template>
-  <label
-    class="inline-flex items-center cursor-pointer"
-    :class="{ 'opacity-50 cursor-not-allowed': disabled }"
-  >
-    <input
-      type="checkbox"
-      :checked="modelValue"
-      :disabled="disabled"
-      class="sr-only peer"
-      @change="toggle"
-    />
-    <div
-      class="relative w-9 h-5 rounded-full peer transition-colors peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-500/50 dark:peer-focus:ring-primary-600/40 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600"
-      :class="backgroundClass"
-    ></div>
-    <span
-      v-if="label || activeText || inactiveText"
-      class="select-none ms-3 text-sm font-medium"
-      :class="disabled ? 'text-fg-disabled' : 'text-heading'"
+  <div class="CompSwitch">
+    <label
+      class="inline-flex items-center cursor-pointer"
+      :class="{ 'opacity-50 cursor-not-allowed': disabled }"
     >
-      {{ displayText }}
-    </span>
-  </label>
+      <input
+        type="checkbox"
+        :checked="modelValue"
+        :disabled="disabled"
+        class="sr-only peer"
+        @change="toggle"
+      />
+      <div
+        class="relative w-9 h-5 rounded-full peer transition-colors peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-500/50 dark:peer-focus:ring-primary-600/40 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-600"
+        :class="backgroundClass"
+      ></div>
+      <span
+        v-if="label || activeText || inactiveText"
+        class="select-none ms-3 text-sm font-medium"
+        :class="disabled ? 'text-fg-disabled' : 'text-heading'"
+      >
+        {{ displayText }}
+        <span v-if="required" class="text-danger">*</span>
+      </span>
+    </label>
+
+    <!-- Error message -->
+    <p v-if="error" class="mt-1 text-sm text-red-600 dark:text-red-400">
+      {{ error }}
+    </p>
+    <!-- Hint message -->
+    <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      {{ hint }}
+    </p>
+  </div>
 </template>
 
 <script>
@@ -53,6 +65,18 @@ export default {
       default: '',
     },
     inactiveColor: {
+      type: String,
+      default: '',
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    error: {
+      type: String,
+      default: '',
+    },
+    hint: {
       type: String,
       default: '',
     },

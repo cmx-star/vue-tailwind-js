@@ -103,37 +103,71 @@ graph TD
 
 ---
 
-### C. 使用自定义样式 (@apply 或 Scoped CSS)
+### C. 使用自定义样式 (Scoped CSS)
 
 **适用场景:**
 
-1. **高频复用组件** (标准按钮、输入框、卡片)
-2. **复杂交互** (伪元素、动画、类名堆叠 >8 个)
+1. **颜色定义** - 所有颜色必须用 CSS 变量
+2. **复杂交互** - 伪元素、动画、特殊状态
 3. **第三方库覆盖**
 
 **规则:**
 
-- 封装在 `@layer components` 中
-- 使用 `@apply` 组合 Tailwind 类名
-- 颜色仍使用 CSS 变量
+- ❌ **不推荐使用 `@apply`** - 会增加 CSS 体积,降低可读性
+- ✅ **Tailwind 类直接写在 template** - 间距、布局、字体等
+- ✅ **颜色用 CSS 变量** - 在 `<style scoped>` 中定义
 
-**示例:**
+**推荐写法:**
 
-```css
-/* src/styles/components/button.css */
-@layer components {
-  .btn-primary {
-    @apply px-4 py-2 rounded-lg font-medium transition-all;
-    background-color: var(--color-primary-600);
-    color: white;
-  }
+```vue
+<!-- ✅ 推荐:类名在 template,颜色在 style -->
+<template>
+  <div class="card-container rounded-lg border shadow-sm p-6">
+    <h3 class="card-title text-lg font-semibold mb-4">{{ title }}</h3>
+    <slot></slot>
+  </div>
+</template>
 
-  .btn-primary:hover {
-    background-color: var(--color-primary-700);
-    @apply shadow-lg;
-  }
+<style scoped>
+.card-container {
+  background-color: var(--color-bg-primary);
+  border-color: var(--color-border);
 }
+
+.card-title {
+  color: var(--color-text-heading);
+}
+</style>
 ```
+
+**不推荐写法:**
+
+```vue
+<!-- ❌ 不推荐:使用 @apply -->
+<template>
+  <div class="card-container">
+    <h3 class="card-title">{{ title }}</h3>
+  </div>
+</template>
+
+<style scoped>
+.card-container {
+  @apply rounded-lg border shadow-sm p-6;
+  background-color: var(--color-bg-primary);
+}
+
+.card-title {
+  @apply text-lg font-semibold mb-4;
+  color: var(--color-text-heading);
+}
+</style>
+```
+
+**原因:**
+
+- ❌ `@apply` 会将类名编译成重复的 CSS,增加体积
+- ❌ 降低可读性,需要在两个地方查看样式
+- ✅ 直接写类名更直观,便于维护
 
 ---
 
@@ -239,20 +273,53 @@ graph TD
 
 ### 规则四:组件封装重于类名堆砌
 
-**原则:** 类名超过 **8 个**,必须重构
+**原则:** 类名超过 **8 个**,考虑重构
 
 **重构方案:**
 
-#### 方案: 使用 @apply
+#### 方案一:提取为独立组件
 
-```css
-@layer components {
-  .card-container {
-    @apply flex items-center justify-between p-6 rounded-xl shadow-sm hover:shadow-md transition-all;
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-  }
+```vue
+<!-- ✅ 推荐:提取为组件 -->
+<template>
+  <CompCard title="用户信息">
+    <p>内容</p>
+  </CompCard>
+</template>
+```
+
+#### 方案二:使用自定义类 + CSS 变量
+
+```vue
+<!-- ✅ 推荐:类名在 template,颜色在 style -->
+<template>
+  <div class="card-container rounded-lg border shadow-sm p-6">
+    <h3 class="card-title text-lg font-semibold mb-4">{{ title }}</h3>
+    <slot></slot>
+  </div>
+</template>
+
+<style scoped>
+.card-container {
+  background-color: var(--color-bg-primary);
+  border-color: var(--color-border);
 }
+
+.card-title {
+  color: var(--color-text-heading);
+}
+</style>
+```
+
+**❌ 不推荐:使用 @apply**
+
+```vue
+<!-- ❌ 不推荐 -->
+<style scoped>
+.card-container {
+  @apply rounded-lg border shadow-sm p-6;
+}
+</style>
 ```
 
 ---
@@ -326,167 +393,6 @@ graph TD
 
 ---
 
-### 规则七:@apply 使用最佳实践 - 全局类封装
-
-**原则:** 使用 `@apply` 封装**全局复用类**,而非在组件内部重复定义
-
-#### ✅ 推荐:全局类封装
-
-**步骤:**
-
-1. 在 `src/styles/moudles/utilities.css` 中定义全局类
-2. 使用 `@layer components` 确保优先级
-3. 在组件中直接使用类名
-
-**示例:**
-
-```css
-/* src/styles/moudles/utilities.css */
-@layer components {
-  /* 卡片容器 - 高频复用 */
-  .card-base {
-    @apply flex items-center justify-between p-6 rounded-xl shadow-sm hover:shadow-md transition-all;
-    background-color: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-  }
-
-  /* 主要按钮 */
-  .btn-primary {
-    @apply px-4 py-2 rounded-lg font-medium transition-all;
-    background-color: var(--color-primary-600);
-    color: white;
-  }
-
-  .btn-primary:hover {
-    background-color: var(--color-primary-700);
-    @apply shadow-lg;
-  }
-
-  /* 输入框基础样式 */
-  .input-base {
-    @apply w-full px-3 py-2 rounded-md border transition-colors;
-    background-color: var(--color-bg-primary);
-    border-color: var(--color-border);
-    color: var(--color-text-body);
-  }
-
-  .input-base:focus {
-    @apply outline-none ring-2;
-    border-color: var(--color-primary-600);
-    ring-color: var(--color-primary-200);
-  }
-}
-```
-
-```vue
-<!-- ✅ 正确:直接使用全局类 -->
-<template>
-  <div class="card-base">
-    <h3>卡片标题</h3>
-    <button class="btn-primary">操作</button>
-  </div>
-
-  <input type="text" class="input-base" />
-</template>
-
-<!-- 无需 <style> 块 -->
-```
-
-**优势:**
-
-- ✅ 一次定义,全局复用
-- ✅ 统一管理,易于维护
-- ✅ 减少 CSS 体积
-- ✅ 类名语义化,可读性强
-
----
-
-#### ❌ 不推荐:组件内重复 @apply
-
-```vue
-<!-- ❌ 错误:每个组件都写一遍 @apply -->
-<template>
-  <div class="my-card">内容</div>
-</template>
-
-<style scoped>
-.my-card {
-  @apply flex items-center p-6 rounded-xl shadow-sm;
-  background-color: var(--color-bg-secondary);
-}
-</style>
-```
-
-**问题:**
-
-- ❌ 多个组件重复定义相同样式
-- ❌ 增加 CSS 体积
-- ❌ 维护困难(修改需要改多处)
-
----
-
-#### 使用场景判断
-
-| 场景                | 使用方式      | 原因              |
-| :------------------ | :------------ | :---------------- |
-| **高频复用 (≥3次)** | ✅ 全局类     | 统一管理,减少重复 |
-| **仅使用1-2次**     | ❌ 直接写类名 | 无需封装          |
-| **组件特有样式**    | ⚠️ Scoped CSS | 不影响其他组件    |
-| **第三方库覆盖**    | ✅ 全局类     | 统一覆盖策略      |
-
-**判断流程:**
-
-```
-这个样式会在其他地方用吗?
-├─ 会 (≥3次) → 封装为全局类
-├─ 可能会 → 先封装,备用
-└─ 不会 → 直接写类名或 scoped CSS
-```
-
----
-
-#### 全局类命名规范
-
-**格式:** `{组件类型}-{变体}`
-
-| 类型   | 命名示例                             | 说明          |
-| :----- | :----------------------------------- | :------------ |
-| 按钮   | `btn-primary`, `btn-secondary`       | 主要/次要按钮 |
-| 卡片   | `card-base`, `card-elevated`         | 基础/悬浮卡片 |
-| 输入框 | `input-base`, `input-error`          | 基础/错误状态 |
-| 徽章   | `badge-success`, `badge-warning`     | 成功/警告徽章 |
-| 容器   | `container-fluid`, `container-fixed` | 流式/固定容器 |
-
-**示例:**
-
-```css
-@layer components {
-  /* 按钮系列 */
-  .btn-primary {
-    /* 主要按钮 */
-  }
-  .btn-secondary {
-    /* 次要按钮 */
-  }
-  .btn-ghost {
-    /* 幽灵按钮 */
-  }
-
-  /* 卡片系列 */
-  .card-base {
-    /* 基础卡片 */
-  }
-  .card-elevated {
-    /* 悬浮卡片 */
-  }
-  .card-bordered {
-    /* 带边框卡片 */
-  }
-}
-```
-
----
-
 ### 规则八:注释规范
 
 **原则:** 复杂样式必须注释,说明设计意图
@@ -516,7 +422,6 @@ graph TD
 - [ ] 是否使用了语义化变量名?
 - [ ] 响应式是否遵循 Mobile First?
 - [ ] 暗黑模式是否正确适配?
-- [ ] 是否有不必要的 `@apply`?
 - [ ] 复杂样式是否添加注释?
 
 ### 审查者检查点

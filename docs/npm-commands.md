@@ -166,88 +166,6 @@ pnpm run lint
 
 ---
 
-#### `pnpm run lint:style`
-
-**用途:** 样式规范检查
-
-**说明:**
-
-- 检查是否符合开发规范
-- 自动扫描所有 Vue 文件
-
-**使用:**
-
-```bash
-pnpm run lint:style
-```
-
-**检查项:**
-
-- ❌ 硬编码颜色 (如 `bg-[#ffffff]`)
-- ❌ 非标准间距 (如 `p-[15px]`)
-- ⚠️ 类名过多 (>8 个)
-- ❌ 未使用语义化变量
-- ⚠️ 未遵循 Mobile First
-- ⚠️ 暗黑模式未适配
-- ⚠️ 不必要的 `@apply`
-
-**示例输出:**
-
-```
-❌ 硬编码颜色 (3 处)
-  → src/views/Dashboard.vue:25
-    class="bg-[#ffffff]"
-
-⚠️ 类名过多 (5 处)
-  → src/components/Card.vue:10 (12 个类)
-```
-
----
-
-#### `pnpm run check:classes`
-
-**用途:** 检测全局类内容重复
-
-**说明:**
-
-- 扫描 `src/styles/utilities/` 目录
-- 检测 CSS 内容重复 (不是类名重复)
-- 自动忽略 Vue 过渡类
-
-**使用:**
-
-```bash
-pnpm run check:classes
-```
-
-**检测逻辑:**
-
-1. 提取所有类的 CSS 内容
-2. 标准化格式后计算 MD5 哈希
-3. 找出哈希相同的类 (内容完全一样)
-
-**示例输出:**
-
-```
-✅ 未发现重复的 CSS 内容!
-   所有全局类样式唯一,可以安全提交。
-```
-
-或
-
-```
-❌ 发现 2 组重复的 CSS 内容:
-
-【重复组 1】
-CSS 内容:
-  padding:16px;border-radius:8px;
-重复的类:
-  → .card-base (src/styles/utilities/cards.css:10)
-  → .panel-base (src/styles/utilities/panels.css:15)
-```
-
----
-
 #### `pnpm run format`
 
 **用途:** Prettier 代码格式化
@@ -354,8 +272,6 @@ pnpm run create
 
 # 4. 提交前检查
 pnpm run lint          # 代码检查
-pnpm run lint:style    # 样式规范检查
-pnpm run check:classes # 全局类重复检查
 
 # 5. 格式化代码
 pnpm run format
@@ -387,18 +303,16 @@ pnpm run build:report
 
 ## 📊 命令对比
 
-| 命令            | 用途       | 运行时间 | 何时使用     |
-| :-------------- | :--------- | :------- | :----------- |
-| `dev`           | 开发服务器 | -        | 日常开发     |
-| `build`         | 生产构建   | ~30s     | 发布前       |
-| `build:report`  | 构建+分析  | ~35s     | 优化体积     |
-| `preview`       | 预览构建   | -        | 测试构建     |
-| `create`        | 创建页面   | ~1s      | 新增页面     |
-| `lint`          | 代码检查   | ~5s      | 提交前       |
-| `lint:style`    | 样式检查   | ~3s      | 提交前       |
-| `check:classes` | 重复检查   | ~1s      | 封装全局类后 |
-| `format`        | 格式化     | ~2s      | 提交前       |
-| `commit`        | 规范提交   | -        | 提交代码     |
+| 命令           | 用途       | 运行时间 | 何时使用 |
+| :------------- | :--------- | :------- | :------- |
+| `dev`          | 开发服务器 | -        | 日常开发 |
+| `build`        | 生产构建   | ~30s     | 发布前   |
+| `build:report` | 构建+分析  | ~35s     | 优化体积 |
+| `preview`      | 预览构建   | -        | 测试构建 |
+| `create`       | 创建页面   | ~1s      | 新增页面 |
+| `lint`         | 代码检查   | ~5s      | 提交前   |
+| `format`       | 格式化     | ~2s      | 提交前   |
+| `commit`       | 规范提交   | -        | 提交代码 |
 
 ---
 
@@ -410,9 +324,8 @@ pnpm run build:report
 # 开发
 pnpm run dev
 
-# 提交前三连
+# 提交前
 pnpm run lint
-pnpm run lint:style
 pnpm run format
 
 # 提交
@@ -431,47 +344,14 @@ pnpm run create
 pnpm run build:report
 ```
 
-### 检查全局类
-
-```bash
-pnpm run check:classes
-```
-
----
-
-## ⚙️ 自定义配置
-
-### 修改开发端口
-
-```javascript
-// vite.config.js
-export default defineConfig({
-  server: {
-    port: 3000, // 默认 5173
-  },
-})
-```
-
-### 修改构建输出目录
-
-```javascript
-// vite.config.js
-export default defineConfig({
-  build: {
-    outDir: 'build', // 默认 dist
-  },
-})
-```
-
 ---
 
 ## 💡 提示
 
 1. **开发时:** 只需运行 `pnpm run dev`
-2. **提交前:** 运行 `pnpm run lint` 和 `pnpm run lint:style`
-3. **封装全局类后:** 运行 `pnpm run check:classes`
-4. **发布前:** 运行 `pnpm run build:report` 检查体积
-5. **使用 `pnpm run commit`** 而非 `git commit`,确保提交信息规范
+2. **提交前:** 运行 `pnpm run lint` 和 `pnpm run format`
+3. **发布前:** 运行 `pnpm run build:report` 检查体积
+4. **使用 `pnpm run commit`** 而非 `git commit`,确保提交信息规范
 
 ---
 

@@ -14,6 +14,7 @@
         :disabled="disabled"
         :required="required"
         :rows="rows"
+        :maxlength="maxlength"
         :autocomplete="autocomplete"
         :class="textareaClasses"
         @input="handleInput"
@@ -29,6 +30,7 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :required="required"
+        :maxlength="maxlength"
         :autocomplete="autocomplete"
         :class="inputClasses"
         @input="handleInput"
@@ -96,6 +98,10 @@ export default {
     rows: {
       type: [Number, String],
       default: 4,
+    },
+    maxlength: {
+      type: [Number, String],
+      default: null,
     },
   },
   emits: ['update:modelValue', 'blur'],
