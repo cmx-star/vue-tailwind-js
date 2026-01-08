@@ -140,29 +140,6 @@ graph TD
 </style>
 ```
 
-**不推荐写法:**
-
-```vue
-<!-- ❌ 不推荐:使用 @apply -->
-<template>
-  <div class="card-container">
-    <h3 class="card-title">{{ title }}</h3>
-  </div>
-</template>
-
-<style scoped>
-.card-container {
-  @apply rounded-lg border shadow-sm p-6;
-  background-color: var(--color-bg-primary);
-}
-
-.card-title {
-  @apply text-lg font-semibold mb-4;
-  color: var(--color-text-heading);
-}
-</style>
-```
-
 **原因:**
 
 - ❌ `@apply` 会将类名编译成重复的 CSS,增加体积
@@ -311,17 +288,6 @@ graph TD
 </style>
 ```
 
-**❌ 不推荐:使用 @apply**
-
-```vue
-<!-- ❌ 不推荐 -->
-<style scoped>
-.card-container {
-  @apply rounded-lg border shadow-sm p-6;
-}
-</style>
-```
-
 ---
 
 ## 4. 新增规则 (Enhanced)
@@ -369,11 +335,6 @@ graph TD
   color: var(--color-text-body);
 }
 </style>
-
-<!-- ⚠️ 次选: 手动写 dark: 前缀 -->
-<div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-  内容
-</div>
 ```
 
 **暗黑模式变量定义:**
