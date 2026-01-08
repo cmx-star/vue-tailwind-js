@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { storage } from '@/utils/storage'
+import { useMenuStore } from './menu'
 
 export const useAppStore = defineStore('app', {
   state: () => ({
@@ -22,12 +23,19 @@ export const useAppStore = defineStore('app', {
     /**
      * 根据当前激活的顶部导航过滤菜单
      */
-    filteredMenuList: (state) => {
-      if (!state.menuList || state.menuList.length === 0) {
+    filteredMenuList: () => {
+      // 从 menuStore 获取数据
+      const menuStore = useMenuStore()
+      const menuList = menuStore.menuList
+      const activeTopNav = menuStore.activeTopNav
+
+      if (!menuList || menuList.length === 0) {
         return []
       }
-      return state.menuList.filter((menu) => {
-        return menu.topNav === state.activeTopNav
+
+      // 过滤出当前顶部导航对应的菜单
+      return menuList.filter((menu) => {
+        return menu.meta?.topNav === activeTopNav
       })
     },
   },

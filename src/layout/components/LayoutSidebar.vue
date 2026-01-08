@@ -28,12 +28,11 @@ export default {
   computed: {
     ...mapStores(useAppStore, useMenuStore),
     currentTopNavMenus() {
-      const activeTopNav = this.menuStore.activeTopNav
-      if (activeTopNav === undefined || activeTopNav === null) return []
+      // 使用 appStore 的 filteredMenuList getter
+      const filtered = this.appStore.filteredMenuList
 
-      const menus = this.menuStore.menuList.filter((menu) => menu.meta?.topNav === activeTopNav)
-
-      if (menus.length === 0) {
+      // 如果没有菜单,返回默认的 Dashboard
+      if (!filtered || filtered.length === 0) {
         return [
           {
             title: 'nav.dashboard',
@@ -42,7 +41,7 @@ export default {
           },
         ]
       }
-      return menus
+      return filtered
     },
   },
 }
