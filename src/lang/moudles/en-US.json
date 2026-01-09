@@ -101,6 +101,7 @@
     "networkCenter": "Network Center",
     "interfaceManagement": "Interface Management",
     "interfaceConfig": "Interface Config",
+    "networkWAN": "Network WAN",
     "securityPolicy": "Security Policy",
     "firewall": "Firewall",
     "firewallSettings": "Firewall Settings",

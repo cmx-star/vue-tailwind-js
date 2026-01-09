@@ -101,6 +101,7 @@
     "networkCenter": "网络中心",
     "interfaceManagement": "接口管理",
     "interfaceConfig": "接口配置",
+    "networkWAN": "网口 WAN",
     "securityPolicy": "安全策略",
     "firewall": "防火墙",
     "firewallSettings": "防火墙设置",

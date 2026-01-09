@@ -1,5 +1,5 @@
 <template>
-  <div class="ViewLogManagement">
+  <div class="ViewNetworkWAN">
     <CompCardTabs :router-view-card="true">
       <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 px-4">
         {{ $t('vpn.networkWAN.title') }}
@@ -56,7 +56,7 @@ import { formatDtDHS, setData, netmaskCheck, wanParams } from '@/utils/network'
 import { validators } from '@/utils/validators'
 
 export default {
-  name: 'ViewLogManagement',
+  name: 'ViewNetworkWAN',
   data() {
     return {
       wanConnectFlag: false,
@@ -277,7 +277,7 @@ export default {
 </script>
 
 <style scoped>
-.ViewLogManagement {
+.ViewNetworkWAN {
   padding-bottom: 20px;
 }
 </style>

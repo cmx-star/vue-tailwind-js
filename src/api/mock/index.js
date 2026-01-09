@@ -77,6 +77,16 @@ const menuMock = {
           aside: 1,
           topNav: 1,
         },
+        {
+          id: 42,
+          name: 'networkWAN',
+          uri: 'wan',
+          permissionValue: 'NetworkWAN',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 1,
+        },
       ],
     },
     {
