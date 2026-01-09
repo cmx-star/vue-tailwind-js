@@ -53,6 +53,16 @@ const menuMock = {
           aside: 1,
           topNav: 3,
         },
+        {
+          id: 24,
+          name: 'releaseSetup',
+          uri: 'release-setup',
+          permissionValue: 'ViewReleaseSetup',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 3,
+        },
       ],
     },
     {

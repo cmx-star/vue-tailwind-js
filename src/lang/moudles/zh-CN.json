@@ -99,6 +99,7 @@
     "productManagement": "节点管理",
     "analyticsManagement": "数据分析",
     "ioManagement": "IO 管理",
+    "releaseSetup": "发布设置",
     "networkCenter": "网络中心",
     "interfaceManagement": "接口管理",
     "interfaceConfig": "接口配置",
@@ -289,6 +290,25 @@
       "title": "节点管理模块",
       "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
     },
+    "release": {
+      "title": "发布设置",
+      "description": "配置 MQTT 发布主题及相关参数设置",
+      "topic": "主题",
+      "qos": "服务质量",
+      "messageRetained": "消息保留",
+      "description_field": "备注",
+      "operation": "操作",
+      "topicManagement": "发布主题管理",
+      "retained": "保留",
+      "notRetained": "不保留",
+      "true": "是",
+      "false": "否",
+      "tips": "提示",
+      "deleteConfirm": "是否删除?",
+      "selectedTopics": "已选择",
+      "maxTopics": "最多支持 16 个主题",
+      "noTopicSelected": "请先选择要删除的主题"
+    },
     "common": {
       "inputExample": "输入示例",
       "interactionExample": "交互示例",
@@ -307,7 +327,17 @@
       "inProgress": "进行中",
       "completed": "已完成",
       "clickedMessage": "您点击了: ",
-      "placeholder": "请输入..."
+      "placeholder": "请输入...",
+      "pleaseEnter": "请输入",
+      "pleaseSelect": "请选择",
+      "formatError": "格式错误",
+      "inputRange": "输入范围",
+      "byte": "字节",
+      "applySuccessfully": "应用成功",
+      "deleteSuccessfully": "删除成功",
+      "modifySuccessfully": "修改成功",
+      "addSuccessfully": "添加成功",
+      "sure": "确定"
     }
   },
   "layout": {

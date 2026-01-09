@@ -99,6 +99,7 @@
     "productManagement": "Node Management",
     "analyticsManagement": "Analytics",
     "ioManagement": "IO Management",
+    "releaseSetup": "Release Setup",
     "networkCenter": "Network Center",
     "interfaceManagement": "Interface Management",
     "interfaceConfig": "Interface Config",
@@ -284,6 +285,25 @@
       "title": "Node Management Module",
       "description": "This is a Vue3-based demo page showcasing the project's auto-import capabilities."
     },
+    "release": {
+      "title": "Release Setup",
+      "description": "Configure MQTT publish topics and related parameters",
+      "topic": "Topic",
+      "qos": "QoS",
+      "messageRetained": "Message Retained",
+      "description_field": "Description",
+      "operation": "Operation",
+      "topicManagement": "Publish Topic Management",
+      "retained": "Retained",
+      "notRetained": "Not Retained",
+      "true": "Yes",
+      "false": "No",
+      "tips": "Tips",
+      "deleteConfirm": "Confirm deletion?",
+      "selectedTopics": "Selected",
+      "maxTopics": "Maximum 16 topics supported",
+      "noTopicSelected": "Please select topics to delete first"
+    },
     "common": {
       "inputExample": "Input Example",
       "interactionExample": "Interaction Example",
@@ -302,7 +322,17 @@
       "inProgress": "In Progress",
       "completed": "Completed",
       "clickedMessage": "You clicked: ",
-      "placeholder": "Please enter..."
+      "placeholder": "Please enter...",
+      "pleaseEnter": "Please enter",
+      "pleaseSelect": "Please select",
+      "formatError": "Format error",
+      "inputRange": "Input range",
+      "byte": "Byte",
+      "applySuccessfully": "Applied successfully",
+      "deleteSuccessfully": "Deleted successfully",
+      "modifySuccessfully": "Modified successfully",
+      "addSuccessfully": "Added successfully",
+      "sure": "Confirm"
     }
   },
   "layout": {
