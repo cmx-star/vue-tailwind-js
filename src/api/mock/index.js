@@ -43,6 +43,16 @@ const menuMock = {
           aside: 1,
           topNav: 3,
         },
+        {
+          id: 23,
+          name: 'ioManagement',
+          uri: 'io',
+          permissionValue: 'ViewIomanagement',
+          type: 1,
+          show: 1,
+          aside: 1,
+          topNav: 3,
+        },
       ],
     },
     {

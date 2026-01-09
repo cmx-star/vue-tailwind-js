@@ -90,6 +90,28 @@
               @update:model-value="handleFieldChange($event, item)"
             />
 
+            <!-- Cascader -->
+            <CompCascader
+              v-else-if="item.type === 'cascader'"
+              :model-value="getFieldValue(item.key)"
+              :options="resolveValue(item.options) || []"
+              :placeholder="resolveValue(item.placeholder) || ''"
+              :disabled="resolveValue(item.disabled)"
+              :separator="item.separator"
+              @update:model-value="handleFieldChange($event, item)"
+            />
+
+            <!-- Transfer -->
+            <CompTransfer
+              v-else-if="item.type === 'transfer'"
+              :model-value="getFieldValue(item.key)"
+              :data="resolveValue(item.data) || []"
+              :titles="item.titles || ['Source', 'Target']"
+              :props="item.props"
+              :searchable="item.searchable"
+              @update:model-value="handleFieldChange($event, item)"
+            />
+
             <!-- Error message -->
             <p v-if="getFieldError(item.key)" class="mt-1 text-sm text-danger">
               {{ getFieldError(item.key) }}
@@ -98,9 +120,6 @@
             <p v-else-if="item.hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
               {{ item.hint }}
             </p>
-
-            <!-- Error message -->
-            <!-- 错误信息已由各个子组件自己显示,这里不需要重复显示 -->
           </div>
         </div>
 

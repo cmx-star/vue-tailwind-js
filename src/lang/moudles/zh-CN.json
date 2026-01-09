@@ -98,6 +98,7 @@
     "edgeComputing": "边缘计算",
     "productManagement": "节点管理",
     "analyticsManagement": "数据分析",
+    "ioManagement": "IO 管理",
     "networkCenter": "网络中心",
     "interfaceManagement": "接口管理",
     "interfaceConfig": "接口配置",
@@ -119,6 +120,67 @@
     "formDemo": "表单演示",
     "componentDemo": "组件演示"
   },
+  "io": {
+    "title": "IO 管理",
+    "description": "配置和管理数字输入输出、模拟输入输出及定时功能。",
+    "di": {
+      "title": "DI 功能",
+      "inputMode": "DI 输入模式",
+      "filterTime": "滤波时间",
+      "counterMode": "计数模式",
+      "countFrequency": "计数频率",
+      "maxRange": "最大量程",
+      "exceedsMaxRange": "超量程后操作",
+      "digitalInput": "数字输入",
+      "counter": "计数模式",
+      "risingEdge": "上升沿",
+      "fallingEdge": "下降沿",
+      "loop": "循环",
+      "stop": "停止"
+    },
+    "ao": {
+      "title": "AO 功能",
+      "type": "AO 类型",
+      "current": "电流",
+      "voltage": "电压",
+      "outputMode": "输出模式",
+      "currentOutput": "电流输出",
+      "voltageOutput": "电压输出",
+      "selectOutputMode": "请选择输出模式"
+    },
+    "do": {
+      "title": "DO 功能",
+      "restartHold": "重启保持",
+      "open": "开启",
+      "close": "关闭",
+      "select": "DO 选择",
+      "action": "DO 动作",
+      "on": "常开",
+      "off": "常闭",
+      "switch": "翻转"
+    },
+    "timing": {
+      "title": "定时功能",
+      "taskDescription": "任务描述",
+      "timingMode": "定时模式",
+      "timingMotion": "定时动作",
+      "periodicAction": "周期动作",
+      "time": "时间",
+      "timingModeTime": "定时时间",
+      "cycleTime": "周期时间",
+      "actionOptions": "动作选项",
+      "action": "动作",
+      "operation": "操作",
+      "maxTasks": "最多支持 16 个定时任务"
+    },
+    "common": {
+      "edit": "编辑",
+      "add": "添加",
+      "apply": "应用",
+      "noData": "暂无数据"
+    }
+  },
+
   "login": {
     "title": "用户登录",
     "subtitle": "轻量级后台管理系统",
@@ -470,7 +532,9 @@
       "cascader": "级联选择",
       "userType": "用户类型",
       "companyName": "公司名称",
-      "department": "部门"
+      "department": "部门",
+      "groupSelect": "分组选择器",
+      "transfer": "穿梭框"
     },
     "placeholders": {
       "username": "请输入用户名",
@@ -487,9 +551,15 @@
       "selectMultiple": "请选择多个",
       "datepicker": "请选择日期",
       "cascader": "请选择",
+      "groupSelect": "请选择技术栈",
       "userType": "请选择用户类型",
       "companyName": "请输入公司名称",
       "department": "请输入部门"
+    },
+    "tips": {
+      "cascader": "支持多级联动选择,点击展开下一级",
+      "groupSelect": "选项按分组展示,更易查找",
+      "transfer": "支持搜索和批量转移数据"
     },
     "options": {
       "male": "男",
@@ -514,7 +584,18 @@
       "hangzhou": "杭州",
       "ningbo": "宁波",
       "nanjing": "南京",
-      "suzhou": "苏州"
+      "suzhou": "苏州",
+      "frontend": "前端技术",
+      "backend": "后端技术",
+      "item1": "数据项 1",
+      "item2": "数据项 2",
+      "item3": "数据项 3",
+      "item4": "数据项 4",
+      "item5": "数据项 5"
+    },
+    "transfer": {
+      "source": "源列表",
+      "target": "目标列表"
     },
     "validation": {
       "usernameRequired": "用户名不能为空",

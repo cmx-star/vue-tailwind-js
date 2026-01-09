@@ -131,11 +131,13 @@ export default {
         number: '42',
         singleSelect: '2',
         multipleSelect: ['a', 'c'],
+        groupSelect: 'frontend-vue',
         radio: '1',
         checkbox: ['a', 'b'],
         switch: true,
         datepicker: new Date().toISOString().split('T')[0],
         cascader: ['zhejiang', 'hangzhou'],
+        transfer: ['1', '3'],
       },
       dynamicFormData: {
         userType: 'company',
@@ -342,6 +344,7 @@ export default {
           label: this.$t('formDemo.fields.cascader'),
           type: 'cascader',
           placeholder: this.$t('formDemo.placeholders.cascader'),
+          tip: this.$t('formDemo.tips.cascader'),
           options: [
             {
               label: this.$t('formDemo.options.zhejiang'),
@@ -360,6 +363,46 @@ export default {
               ],
             },
           ],
+        },
+        {
+          key: 'groupSelect',
+          label: this.$t('formDemo.fields.groupSelect'),
+          type: 'select',
+          placeholder: this.$t('formDemo.placeholders.groupSelect'),
+          tip: this.$t('formDemo.tips.groupSelect'),
+          options: [
+            {
+              label: this.$t('formDemo.options.frontend'),
+              options: [
+                { label: 'Vue.js', value: 'frontend-vue' },
+                { label: 'React', value: 'frontend-react' },
+                { label: 'Angular', value: 'frontend-angular' },
+              ],
+            },
+            {
+              label: this.$t('formDemo.options.backend'),
+              options: [
+                { label: 'Node.js', value: 'backend-node' },
+                { label: 'Python', value: 'backend-python' },
+                { label: 'Java', value: 'backend-java' },
+              ],
+            },
+          ],
+        },
+        {
+          key: 'transfer',
+          label: this.$t('formDemo.fields.transfer'),
+          type: 'transfer',
+          tip: this.$t('formDemo.tips.transfer'),
+          data: [
+            { key: '1', label: this.$t('formDemo.options.item1') },
+            { key: '2', label: this.$t('formDemo.options.item2') },
+            { key: '3', label: this.$t('formDemo.options.item3') },
+            { key: '4', label: this.$t('formDemo.options.item4') },
+            { key: '5', label: this.$t('formDemo.options.item5') },
+          ],
+          titles: [this.$t('formDemo.transfer.source'), this.$t('formDemo.transfer.target')],
+          searchable: true,
         },
       ]
     },

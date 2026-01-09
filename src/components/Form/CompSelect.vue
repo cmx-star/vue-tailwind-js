@@ -49,34 +49,76 @@
           </div>
           <ul class="py-0.5" role="listbox">
             <li
-              v-if="filteredOptions.length === 0"
+              v-if="filteredOptionsOrGroups.length === 0"
               class="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 text-center"
             >
               {{ actualNoOptionsText }}
             </li>
-            <li
-              v-for="(option, index) in filteredOptions"
-              :key="getOptionValue(option, index)"
-              :class="[
-                'relative cursor-pointer select-none px-4 py-2 text-sm',
-                isSelected(option)
-                  ? 'bg-primary-600 text-white'
-                  : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700',
-              ]"
-              role="option"
-              :aria-selected="isSelected(option)"
-              @click="selectOption(option)"
-            >
-              <span class="block truncate">
-                {{ getOptionLabel(option) }}
-              </span>
-              <span
-                v-if="isSelected(option)"
-                class="absolute inset-y-0 right-0 flex items-center pr-4"
+
+            <!-- 分组模式 -->
+            <template v-if="hasGroups">
+              <template v-for="(group, groupIndex) in filteredOptionsOrGroups" :key="groupIndex">
+                <!-- 分组标题 -->
+                <li
+                  class="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-900"
+                >
+                  {{ group.label }}
+                </li>
+                <!-- 分组选项 -->
+                <li
+                  v-for="(option, optionIndex) in group.options"
+                  :key="getOptionValue(option, optionIndex)"
+                  :class="[
+                    'relative cursor-pointer select-none px-6 py-2 text-sm',
+                    isSelected(option)
+                      ? 'bg-primary-600 text-white'
+                      : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700',
+                    option.disabled ? 'opacity-50 cursor-not-allowed' : '',
+                  ]"
+                  role="option"
+                  :aria-selected="isSelected(option)"
+                  @click="!option.disabled && selectOption(option)"
+                >
+                  <span class="block truncate">
+                    {{ getOptionLabel(option) }}
+                  </span>
+                  <span
+                    v-if="isSelected(option)"
+                    class="absolute inset-y-0 right-0 flex items-center pr-4"
+                  >
+                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                  </span>
+                </li>
+              </template>
+            </template>
+
+            <!-- 普通模式 -->
+            <template v-else>
+              <li
+                v-for="(option, index) in filteredOptionsOrGroups"
+                :key="getOptionValue(option, index)"
+                :class="[
+                  'relative cursor-pointer select-none px-4 py-2 text-sm',
+                  isSelected(option)
+                    ? 'bg-primary-600 text-white'
+                    : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700',
+                  option.disabled ? 'opacity-50 cursor-not-allowed' : '',
+                ]"
+                role="option"
+                :aria-selected="isSelected(option)"
+                @click="!option.disabled && selectOption(option)"
               >
-                <CheckIcon class="h-5 w-5" aria-hidden="true" />
-              </span>
-            </li>
+                <span class="block truncate">
+                  {{ getOptionLabel(option) }}
+                </span>
+                <span
+                  v-if="isSelected(option)"
+                  class="absolute inset-y-0 right-0 flex items-center pr-4"
+                >
+                  <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                </span>
+              </li>
+            </template>
           </ul>
         </div>
       </Transition>
@@ -157,22 +199,56 @@ export default {
     }
   },
   computed: {
-    filteredOptions() {
+    // 检测是否为分组模式
+    hasGroups() {
+      return this.options.length > 0 && this.options[0]?.options !== undefined
+    },
+
+    // 统一的过滤逻辑，支持分组和普通模式
+    filteredOptionsOrGroups() {
       if (!this.searchable || !this.searchQuery) {
         return this.options
       }
+
       const query = this.searchQuery.toLowerCase()
+
+      // 分组模式
+      if (this.hasGroups) {
+        return this.options
+          .map((group) => ({
+            ...group,
+            options: group.options.filter((option) => {
+              const label = this.getOptionLabel(option).toLowerCase()
+              return label.includes(query)
+            }),
+          }))
+          .filter((group) => group.options.length > 0)
+      }
+
+      // 普通模式
       return this.options.filter((option) => {
         const label = this.getOptionLabel(option).toLowerCase()
         return label.includes(query)
       })
     },
+
+    // 保留旧的 filteredOptions 以兼容
+    filteredOptions() {
+      return this.filteredOptionsOrGroups
+    },
+
     displayValue() {
       if (this.multiple) {
         if (!Array.isArray(this.modelValue) || this.modelValue.length === 0) {
           return this.placeholder || this.$t('common.pleaseSelect')
         }
-        const selectedOptions = this.options.filter((option) => {
+
+        // 获取所有选项（包括分组中的）
+        const allOptions = this.hasGroups
+          ? this.options.flatMap((group) => group.options)
+          : this.options
+
+        const selectedOptions = allOptions.filter((option) => {
           const value = this.getOptionValue(option)
           return this.modelValue.includes(value)
         })
@@ -183,7 +259,13 @@ export default {
         if (this.modelValue === null || this.modelValue === undefined || this.modelValue === '') {
           return this.placeholder || this.$t('common.pleaseSelect')
         }
-        const selectedOption = this.options.find((option) => {
+
+        // 获取所有选项（包括分组中的）
+        const allOptions = this.hasGroups
+          ? this.options.flatMap((group) => group.options)
+          : this.options
+
+        const selectedOption = allOptions.find((option) => {
           const value = this.getOptionValue(option)
           return this.modelValue === value
         })

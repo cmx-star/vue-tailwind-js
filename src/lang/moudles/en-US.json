@@ -98,6 +98,7 @@
     "edgeComputing": "Edge Computing",
     "productManagement": "Node Management",
     "analyticsManagement": "Analytics",
+    "ioManagement": "IO Management",
     "networkCenter": "Network Center",
     "interfaceManagement": "Interface Management",
     "interfaceConfig": "Interface Config",
@@ -119,6 +120,67 @@
     "formDemo": "Form Demo",
     "componentDemo": "Component Demo"
   },
+  "io": {
+    "title": "IO Management",
+    "description": "Configure and manage digital I/O, analog I/O, and timing functions.",
+    "di": {
+      "title": "DI Function",
+      "inputMode": "DI Input Mode",
+      "filterTime": "Filter Time",
+      "counterMode": "Counter Mode",
+      "countFrequency": "Count Frequency",
+      "maxRange": "Maximum Range",
+      "exceedsMaxRange": "Exceeds Max Range",
+      "digitalInput": "Digital Input",
+      "counter": "Counter Mode",
+      "risingEdge": "Rising Edge",
+      "fallingEdge": "Falling Edge",
+      "loop": "Loop",
+      "stop": "Stop"
+    },
+    "ao": {
+      "title": "AO Function",
+      "type": "AO Type",
+      "current": "Current",
+      "voltage": "Voltage",
+      "outputMode": "Output Mode",
+      "currentOutput": "Current Output",
+      "voltageOutput": "Voltage Output",
+      "selectOutputMode": "Please select output mode"
+    },
+    "do": {
+      "title": "DO Function",
+      "restartHold": "Restart Hold",
+      "open": "Open",
+      "close": "Close",
+      "select": "DO Select",
+      "action": "DO Action",
+      "on": "ON",
+      "off": "OFF",
+      "switch": "Switch"
+    },
+    "timing": {
+      "title": "Timing Function",
+      "taskDescription": "Task Description",
+      "timingMode": "Timing Mode",
+      "timingMotion": "Timing Motion",
+      "periodicAction": "Periodic Action",
+      "time": "Time",
+      "timingModeTime": "Timing Time",
+      "cycleTime": "Cycle Time",
+      "actionOptions": "Action Options",
+      "action": "Action",
+      "operation": "Operation",
+      "maxTasks": "Maximum 16 timing tasks supported"
+    },
+    "common": {
+      "edit": "Edit",
+      "add": "Add",
+      "apply": "Apply",
+      "noData": "No Data"
+    }
+  },
+
   "login": {
     "title": "User Login",
     "subtitle": "Lightweight Admin System",
@@ -461,7 +523,9 @@
       "cascader": "Cascader",
       "userType": "User Type",
       "companyName": "Company Name",
-      "department": "Department"
+      "department": "Department",
+      "groupSelect": "Group Select",
+      "transfer": "Transfer"
     },
     "placeholders": {
       "username": "Please enter username",
@@ -478,9 +542,15 @@
       "selectMultiple": "Please select multiple",
       "datepicker": "Please select date",
       "cascader": "Please select",
+      "groupSelect": "Please select tech stack",
       "userType": "Please select user type",
       "companyName": "Please enter company name",
       "department": "Please enter department"
+    },
+    "tips": {
+      "cascader": "Supports multi-level cascading selection, click to expand next level",
+      "groupSelect": "Options are grouped for easier navigation",
+      "transfer": "Supports search and batch data transfer"
     },
     "options": {
       "male": "Male",
@@ -505,7 +575,18 @@
       "hangzhou": "Hangzhou",
       "ningbo": "Ningbo",
       "nanjing": "Nanjing",
-      "suzhou": "Suzhou"
+      "suzhou": "Suzhou",
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "item1": "Item 1",
+      "item2": "Item 2",
+      "item3": "Item 3",
+      "item4": "Item 4",
+      "item5": "Item 5"
+    },
+    "transfer": {
+      "source": "Source",
+      "target": "Target"
     },
     "validation": {
       "usernameRequired": "Username is required",
