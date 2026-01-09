@@ -31,8 +31,8 @@
               v-if="item.type === 'input'"
               :model-value="getFieldValue(item.key)"
               :type="item.subType || 'text'"
-              :placeholder="item.placeholder || ''"
-              :disabled="item.disabled"
+              :placeholder="resolveValue(item.placeholder) || ''"
+              :disabled="resolveValue(item.disabled)"
               @update:model-value="handleFieldChange($event, item)"
               @blur="validateField(item.key)"
             />
@@ -41,9 +41,9 @@
             <CompSelect
               v-else-if="item.type === 'select'"
               :model-value="getFieldValue(item.key)"
-              :options="item.options || []"
-              :placeholder="item.placeholder || ''"
-              :disabled="item.disabled"
+              :options="resolveValue(item.options) || []"
+              :placeholder="resolveValue(item.placeholder) || ''"
+              :disabled="resolveValue(item.disabled)"
               :multiple="item.multiple"
               :searchable="item.filterable"
               @update:model-value="handleFieldChange($event, item)"
@@ -54,8 +54,8 @@
               v-else-if="item.type === 'datepicker'"
               :model-value="getFieldValue(item.key)"
               :mode="item.mode || 'date'"
-              :placeholder="item.placeholder || ''"
-              :disabled="item.disabled"
+              :placeholder="resolveValue(item.placeholder) || ''"
+              :disabled="resolveValue(item.disabled)"
               :range="item.range"
               @update:model-value="handleFieldChange($event, item)"
             />
@@ -64,9 +64,9 @@
             <CompRadio
               v-else-if="item.type === 'radio'"
               :model-value="getFieldValue(item.key)"
-              :options="item.options || []"
+              :options="resolveValue(item.options) || []"
               :name="item.key"
-              :disabled="item.disabled"
+              :disabled="resolveValue(item.disabled)"
               @update:model-value="handleFieldChange($event, item)"
             />
 
@@ -74,9 +74,9 @@
             <CompCheckbox
               v-else-if="item.type === 'checkbox'"
               :model-value="getFieldValue(item.key)"
-              :options="item.options || []"
+              :options="resolveValue(item.options) || []"
               :name="item.key"
-              :disabled="item.disabled"
+              :disabled="resolveValue(item.disabled)"
               @update:model-value="handleFieldChange($event, item)"
             />
 
@@ -84,7 +84,7 @@
             <CompSwitch
               v-else-if="item.type === 'switch'"
               :model-value="getFieldValue(item.key)"
-              :disabled="item.disabled"
+              :disabled="resolveValue(item.disabled)"
               :active-text="item.activeText"
               :inactive-text="item.inactiveText"
               @update:model-value="handleFieldChange($event, item)"
@@ -189,6 +189,12 @@ export default {
         return show(this.modelValue)
       }
       return false
+    },
+    resolveValue(value) {
+      if (typeof value === 'function') {
+        return value(this.modelValue)
+      }
+      return value
     },
     getFieldValue(key) {
       // Support nested keys like 'user.name'

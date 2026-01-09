@@ -71,7 +71,17 @@
     "deleteCanceled": "Delete canceled",
     "querySuccess": "Query successful",
     "deleteConfirm": "Delete Confirmation",
-    "deleteConfirmMessage": "Are you sure you want to delete this record? This action cannot be undone."
+    "deleteConfirmMessage": "Are you sure you want to delete this record? This action cannot be undone.",
+    "connected": "Connected",
+    "disconnected": "Disconnected"
+  },
+  "button": {
+    "edit": "Edit",
+    "add": "Add",
+    "delete": "Delete",
+    "apply": "Apply",
+    "import": "Import",
+    "export": "Export"
   },
   "menu": {
     "topNav": {
@@ -380,6 +390,41 @@
       "errorMessage": "Error! Unable to connect to server.",
       "infoMessage": "Info: You have received a new message.",
       "dangerMessage": "Danger! This operation cannot be undone."
+    },
+    "networkWAN": {
+      "title": "Network WAN",
+      "description": "Configure and monitor the connection status and parameters of the Network WAN interface.",
+      "statusTitle": "Running Status",
+      "configTitle": "Configuration",
+      "fields": {
+        "proto": "Network Mode",
+        "ip": "Static Address",
+        "netmask": "Subnet Mask",
+        "gw": "Gateway",
+        "dnsMode": "DNS Mode",
+        "dns1": "Primary DNS Server",
+        "dns2": "Secondary DNS Server",
+        "mtu": "MTU"
+      },
+      "options": {
+        "dhcp": "DHCP",
+        "static": "Static IP",
+        "auto": "Auto",
+        "manual": "Manual"
+      },
+      "status": {
+        "type": "Network Type",
+        "ip": "WAN IP",
+        "gw": "Gateway IP",
+        "mac": "MAC Address",
+        "mask": "Subnet Mask",
+        "dns": "DNS Server",
+        "rx": "Received",
+        "tx": "Sent",
+        "uptime": "Uptime",
+        "connected": "Connected",
+        "disconnected": "Disconnected"
+      }
     }
   },
   "formDemo": {

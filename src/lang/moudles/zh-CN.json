@@ -71,7 +71,17 @@
     "deleteCanceled": "已取消删除",
     "querySuccess": "查询成功",
     "deleteConfirm": "删除确认",
-    "deleteConfirmMessage": "确定要删除该记录吗?此操作不可恢复。"
+    "deleteConfirmMessage": "确定要删除该记录吗?此操作不可恢复。",
+    "connected": "已连接",
+    "disconnected": "未连接"
+  },
+  "button": {
+    "edit": "编辑",
+    "add": "添加",
+    "delete": "删除",
+    "apply": "应用",
+    "import": "导入",
+    "export": "导出"
   },
   "menu": {
     "topNav": {
@@ -389,6 +399,41 @@
       "errorMessage": "错误！无法连接到服务器。",
       "infoMessage": "提示：您收到了一条新消息。",
       "dangerMessage": "危险！该操作不可撤销。"
+    },
+    "networkWAN": {
+      "title": "网口 WAN",
+      "description": "配置和监测网络 WAN 接口的连接状态及属性参数。",
+      "statusTitle": "运行状态",
+      "configTitle": "属性配置",
+      "fields": {
+        "proto": "网络模式",
+        "ip": "静态地址",
+        "netmask": "子网掩码",
+        "gw": "网关",
+        "dnsMode": "DNS 获取方式",
+        "dns1": "主 DNS 服务器",
+        "dns2": "备 DNS 服务器",
+        "mtu": "MTU"
+      },
+      "options": {
+        "dhcp": "DHCP",
+        "static": "静态 IP",
+        "auto": "自动获取",
+        "manual": "手动配置"
+      },
+      "status": {
+        "type": "网络类型",
+        "ip": "WAN IP",
+        "gw": "网关 IP",
+        "mac": "MAC 地址",
+        "mask": "子网掩码",
+        "dns": "DNS 服务器",
+        "rx": "接收流量",
+        "tx": "发送流量",
+        "uptime": "连接时间",
+        "connected": "已连接",
+        "disconnected": "未连接"
+      }
     }
   },
   "formDemo": {
