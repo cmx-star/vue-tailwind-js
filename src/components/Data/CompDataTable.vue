@@ -43,8 +43,8 @@
           >
             <!-- 自定义插槽 -->
             <slot
-              v-if="$slots[`cell-${column.key}`]"
-              :name="`cell-${column.key}`"
+              v-if="$slots[column.key]"
+              :name="column.key"
               :row="row"
               :column="column"
               :index="index"

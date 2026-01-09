@@ -1,14 +1,5 @@
 <template>
   <div class="date-picker-wrapper">
-    <label
-      v-if="label"
-      :for="inputId"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-    >
-      {{ label }}
-      <span v-if="required" class="text-danger">*</span>
-    </label>
-
     <div class="relative group">
       <!-- 图标显示 -->
       <div class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none z-10">
@@ -72,13 +63,6 @@
         </svg>
       </button>
     </div>
-
-    <p v-if="error" class="mt-1 text-sm text-red-600 dark:text-red-400">
-      {{ error }}
-    </p>
-    <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-      {{ hint }}
-    </p>
   </div>
 </template>
 
@@ -96,10 +80,6 @@ export default {
       type: [Date, String, Number, Object, Array],
       default: null,
     },
-    label: {
-      type: String,
-      default: '',
-    },
     mode: {
       type: String,
       default: 'date', // 'date' | 'time' | 'dateTime'
@@ -113,15 +93,6 @@ export default {
       default: '',
     },
     disabled: Boolean,
-    required: Boolean,
-    error: {
-      type: String,
-      default: '',
-    },
-    hint: {
-      type: String,
-      default: '',
-    },
     clearable: {
       type: Boolean,
       default: true,

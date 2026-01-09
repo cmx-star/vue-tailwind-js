@@ -1,11 +1,11 @@
 <template>
   <form class="CompForm" autocomplete="off" @submit.prevent="handleSubmit">
-    <div :class="[inline ? 'flex flex-wrap gap-4' : 'space-y-4', gridClass]">
+    <div :class="[inline ? 'flex flex-row flex-wrap gap-4' : 'space-y-4', gridClass]">
       <template v-for="(item, index) in formItems" :key="index">
         <!-- Regular form field -->
         <div v-if="!item.slot && controlShow(item.show)" :class="fieldClass">
           <div class="relative">
-            <!-- Label with optional tip icon -->
+            <!-- Label with optional tip icon - 由 CompForm 统一渲染 -->
             <label
               v-if="item.label"
               class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
@@ -33,8 +33,6 @@
               :type="item.subType || 'text'"
               :placeholder="item.placeholder || ''"
               :disabled="item.disabled"
-              :required="item.required"
-              :error="getFieldError(item.key)"
               @update:model-value="handleFieldChange($event, item)"
               @blur="validateField(item.key)"
             />
@@ -91,6 +89,15 @@
               :inactive-text="item.inactiveText"
               @update:model-value="handleFieldChange($event, item)"
             />
+
+            <!-- Error message -->
+            <p v-if="getFieldError(item.key)" class="mt-1 text-sm text-danger">
+              {{ getFieldError(item.key) }}
+            </p>
+            <!-- Hint message -->
+            <p v-else-if="item.hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {{ item.hint }}
+            </p>
 
             <!-- Error message -->
             <!-- 错误信息已由各个子组件自己显示,这里不需要重复显示 -->

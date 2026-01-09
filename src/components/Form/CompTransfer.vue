@@ -1,10 +1,5 @@
 <template>
   <div class="CompTransfer w-full">
-    <label v-if="label" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-      {{ label }}
-      <span v-if="required" class="text-danger">*</span>
-    </label>
-
     <div class="flex items-center gap-4">
       <!-- Left list (Source) -->
       <div class="flex-1">
@@ -154,13 +149,6 @@
         </div>
       </div>
     </div>
-
-    <p v-if="error" class="mt-2 text-sm text-danger">
-      {{ error }}
-    </p>
-    <p v-else-if="hint" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-      {{ hint }}
-    </p>
   </div>
 </template>
 
@@ -187,22 +175,6 @@ export default {
         key: 'key',
         label: 'label',
       }),
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    error: {
-      type: String,
-      default: '',
-    },
-    hint: {
-      type: String,
-      default: '',
     },
     searchable: {
       type: Boolean,

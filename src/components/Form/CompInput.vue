@@ -1,9 +1,5 @@
 <template>
   <div class="w-full">
-    <label v-if="label" :for="inputId" class="block mb-2.5 text-sm font-medium text-heading">
-      {{ label }}
-      <span v-if="required" class="text-danger">*</span>
-    </label>
     <div class="relative">
       <!-- Textarea -->
       <textarea
@@ -49,8 +45,6 @@
         <EyeSlashIcon v-else class="h-5 w-5" aria-hidden="true" />
       </button>
     </div>
-    <p v-if="error" class="mt-1 text-sm text-danger">{{ error }}</p>
-    <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ hint }}</p>
   </div>
 </template>
 
@@ -68,10 +62,6 @@ export default {
       type: [String, Number],
       default: '',
     },
-    label: {
-      type: String,
-      default: '',
-    },
     type: {
       type: String,
       default: 'text',
@@ -82,7 +72,6 @@ export default {
       default: '',
     },
     disabled: Boolean,
-    required: Boolean,
     error: {
       type: String,
       default: '',
@@ -93,7 +82,7 @@ export default {
     },
     autocomplete: {
       type: String,
-      default: 'new-password', // 使用 new-password 可以更有效地阻止浏览器自动填充
+      default: 'new-password',
     },
     rows: {
       type: [Number, String],

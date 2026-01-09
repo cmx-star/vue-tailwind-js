@@ -55,7 +55,23 @@
     "tip": "提示",
     "pageNotFound": "页面未找到",
     "pageNotFoundDesc": "抱歉，您访问的页面不存在",
-    "backHome": "返回首页"
+    "backHome": "返回首页",
+    "query": "查询",
+    "detail": "详情",
+    "actions": "操作",
+    "keyword": "关键词",
+    "keywordPlaceholder": "请输入关键词",
+    "selectPlaceholder": "请选择",
+    "required": "此字段为必填项",
+    "lengthRange": "长度必须在 {min} 到 {max} 个字符之间",
+    "validateFailed": "表单验证失败,请检查输入",
+    "addSuccess": "新增成功",
+    "editSuccess": "编辑成功",
+    "deleteSuccess": "删除成功",
+    "deleteCanceled": "已取消删除",
+    "querySuccess": "查询成功",
+    "deleteConfirm": "删除确认",
+    "deleteConfirmMessage": "确定要删除该记录吗?此操作不可恢复。"
   },
   "menu": {
     "topNav": {
@@ -246,11 +262,45 @@
   "network": {
     "manager": {
       "title": "网络管理模块",
-      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。",
+      "queryTitle": "查询条件",
+      "listTitle": "数据列表"
     },
     "interface": {
       "title": "接口配置模块",
-      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。"
+      "description": "这是一个基于 Vue3 的演示页面,展示了项目的组件自动引入能力。",
+      "queryTitle": "查询条件",
+      "listTitle": "数据列表",
+      "interfaceName": "接口名称",
+      "interfaceNamePlaceholder": "请输入接口名称",
+      "ipAddress": "IP地址",
+      "ipAddressPlaceholder": "例如: 192.168.1.1",
+      "protocols": "支持协议",
+      "protocolsPlaceholder": "请选择协议",
+      "http": "HTTP",
+      "https": "HTTPS",
+      "websocket": "WebSocket",
+      "grpc": "gRPC",
+      "deployDate": "部署日期",
+      "deployDatePlaceholder": "请选择部署日期",
+      "maintenanceTime": "维护时间",
+      "maintenanceTimePlaceholder": "请选择维护时间",
+      "scheduleTime": "计划时间",
+      "scheduleTimePlaceholder": "请选择计划时间",
+      "networkType": "网络类型",
+      "internal": "内网",
+      "external": "外网",
+      "features": "功能特性",
+      "loadBalance": "负载均衡",
+      "failover": "故障转移",
+      "cache": "缓存",
+      "rateLimit": "限流",
+      "autoRestart": "自动重启",
+      "enableMonitoring": "启用监控",
+      "descriptionPlaceholder": "请输入接口描述",
+      "descriptionHint": "详细描述接口用途和配置说明",
+      "enabled": "开启",
+      "disabled": "关闭"
     },
     "firewall": {
       "title": "防火墙设置模块",

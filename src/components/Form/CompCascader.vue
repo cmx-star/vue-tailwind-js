@@ -1,13 +1,5 @@
 <template>
   <div class="w-full">
-    <label
-      v-if="label"
-      :for="inputId"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-    >
-      {{ label }}
-      <span v-if="required" class="text-danger">*</span>
-    </label>
     <div ref="referenceRef" class="relative">
       <button
         :id="inputId"
@@ -107,12 +99,6 @@
         </div>
       </Transition>
     </div>
-    <p v-if="error" class="mt-1 text-sm text-red-600 dark:text-red-400">
-      {{ error }}
-    </p>
-    <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-      {{ hint }}
-    </p>
   </div>
 </template>
 
@@ -141,22 +127,6 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    error: {
-      type: String,
-      default: '',
-    },
-    hint: {
-      type: String,
-      default: '',
     },
     separator: {
       type: String,

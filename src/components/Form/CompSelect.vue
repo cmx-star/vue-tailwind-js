@@ -1,13 +1,5 @@
 <template>
   <div class="w-full">
-    <label
-      v-if="label"
-      :for="inputId"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-    >
-      {{ label }}
-      <span v-if="required" class="text-danger">*</span>
-    </label>
     <div ref="referenceRef" class="relative">
       <button
         :id="inputId"
@@ -44,7 +36,7 @@
           v-if="isOpen"
           ref="floatingRef"
           :style="floatingStyles"
-          class="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 focus:outline-none custom-scrollbar"
+          class="absolute z-50 mt-1 max-h-60 overflow-auto rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 focus:outline-none custom-scrollbar"
         >
           <div v-if="searchable" class="p-2 border-b border-gray-200 dark:border-gray-700">
             <input
@@ -89,12 +81,6 @@
         </div>
       </Transition>
     </div>
-    <p v-if="error" class="mt-1 text-sm text-danger">
-      {{ error }}
-    </p>
-    <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-      {{ hint }}
-    </p>
   </div>
 </template>
 
@@ -117,16 +103,11 @@ export default {
       type: Array,
       required: true,
     },
-    label: {
-      type: String,
-      default: '',
-    },
     placeholder: {
       type: String,
       default: '',
     },
     disabled: Boolean,
-    required: Boolean,
     error: {
       type: String,
       default: '',
@@ -263,10 +244,13 @@ export default {
           placement: 'bottom-start',
           middleware: [offset(4), flip(), shift({ padding: 8 })],
         }).then(({ x, y }) => {
+          // 设置下拉框宽度与父容器一致
+          const width = referenceEl.offsetWidth
           this.floatingStyles = {
             ...this.floatingStyles,
             left: `${x}px`,
             top: `${y}px`,
+            width: `${width}px`,
           }
         })
       })

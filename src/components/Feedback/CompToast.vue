@@ -1,5 +1,5 @@
 <template>
-  <div ref="toastContainer" class="fixed top-4 right-4 z-50 space-y-3">
+  <div ref="toastContainer" class="fixed top-4 right-4 z-9999 space-y-3">
     <transition-group name="toast">
       <div
         v-for="toast in toasts"
@@ -12,7 +12,7 @@
       >
         <div
           :class="[
-            'inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg',
+            'inline-flex items-center justify-center shrink-0 w-8 h-8 rounded-lg',
             getIconClasses(toast.type),
           ]"
         >

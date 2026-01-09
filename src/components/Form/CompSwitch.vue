@@ -16,23 +16,13 @@
         :class="backgroundClass"
       ></div>
       <span
-        v-if="label || activeText || inactiveText"
+        v-if="activeText || inactiveText"
         class="select-none ms-3 text-sm font-medium"
         :class="disabled ? 'text-fg-disabled' : 'text-heading'"
       >
         {{ displayText }}
-        <span v-if="required" class="text-danger">*</span>
       </span>
     </label>
-
-    <!-- Error message -->
-    <p v-if="error" class="mt-1 text-sm text-red-600 dark:text-red-400">
-      {{ error }}
-    </p>
-    <!-- Hint message -->
-    <p v-else-if="hint" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-      {{ hint }}
-    </p>
   </div>
 </template>
 
@@ -47,10 +37,6 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
-    },
-    label: {
-      type: String,
-      default: '',
     },
     activeText: {
       type: String,
@@ -68,18 +54,6 @@ export default {
       type: String,
       default: '',
     },
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    error: {
-      type: String,
-      default: '',
-    },
-    hint: {
-      type: String,
-      default: '',
-    },
   },
   emits: ['update:modelValue', 'change'],
   computed: {
@@ -90,9 +64,6 @@ export default {
       return 'bg-neutral-quaternary'
     },
     displayText() {
-      if (this.label) {
-        return this.label
-      }
       if (this.activeText && this.inactiveText) {
         return this.modelValue ? this.activeText : this.inactiveText
       }
