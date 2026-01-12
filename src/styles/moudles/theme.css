@@ -10,12 +10,12 @@
 @import '../theme/modern_dark.css';
 @import '../theme/enterprise_light.css';
 @import '../theme/enterprise_dark.css';
-@import '../theme/playful_light.css';
-@import '../theme/playful_dark.css';
-@import '../theme/minimal_light.css';
-@import '../theme/minimal_dark.css';
-@import '../theme/mono_light.css';
-@import '../theme/mono_dark.css';
+/* @import '../theme/playful_light.css'; */
+/* @import '../theme/playful_dark.css'; */
+/* @import '../theme/minimal_light.css'; */
+/* @import '../theme/minimal_dark.css'; */
+/* @import '../theme/mono_light.css'; */
+/* @import '../theme/mono_dark.css'; */
 
 /* 3. 为 UI 组件定义语义化映射变量 (与 components.css 配合) */
 :root {

@@ -214,14 +214,7 @@ export default {
       return this.$i18n.locale
     },
     themeStyleOptions() {
-      return [
-        { value: 'default' },
-        { value: 'minimal' },
-        { value: 'enterprise' },
-        { value: 'playful' },
-        { value: 'mono' },
-        { value: 'modern' },
-      ]
+      return [{ value: 'default' }, { value: 'enterprise' }, { value: 'modern' }]
     },
     navIconMap() {
       return {
