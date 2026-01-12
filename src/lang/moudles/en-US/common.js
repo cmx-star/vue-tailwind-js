@@ -77,12 +77,4 @@ export default {
     connected: 'Connected',
     disconnected: 'Disconnected',
   },
-  button: {
-    edit: 'Edit',
-    add: 'Add',
-    delete: 'Delete',
-    apply: 'Apply',
-    import: 'Import',
-    export: 'Export',
-  },
 }

@@ -75,12 +75,4 @@ export default {
     connected: '已连接',
     disconnected: '未连接',
   },
-  button: {
-    edit: '编辑',
-    add: '添加',
-    delete: '删除',
-    apply: '应用',
-    import: '导入',
-    export: '导出',
-  },
 }
