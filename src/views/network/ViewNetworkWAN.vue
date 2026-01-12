@@ -1,54 +1,37 @@
 <template>
-  <div class="ViewNetworkWAN">
-    <CompCardTabs :router-view-card="true">
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 px-4">
-        {{ $t('network.wan.title') }}
-      </h2>
+  <CompPageLayout class="ViewEdgeCloud">
+    <CompPageHeader :title="$t('network.wan.title')" class="mb-6" />
 
-      <!-- 运行状态 -->
-      <div
-        class="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6 mx-4 shadow-sm border border-gray-100 dark:border-gray-700/50"
-      >
-        <CompTitle
-          :title="$t('network.wan.statusTitle')"
-          :connect="wanConnectFlag ? 1 : 0"
-          class="mb-4"
-        />
-        <CompBasicInformation :data-list="statusData" :columns="3" />
-      </div>
+    <!-- 运行状态 -->
+    <CompCard class="mb-6">
+      <CompTitle
+        :title="$t('network.wan.statusTitle')"
+        :connect="wanConnectFlag ? 1 : 0"
+        class="mb-4"
+      />
+      <CompBasicInformation :data-list="statusData" :columns="3" />
+    </CompCard>
 
-      <!-- 属性配置 -->
-      <div
-        class="bg-white dark:bg-gray-800 rounded-xl p-6 mb-6 mx-4 shadow-sm border border-gray-100 dark:border-gray-700/50"
-      >
-        <CompTitle :title="$t('network.wan.configTitle')" class="mb-4" />
-        <div class="max-w-4xl mx-auto py-4">
-          <CompForm
-            ref="configFormRef"
-            v-model="wanFormData"
-            :form-items="formItems"
-            :columns="2"
-            label-width="150px"
-          />
-
-          <div
-            class="mt-10 flex justify-center border-t border-gray-100 dark:border-gray-700/50 pt-8"
-          >
-            <CompBaseButton
-              size="lg"
-              :loading="btnLoading"
-              :disabled="isUnchanged"
-              :type="buttonType"
-              class="w-48 shadow-lg transition-all active:scale-95"
-              @click="handleSubmit"
-            >
-              {{ $t('common.submit') }}
-            </CompBaseButton>
-          </div>
-        </div>
-      </div>
-    </CompCardTabs>
-  </div>
+    <!-- 属性配置 -->
+    <CompCard class="mb-6">
+      <CompSectionHeader :title="$t('network.wan.configTitle')" />
+      <CompForm
+        ref="configFormRef"
+        v-model="wanFormData"
+        :form-items="formItems"
+        :columns="2"
+        label-width="150px"
+      />
+    </CompCard>
+    <!-- 属性配置 -->
+    <CompCard class="mb-6">
+      <CompActionButtons
+        :primary-text="$t('common.submit')"
+        :show-secondary="false"
+        @primary="handleSubmit"
+      />
+    </CompCard>
+  </CompPageLayout>
 </template>
 
 <script>
@@ -57,12 +40,14 @@ import { validators } from '@/utils/validators'
 
 export default {
   name: 'ViewNetworkWAN',
+  components: {},
   data() {
     return {
       wanConnectFlag: false,
       statusData: [],
       btnLoading: false,
       initialFormData: null,
+      isUnchanged: true,
       wanFormData: {
         proto: 'dhcp',
         dns_mode: 'auto',

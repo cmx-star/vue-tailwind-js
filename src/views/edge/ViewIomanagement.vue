@@ -5,11 +5,7 @@
 
     <!-- 接入点 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.io.accessPoint') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.io.accessPoint')" />
       <CompForm
         ref="accessPointForm"
         v-model="accessPointData"
@@ -20,11 +16,7 @@
 
     <!-- 配置 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.io.configuration') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.io.configuration')" />
       <CompForm
         ref="configForm"
         v-model="configData"
@@ -35,11 +27,7 @@
 
     <!-- UDPv6配置 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.io.udpv6Config') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.io.udpv6Config')" />
       <CompForm
         ref="udpv6Form"
         v-model="udpv6Data"
@@ -50,11 +38,7 @@
 
     <!-- 私有空间分配 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.io.privateSpaceAllocation') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.io.privateSpaceAllocation')" />
       <CompForm
         ref="privateSpaceForm"
         v-model="privateSpaceData"
@@ -65,11 +49,7 @@
 
     <!-- 目录文件的权限设置 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.io.permissionSettings') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.io.permissionSettings')" />
       <CompForm
         ref="permissionForm"
         v-model="permissionData"
@@ -80,14 +60,7 @@
 
     <!-- 操作按钮 -->
     <CompCard>
-      <div class="flex justify-center gap-4">
-        <CompBaseButton variant="primary" @click="submitForm">
-          {{ $t('common.apply') }}
-        </CompBaseButton>
-        <CompBaseButton variant="secondary" @click="resetForm">
-          {{ $t('common.reset') }}
-        </CompBaseButton>
-      </div>
+      <CompActionButtons @primary="submitForm" @secondary="resetForm" />
     </CompCard>
   </CompPageLayout>
 </template>

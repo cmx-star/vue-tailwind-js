@@ -6,67 +6,13 @@
     />
 
     <!-- 统计卡片 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-      <CompCard
-        v-for="stat in stats"
-        :key="stat.title"
-        class="border-l-4 hover:shadow-md transition-all shadow-none"
-        :class="stat.borderColor"
-      >
-        <div class="flex items-center justify-between">
-          <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-              {{ stat.title }}
-            </p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white">
-              {{ stat.value }}
-            </p>
-            <div class="flex items-center mt-2">
-              <span
-                class="text-xs font-medium"
-                :class="stat.trend > 0 ? 'text-green-600' : 'text-red-600'"
-              >
-                {{ stat.trend > 0 ? '↑' : '↓' }} {{ Math.abs(stat.trend) }}%
-              </span>
-              <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">{{
-                $t('overview.dashboard.comparedToLastMonth')
-              }}</span>
-            </div>
-          </div>
-          <div
-            class="w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
-            :class="stat.bgColor"
-          >
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                :d="stat.icon"
-              />
-            </svg>
-          </div>
-        </div>
-      </CompCard>
-    </div>
+    <CompDashboardStats :stats="stats" />
 
     <!-- 图表区域 -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- 数据趋势图 -->
       <CompCard class="lg:col-span-2 shadow-none">
-        <div class="flex items-center justify-between mb-6">
-          <CompTitle :title="$t('overview.dashboard.dataTrend')" class="pb-0!" />
-          <div class="flex items-center space-x-3">
-            <!-- 日期选择器 -->
-            <CompDatePicker v-model="selectedDateRange" :clearable="true" />
-            <!-- 时间段选择器 -->
-            <CompSelect
-              v-model="selectedPeriod"
-              :options="periodOptions"
-              :placeholder="$t('overview.dashboard.selectTimePeriod')"
-            />
-          </div>
-        </div>
+        <CompTitle :title="$t('overview.dashboard.dataTrend')" class="pb-0!" />
         <!-- 折线图 -->
         <CompLineChart :data="chartData" :height="320" :smooth="true" />
       </CompCard>
@@ -77,21 +23,11 @@
         <CompCard class="shadow-none">
           <CompTitle :title="$t('overview.dashboard.quickActions')" class="pb-0!" />
           <div class="space-y-2 mt-4">
-            <button
+            <CompDashboardQuickActionItem
               v-for="action in quickActions"
               :key="action.label"
-              class="w-full flex items-center px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  :d="action.icon"
-                />
-              </svg>
-              {{ action.label }}
-            </button>
+              :action="action"
+            />
           </div>
         </CompCard>
 
@@ -99,38 +35,11 @@
         <CompCard class="shadow-none">
           <CompTitle :title="$t('overview.dashboard.recentActivity')" class="pb-0!" />
           <div class="space-y-4 mt-4">
-            <div
+            <CompDashboardActivityItem
               v-for="activity in recentActivities"
               :key="activity.id"
-              class="flex items-start space-x-3"
-            >
-              <div
-                class="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-                :class="activity.bgColor"
-              >
-                <svg
-                  class="w-4 h-4 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    :d="activity.icon"
-                  />
-                </svg>
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">
-                  {{ activity.title }}
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  {{ activity.time }}
-                </p>
-              </div>
-            </div>
+              :activity="activity"
+            />
           </div>
         </CompCard>
       </div>
@@ -158,131 +67,28 @@
     </div>
 
     <!-- 组件展示区域 -->
-    <CompCard class="mt-6 shadow-none">
-      <CompTitle :title="$t('overview.dashboard.componentDemo')" class="pb-0!" />
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        <!-- 下拉选择器 -->
-        <div>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-            {{ $t('overview.dashboard.selectDemo') }}
-          </h3>
-          <div class="space-y-3">
-            <CompSelect
-              v-model="demoSelect"
-              :options="selectOptions"
-              :placeholder="$t('overview.dashboard.selectOption')"
-              label="label"
-            />
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-              {{ $t('overview.dashboard.selected')
-              }}{{ demoSelect || $t('overview.dashboard.none') }}
-            </p>
-          </div>
-        </div>
-
-        <!-- 日期选择器 -->
-        <div>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-            {{ $t('overview.dashboard.datePicker') }}
-          </h3>
-          <div class="space-y-3">
-            <CompDatePicker
-              v-model="demoDate"
-              :label="$t('overview.dashboard.selectDate')"
-              mode="date"
-            />
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-              {{ $t('overview.dashboard.selected')
-              }}{{
-                demoDate ? new Date(demoDate).toLocaleDateString() : $t('overview.dashboard.none')
-              }}
-            </p>
-          </div>
-        </div>
-
-        <!-- 时间选择器 -->
-        <div>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-            {{ $t('overview.dashboard.timePicker') }}
-          </h3>
-          <div class="space-y-3">
-            <CompDatePicker
-              v-model="demoTime"
-              :label="$t('overview.dashboard.selectTime')"
-              mode="time"
-            />
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-              {{ $t('overview.dashboard.selected')
-              }}{{
-                demoTime ? new Date(demoTime).toLocaleTimeString() : $t('overview.dashboard.none')
-              }}
-            </p>
-          </div>
-        </div>
-
-        <!-- 日期时间选择器 -->
-        <div>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-            {{ $t('overview.dashboard.dateTimePicker') }}
-          </h3>
-          <div class="space-y-3">
-            <CompDatePicker
-              v-model="demoDateTime"
-              :label="$t('overview.dashboard.selectDateTime')"
-              mode="dateTime"
-            />
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-              {{ $t('overview.dashboard.selected')
-              }}{{
-                demoDateTime
-                  ? new Date(demoDateTime).toLocaleString()
-                  : $t('overview.dashboard.none')
-              }}
-            </p>
-          </div>
-        </div>
-
-        <!-- 日期范围选择器 -->
-        <div class="lg:col-span-2">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-            {{ $t('overview.dashboard.dateRangePicker') }}
-          </h3>
-          <div class="space-y-3">
-            <CompDatePicker
-              v-model="demoDateRange"
-              :label="$t('overview.dashboard.selectDateRange')"
-              mode="date"
-              :range="true"
-            />
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-              {{ $t('overview.dashboard.selected') }}
-              <span v-if="demoDateRange && demoDateRange.start && demoDateRange.end">
-                {{ new Date(demoDateRange.start).toLocaleDateString() }}
-                {{ $t('overview.dashboard.to') }}
-                {{ new Date(demoDateRange.end).toLocaleDateString() }}
-              </span>
-              <span v-else>{{ $t('overview.dashboard.none') }}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </CompCard>
+    <CompDashboardDemo />
   </CompPageLayout>
 </template>
 
 <script>
+import CompDashboardStats from './components/CompDashboardStats.vue'
+import CompDashboardDemo from './components/CompDashboardDemo.vue'
+import CompDashboardQuickActionItem from './components/CompDashboardQuickActionItem.vue'
+import CompDashboardActivityItem from './components/CompDashboardActivityItem.vue'
+
 export default {
   name: 'Dashboard',
-  components: {},
+  components: {
+    CompDashboardStats,
+    CompDashboardDemo,
+    CompDashboardQuickActionItem,
+    CompDashboardActivityItem,
+  },
   data() {
     return {
       selectedPeriod: 'week',
       selectedDateRange: null,
-      periodOptions: [
-        { label: this.$t('overview.dashboard.thisWeek'), value: 'week' },
-        { label: this.$t('overview.dashboard.thisMonth'), value: 'month' },
-        { label: this.$t('overview.dashboard.thisQuarter'), value: 'quarter' },
-      ],
       chartData: [
         { x: '周一', y: 30 },
         { x: '周二', y: 45 },
@@ -334,18 +140,6 @@ export default {
           },
         ],
       },
-      // 组件展示数据
-      demoSelect: '',
-      selectOptions: [
-        { label: '选项一', value: 'option1' },
-        { label: '选项二', value: 'option2' },
-        { label: '选项三', value: 'option3' },
-        { label: '选项四', value: 'option4' },
-      ],
-      demoDate: null,
-      demoTime: null,
-      demoDateTime: null,
-      demoDateRange: null,
       stats: [
         {
           title: '总用户',

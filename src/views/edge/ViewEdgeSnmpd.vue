@@ -5,11 +5,7 @@
 
     <!-- SNMP开关配置 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.snmpd.snmpSwitchConfig') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.snmpd.snmpSwitchConfig')" />
       <CompForm
         ref="switchForm"
         v-model="switchData"
@@ -20,11 +16,7 @@
 
     <!-- 用户配置 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.snmpd.userConfig') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.snmpd.userConfig')" />
       <CompForm
         ref="userForm"
         v-model="userData"
@@ -35,11 +27,7 @@
 
     <!-- 系统信息 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.snmpd.systemInfo') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.snmpd.systemInfo')" />
       <CompForm
         ref="systemForm"
         v-model="systemData"
@@ -50,14 +38,11 @@
 
     <!-- 操作按钮 -->
     <CompCard>
-      <div class="flex justify-center gap-4">
-        <CompBaseButton variant="primary" @click="submitForm">
-          {{ $t('common.apply') }}
-        </CompBaseButton>
-        <CompBaseButton variant="secondary" @click="resetForm">
-          {{ $t('common.save') }}
-        </CompBaseButton>
-      </div>
+      <CompActionButtons
+        :secondary-text="$t('common.save')"
+        @primary="submitForm"
+        @secondary="resetForm"
+      />
     </CompCard>
   </CompPageLayout>
 </template>

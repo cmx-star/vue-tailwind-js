@@ -114,23 +114,17 @@ export default {
         axes: [
           {
             show: true,
-            stroke: this.isDark
-              ? 'var(--color-gray-500, #6b7280)'
-              : 'var(--color-gray-400, #9ca3af)',
+            stroke: this.isDark ? '#d1d5db' : '#9ca3af',
             space: 40,
             border: {
               show: true,
-              stroke: this.isDark
-                ? 'var(--color-gray-500, #6b7280)'
-                : 'var(--color-gray-400, #9ca3af)',
+              stroke: this.isDark ? '#d1d5db' : '#9ca3af',
               width: 1,
             },
             grid: { show: false },
             ticks: {
               show: true,
-              stroke: this.isDark
-                ? 'var(--color-gray-500, #6b7280)'
-                : 'var(--color-gray-400, #9ca3af)',
+              stroke: this.isDark ? '#d1d5db' : '#9ca3af',
               width: 1,
             },
             values: (u, splits) =>
@@ -141,23 +135,17 @@ export default {
           },
           {
             show: true,
-            stroke: this.isDark
-              ? 'var(--color-gray-500, #6b7280)'
-              : 'var(--color-gray-400, #9ca3af)',
+            stroke: this.isDark ? '#d1d5db' : '#9ca3af',
             space: 50,
             border: {
               show: true,
-              stroke: this.isDark
-                ? 'var(--color-gray-500, #6b7280)'
-                : 'var(--color-gray-400, #9ca3af)',
+              stroke: this.isDark ? '#d1d5db' : '#9ca3af',
               width: 1,
             },
             grid: { show: false },
             ticks: {
               show: true,
-              stroke: this.isDark
-                ? 'var(--color-gray-500, #6b7280)'
-                : 'var(--color-gray-400, #9ca3af)',
+              stroke: this.isDark ? '#d1d5db' : '#9ca3af',
               width: 1,
             },
           },

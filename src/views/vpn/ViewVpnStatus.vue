@@ -5,21 +5,13 @@
 
     <!-- OpenVPN Clients 表格 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('vpn.status.openVpnClients') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('vpn.status.openVpnClients')" />
       <CompDataTable :data="openVpnData" :columns="openVpnColumns" :loading="loading" />
     </CompCard>
 
     <!-- VPN 连接表格 -->
     <CompCard>
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('vpn.status.vpnConnections') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('vpn.status.vpnConnections')" />
       <CompDataTable
         :data="vpnConnectionsData"
         :columns="vpnConnectionsColumns"

@@ -5,11 +5,7 @@
 
     <!-- 有人云 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.cloud.usrCloud') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.cloud.usrCloud')" />
       <CompForm
         ref="cloudForm"
         v-model="cloudData"
@@ -20,11 +16,7 @@
 
     <!-- 配置 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.cloud.config') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.cloud.config')" />
       <CompForm
         ref="configForm"
         v-model="configData"
@@ -35,21 +27,13 @@
 
     <!-- UDP配置 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.cloud.udpConfig') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.cloud.udpConfig')" />
       <CompForm ref="udpForm" v-model="udpData" :form-items="udpItems" :label-width="labelWidth" />
     </CompCard>
 
     <!-- 私有化部署 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.cloud.privateDeployment') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.cloud.privateDeployment')" />
       <CompForm
         ref="privateForm"
         v-model="privateData"
@@ -60,11 +44,7 @@
 
     <!-- 自定义ping检查地址 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('edge.cloud.customPing') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('edge.cloud.customPing')" />
       <CompForm
         ref="pingForm"
         v-model="pingData"
@@ -75,14 +55,11 @@
 
     <!-- 操作按钮 -->
     <CompCard>
-      <div class="flex justify-center gap-4">
-        <CompBaseButton variant="primary" @click="submitForm">
-          {{ $t('common.apply') }}
-        </CompBaseButton>
-        <CompBaseButton variant="secondary" @click="saveForm">
-          {{ $t('common.save') }}
-        </CompBaseButton>
-      </div>
+      <CompActionButtons
+        :secondary-text="$t('common.save')"
+        @primary="submitForm"
+        @secondary="saveForm"
+      />
     </CompCard>
   </CompPageLayout>
 </template>

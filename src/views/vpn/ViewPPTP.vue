@@ -5,11 +5,7 @@
 
     <!-- PPTP 服务器 -->
     <CompCard class="mb-6">
-      <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-          {{ $t('vpn.pptp.serverTitle') }}
-        </h2>
-      </div>
+      <CompSectionHeader :title="$t('vpn.pptp.serverTitle')" />
       <CompForm
         ref="pptpForm"
         v-model="formData"
@@ -20,14 +16,7 @@
 
     <!-- 操作按钮 -->
     <CompCard>
-      <div class="flex justify-center gap-4">
-        <CompBaseButton variant="primary" @click="submitForm">
-          {{ $t('common.apply') }}
-        </CompBaseButton>
-        <CompBaseButton variant="secondary" @click="resetForm">
-          {{ $t('common.reset') }}
-        </CompBaseButton>
-      </div>
+      <CompActionButtons @primary="submitForm" @secondary="resetForm" />
     </CompCard>
   </CompPageLayout>
 </template>
