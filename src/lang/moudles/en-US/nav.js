@@ -12,6 +12,7 @@ export default {
   nav: {
     dashboard: 'Dashboard',
     edgeComputing: 'Edge Computing',
+    edgeStatus: 'Status',
     ioManagement: 'Access Routing',
     networkCenter: 'Network Center',
     vpnService: 'VPN Service',

@@ -22,6 +22,17 @@ export const menuMockData = [
     topNav: 3,
     subMenu: [
       {
+        id: 26,
+        name: 'edgeStatus',
+        uri: 'status',
+        permissionValue: 'ViewEdgeStatus',
+        type: 1,
+        show: 1,
+        aside: 1,
+        topNav: 3,
+        icon: 'chart-bar',
+      },
+      {
         id: 23,
         name: 'ioManagement',
         uri: 'io',

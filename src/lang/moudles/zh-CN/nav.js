@@ -12,6 +12,7 @@ export default {
   nav: {
     dashboard: '控制台',
     edgeComputing: '边缘计算',
+    edgeStatus: '运行状态',
     ioManagement: '接入选路',
     networkCenter: '网络中心',
     vpnService: 'VPN 服务',
