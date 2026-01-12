@@ -33,6 +33,17 @@ export const menuMockData = [
         icon: 'chart-bar',
       },
       {
+        id: 27,
+        name: 'edgeStatusApi',
+        uri: 'status-api',
+        permissionValue: 'ViewEdgeStatusApi',
+        type: 1,
+        show: 1,
+        aside: 1,
+        topNav: 3,
+        icon: 'chart-bar-square',
+      },
+      {
         id: 23,
         name: 'ioManagement',
         uri: 'io',

@@ -13,6 +13,7 @@ export default {
     dashboard: 'Dashboard',
     edgeComputing: 'Edge Computing',
     edgeStatus: 'Status',
+    edgeStatusApi: 'Status (API)',
     ioManagement: 'Access Routing',
     networkCenter: 'Network Center',
     vpnService: 'VPN Service',
