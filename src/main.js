@@ -5,6 +5,7 @@ import router from '@/router'
 import i18n from './lang'
 import { ToastPlugin } from '@/plugins/toast'
 import { ModalPlugin } from '@/plugins/modal'
+import utils from '@/utils'
 
 // 导入样式
 import './styles/index.css'
@@ -18,6 +19,7 @@ app.use(router)
 app.use(i18n)
 app.use(ToastPlugin)
 app.use(ModalPlugin)
+app.use(utils)
 
 // 挂载应用
 app.mount('#app')

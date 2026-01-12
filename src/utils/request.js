@@ -13,12 +13,7 @@ const request = axios.create({
 })
 
 // 不需要token的url (从 status.js 迁移)
-const notNeedTokenUrl = [
-  '/api/user/login',
-  '/api/auth/refresh',
-  '/api/user/regUser',
-  '/api/user/loginByPhoneNumber',
-]
+const notNeedTokenUrl = ['/api/user/login', '/api/auth/refresh']
 
 // 请求拦截器
 request.interceptors.request.use(
