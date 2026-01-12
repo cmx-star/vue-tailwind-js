@@ -31,6 +31,17 @@ export const menuMockData = [
         aside: 1,
         topNav: 3,
       },
+      {
+        id: 24,
+        name: 'snmpd',
+        uri: 'snmpd',
+        permissionValue: 'EdgeSnmpd', // Maps to ViewEdgeSnmpd.vue
+        type: 1,
+        show: 1,
+        aside: 1,
+        topNav: 3,
+        icon: 'server', // Adding an icon, maybe 'server' or 'cog'
+      },
     ],
   },
   {
