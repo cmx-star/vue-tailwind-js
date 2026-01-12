@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { login as loginApi, getUserInfo } from '@/api'
 import { setToken, removeToken, getToken, getUserLogin } from '@/utils/auth'
-import { useAppStore } from './app'
+
 import { useMenuStore } from './menu'
 
 export const useUserStore = defineStore('user', {
@@ -66,9 +66,8 @@ export const useUserStore = defineStore('user', {
       localStorage.removeItem('userInfo')
 
       // 清除菜单
-      const appStore = useAppStore()
-      appStore.setMenuList([])
-      appStore.setTopNavList([])
+      const menuStore = useMenuStore()
+      menuStore.clearMenuData()
     },
 
     /**

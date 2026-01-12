@@ -181,9 +181,12 @@ export async function handleLoginMenus(next, to, router) {
   })
 
   // 5. 应用到 router
+  const removeRoutes = []
   addRoutesArr.forEach((route) => {
-    router.addRoute(route)
+    const removeFn = router.addRoute(route)
+    removeRoutes.push(removeFn)
   })
+  menuStore.addRemoveRouteFns(removeRoutes)
 
   // 6. 将嵌套树存入 store 给侧边栏用
   const menuTree = getMenuTree(menuList)

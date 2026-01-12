@@ -42,12 +42,6 @@
                 {{ $t('login.remember') }}
               </span>
             </label>
-            <a
-              href="#"
-              class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400"
-            >
-              {{ $t('login.forgot') }}
-            </a>
           </div>
 
           <CompBaseButton type="primary" native-type="submit" :loading="loading" class="w-full">

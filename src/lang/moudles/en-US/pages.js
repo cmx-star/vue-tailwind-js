@@ -5,7 +5,7 @@ export default {
     username: 'Username',
     password: 'Password',
     remember: 'Remember me',
-    forgot: 'Forgot password?',
+
     login: 'Login',
     usernamePlaceholder: 'Enter username',
     passwordPlaceholder: 'Enter password',

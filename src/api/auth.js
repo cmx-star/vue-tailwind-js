@@ -1,5 +1,5 @@
 import httpRequest from '@/utils/request'
-import { menuMock } from './mock'
+import { menuMockData } from '@/mock/modules/menu'
 import { useUserStore } from '@/stores/user'
 
 // 存储当前登录的用户名，用于返回对应的菜单（作为fallback）
@@ -77,7 +77,7 @@ function getUserNickname(username) {
 }
 
 function getMenuByUser(username) {
-  const allMenus = menuMock.data
+  const allMenus = menuMockData
 
   // 定义不同用户的权限配置
   const userPermissions = {

@@ -21,7 +21,7 @@
         <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow dark:shadow-gray-900">
           <!-- Header -->
           <div
-            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600"
+            class="flex items-center justify-between p-4 md:p-5 border-b border-gray-300 rounded-t dark:border-gray-600"
           >
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
               {{ title }}
@@ -63,7 +63,7 @@
           <!-- Footer -->
           <div
             v-if="$slots.footer || showFooter"
-            class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600"
+            class="flex items-center p-4 md:p-5 border-t border-gray-300 rounded-b dark:border-gray-600"
           >
             <slot name="footer">
               <div class="flex justify-end gap-3 w-full">

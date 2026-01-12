@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getToken } from '@/utils/auth'
-import mockApi from '@/api/mock'
+import { matchMock } from '@/mock'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
@@ -74,9 +74,15 @@ request.interceptors.response.use(
 
 const httpRequest = {
   get(url, params = {}, config = {}) {
-    const mockData = mockApi(url, params)
-    if (mockData || (config.mock && config.mockResponse)) {
-      return Promise.resolve(config.mockResponse || mockData)
+    // 检查环境变量开关，默认开启 ('true' or undefined treated as true if we want, but usually explicit true)
+    // 这里设定：只有 VITE_USE_MOCK !== 'false' 时才启用 mock
+    const useMock = import.meta.env.VITE_USE_MOCK !== 'false'
+
+    if (useMock) {
+      const mockData = matchMock(url, 'get', params)
+      if (mockData || (config.mock && config.mockResponse)) {
+        return Promise.resolve(config.mockResponse || mockData)
+      }
     }
     return request({
       method: 'get',
@@ -87,13 +93,17 @@ const httpRequest = {
   },
 
   post(url, data = {}, config = {}) {
-    const mockData = mockApi(url, data)
-    // 如果 mock 文件中有该接口，或者显式传入了 mock 标志和数据
-    if (mockData || (config.mock && config.mockResponse)) {
-      if (mockData.code && mockData.code !== 200) {
-        return Promise.reject(new Error(mockData.message || 'Error'))
+    const useMock = import.meta.env.VITE_USE_MOCK !== 'false'
+
+    if (useMock) {
+      const mockData = matchMock(url, 'post', data)
+      // 如果 mock 文件中有该接口，或者显式传入了 mock 标志和数据
+      if (mockData || (config.mock && config.mockResponse)) {
+        if (mockData.code && mockData.code !== 200) {
+          return Promise.reject(new Error(mockData.message || 'Error'))
+        }
+        return Promise.resolve(config.mockResponse || mockData)
       }
-      return Promise.resolve(config.mockResponse || mockData)
     }
 
     return request({
