@@ -57,5 +57,6 @@ export default {
     usrService: 'USR 服务',
     ddns: '动态域名',
     snmpd: 'SNMP 服务',
+    cloud: '云平台对接',
   },
 }

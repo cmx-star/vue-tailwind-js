@@ -57,5 +57,6 @@ export default {
     usrService: 'USR Service',
     ddns: 'Dynamic DNS',
     snmpd: 'SNMP Service',
+    cloud: 'Cloud Integration',
   },
 }
