@@ -258,19 +258,19 @@ export default {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.3);
+  background: var(--color-scrollbar, rgba(156, 163, 175, 0.3));
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.5);
+  background: var(--color-scrollbar-hover, rgba(156, 163, 175, 0.5));
 }
 
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(75, 85, 99, 0.5);
+  background: var(--color-scrollbar-dark, rgba(75, 85, 99, 0.5));
 }
 
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(75, 85, 99, 0.7);
+  background: var(--color-scrollbar-dark-hover, rgba(75, 85, 99, 0.7));
 }
 </style>

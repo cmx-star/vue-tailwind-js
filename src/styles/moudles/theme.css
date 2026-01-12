@@ -35,6 +35,7 @@
   --color-bg-primary: var(--colors-background-bg-neutral-primary);
   --color-bg-secondary: var(--colors-background-bg-neutral-secondary);
   --color-bg-tertiary: var(--colors-background-bg-neutral-tertiary);
+  --color-bg-card: var(--white);
 
   /* 文字颜色映射 */
   --color-text-heading: var(--colors-text-text-heading);
@@ -72,6 +73,11 @@
   --radius-xxs: var(--border-border-radius-rounded-xxs);
 }
 
+/* 4. 暗色模式变量覆盖 - 确保即使不动主题文件也能生效 */
+:where(.dark, .dark *) {
+  --color-bg-card: var(--colors-gray-800);
+}
+
 /* ============================================
    Tailwind v4 主题集成
    ============================================ */
@@ -95,6 +101,7 @@
   --color-success-bg: var(--color-bg-success);
   --color-error-bg: var(--color-bg-danger);
   --color-warning-bg: var(--color-bg-warning);
+  --color-bg-card: var(--color-bg-card);
 }
 
 /* 暗黑模式变体配置 */

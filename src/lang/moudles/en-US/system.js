@@ -102,6 +102,31 @@ export default {
     statistics: {
       title: 'Data Statistics',
       description: 'View current system network statistics and connection lists.',
+      summary: 'Metrics Summary',
+      arpCount: 'ARP Entries',
+      connCount: 'Active Connections',
+      upFlow: 'Upstream Traffic',
+      downFlow: 'Downstream Traffic',
+      tabs: {
+        table: 'Data Table',
+        form: 'Configuration Form',
+      },
+      dialogTitle: 'Operation Confirmation',
+      dialogContent:
+        'You can perform advanced operations through this dialog, and the input content will simulate writing to the system log.',
+      placeholder: {
+        input: 'Please enter some content...',
+      },
+      messages: {
+        pageSwitched: 'Switched to page {page}',
+        applied: 'Configuration applied',
+        validateSuccess: 'Validation passed, saved successfully!',
+        validateFailed: 'Validation failed, please check inputs',
+        reset: 'Form has been reset',
+        exporting: 'Exporting configuration data...',
+        addSuccess: 'Record added successfully: {val}',
+        noInput: 'No input provided',
+      },
       arpTable: 'ARP Table',
       arpTableDesc: 'List of Address Resolution Protocol (ARP) cache.',
       activeConnections: 'Active Connections',

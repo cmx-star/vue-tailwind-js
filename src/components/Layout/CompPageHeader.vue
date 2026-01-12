@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6"
+    class="page-header-container rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700 mb-6"
   >
     <h1 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
       <slot name="title">{{ title }}</slot>
@@ -35,5 +35,7 @@ export default {
 </script>
 
 <style scoped>
-/* 使用 Tailwind CSS,最小化自定义样式 */
+.page-header-container {
+  background-color: var(--color-bg-card);
+}
 </style>

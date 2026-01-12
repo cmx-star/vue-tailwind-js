@@ -22,7 +22,7 @@ export default {
 
 <style scoped>
 .card-container {
-  background-color: var(--color-bg-primary);
+  background-color: var(--color-bg-card);
   border-color: var(--color-border);
 }
 

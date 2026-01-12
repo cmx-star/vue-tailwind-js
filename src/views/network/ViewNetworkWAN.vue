@@ -62,9 +62,7 @@ export default {
       wanConnectFlag: false,
       statusData: [],
       btnLoading: false,
-      isUnchanged: true,
       initialFormData: null,
-      deviceType: '', // EG628 or others
       wanFormData: {
         proto: 'dhcp',
         dns_mode: 'auto',
@@ -79,9 +77,8 @@ export default {
   },
   computed: {
     buttonType() {
-      // 模拟原有的 device_type 逻辑
       if (this.isUnchanged) return 'secondary'
-      return this.deviceType === 'EG628' ? 'danger' : 'primary'
+      return 'primary'
     },
     formItems() {
       return [
@@ -197,7 +194,6 @@ export default {
   },
   mounted() {
     this.fetchConfig()
-    this.get_language()
     this.startPolling()
   },
   beforeUnmount() {
@@ -205,10 +201,6 @@ export default {
   },
   methods: {
     formatDtDHS,
-    async get_language() {
-      // 本地模拟
-      this.deviceType = 'M300'
-    },
     async fetchConfig() {
       // 本地模拟 ethwanGetConfig
       const mockData = {

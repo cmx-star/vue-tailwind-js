@@ -208,12 +208,11 @@ export default {
 }
 
 /* Dark theme arrow */
-.bg-gray-900 + .tooltip-arrow,
-.dark .bg-gray-700 + .tooltip-arrow {
-  background: rgb(17 24 39);
+.bg-gray-900 + .tooltip-arrow {
+  background-color: var(--color-gray-900, rgb(17 24 39));
 }
 
 .dark .bg-gray-700 + .tooltip-arrow {
-  background: rgb(55 65 81);
+  background-color: var(--color-gray-700, rgb(55 65 81));
 }
 </style>

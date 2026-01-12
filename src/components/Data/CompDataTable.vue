@@ -266,16 +266,16 @@ export default {
 input[type='checkbox'] {
   border-radius: 0 !important;
   appearance: none;
-  background-color: #fff;
-  border: 1px solid #d1d5db;
+  background-color: transparent;
+  border: 1px solid var(--color-border, #d1d5db);
   user-select: none;
   flex-shrink: 0;
   transition: all 0.2s;
 }
 
 .dark input[type='checkbox'] {
-  background-color: #374151; /* gray-700 */
-  border-color: #4b5563; /* gray-600 */
+  background-color: var(--color-bg-tertiary, #374151);
+  border-color: var(--color-border-dark, #4b5563);
 }
 
 input[type='checkbox']:checked {
@@ -283,21 +283,21 @@ input[type='checkbox']:checked {
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: var(--color-primary-600, #2563eb) !important;
-  border-color: var(--color-primary-600, #2563eb) !important;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
 }
 
 input[type='checkbox']:indeterminate {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%path stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: var(--color-primary-600, #2563eb) !important;
-  border-color: var(--color-primary-600, #2563eb) !important;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
 }
 
 input[type='checkbox']:focus {
   outline: none;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary-600, #2563eb), transparent 50%) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary), transparent 50%) !important;
 }
 </style>
