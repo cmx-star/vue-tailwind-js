@@ -1,6 +1,6 @@
 import { createI18n } from 'vue-i18n'
-import zhCN from './moudles/zh-CN.json'
-import enUS from './moudles/en-US.json'
+import zhCN from './moudles/zh-CN/index'
+import enUS from './moudles/en-US/index'
 import { storage } from '@/utils/storage'
 
 // 获取默认语言

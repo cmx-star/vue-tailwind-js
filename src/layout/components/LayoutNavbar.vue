@@ -5,11 +5,11 @@
       <!-- Logo 区域 - 宽度与侧边栏保持一致,移动端隐藏 -->
       <div
         v-if="isAside"
-        class="hidden md:flex items-center gap-3 flex-shrink-0"
+        class="hidden md:flex items-center gap-3 shrink-0"
         :style="{ width: appStore.sidebarCollapse ? '4rem' : '16rem' }"
       >
         <div
-          class="w-10 h-10 flex items-center justify-center rounded-lg text-white text-lg font-bold flex-shrink-0"
+          class="w-10 h-10 flex items-center justify-center rounded-lg text-white text-lg font-bold shrink-0"
           style="background-color: var(--color-primary-600)"
         >
           {{ $t('layout.appNameShort') }}
@@ -25,7 +25,7 @@
       <!-- 无侧边栏时的 Logo,移动端隐藏 -->
       <div v-if="!isAside" class="hidden md:flex items-center gap-3">
         <div
-          class="w-10 h-10 flex items-center justify-center rounded-lg text-white text-lg font-bold flex-shrink-0"
+          class="w-10 h-10 flex items-center justify-center rounded-lg text-white text-lg font-bold shrink-0"
           style="background-color: var(--color-primary-600)"
         >
           {{ $t('layout.appNameShort') }}
@@ -38,7 +38,7 @@
       <!-- 侧边栏切换按钮（如果有左侧导航）- 移动端隐藏 -->
       <button
         v-if="isAside"
-        class="hidden md:flex p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex-shrink-0 w-8 h-8 md:w-auto md:h-auto items-center justify-center"
+        class="hidden md:flex p-1.5 md:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shrink-0 w-8 h-8 md:w-auto md:h-auto items-center justify-center"
         @click="handleSidebarToggle"
       >
         <Bars3Icon class="w-4 h-4 md:w-5 md:h-5 text-gray-700 dark:text-gray-300" />
@@ -69,7 +69,7 @@
     </div>
 
     <!-- 右侧：语言切换、主题切换、用户操作按钮 -->
-    <div class="flex items-center gap-1 md:gap-2 flex-shrink-0">
+    <div class="flex items-center gap-1 md:gap-2 shrink-0">
       <!-- 语言切换 -->
       <div ref="langDropdownRef" class="relative">
         <button
@@ -157,6 +157,7 @@ import { mapStores } from 'pinia'
 import { useAppStore } from '@/stores/app'
 import { useMenuStore } from '@/stores/menu'
 import { useThemeStore } from '@/stores/theme'
+import { storage } from '@/utils/storage'
 import {
   Bars3Icon,
   LanguageIcon,
@@ -233,6 +234,12 @@ export default {
       }
     },
   },
+  watch: {
+    // 监听路由变化，同步顶部导航状态
+    $route() {
+      this.updateActiveTopNav()
+    },
+  },
   mounted() {
     this.updateActiveTopNav()
     document.addEventListener('click', this.handleOutsideClick)
@@ -306,7 +313,11 @@ export default {
     },
     changeLanguage(lang) {
       this.$i18n.locale = lang
+      // 保存语言设置
+      storage.set('locale', lang)
       this.showLangDropdown = false
+      // 刷新页面以更新所有翻译
+      window.location.reload()
     },
     toggleDark() {
       this.themeStore.toggleDark()
@@ -316,12 +327,16 @@ export default {
     },
     updateActiveTopNav() {
       const currentTopNav = this.$route.meta?.topNav
-      if (
-        currentTopNav !== undefined &&
-        currentTopNav !== null &&
-        currentTopNav !== this.activeTopNav
-      ) {
-        this.menuStore.setActiveTopNav(currentTopNav)
+      // 如果没有 topNav 元信息，但路径是 dashboard，默认为 0
+      const targetNav =
+        currentTopNav !== undefined && currentTopNav !== null
+          ? currentTopNav
+          : this.$route.path === '/dashboard' || this.$route.path === '/'
+            ? 0
+            : null
+
+      if (targetNav !== null && targetNav !== this.activeTopNav) {
+        this.menuStore.setActiveTopNav(targetNav)
       }
     },
   },
