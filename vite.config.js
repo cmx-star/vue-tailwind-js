@@ -65,7 +65,11 @@ export default defineConfig(() => {
                 return 'chart-vendor'
               }
               // 2. 基础工具类 (必须在 vue-core 之前匹配)
-              if (id.includes('dayjs') || id.includes('async-validator')) {
+              if (
+                id.includes('dayjs') ||
+                id.includes('async-validator') ||
+                id.includes('spark-md5')
+              ) {
                 return 'utils-vendor'
               }
 
@@ -74,7 +78,8 @@ export default defineConfig(() => {
                 id.includes('flowbite') ||
                 id.includes('@heroicons') ||
                 id.includes('flatpickr') ||
-                id.includes('@floating-ui')
+                id.includes('@floating-ui') ||
+                id.includes('nprogress')
               ) {
                 return 'ui-vendor'
               }
@@ -135,7 +140,17 @@ export default defineConfig(() => {
      * 包含三端适配的核心库，提升开发环境响应速度
      */
     optimizeDeps: {
-      include: ['vue', 'vue-router', 'pinia', 'vue-i18n', 'dayjs', 'axios', '@floating-ui/dom'],
+      include: [
+        'vue',
+        'vue-router',
+        'pinia',
+        'vue-i18n',
+        'dayjs',
+        'axios',
+        '@floating-ui/dom',
+        'spark-md5',
+        'uplot',
+      ],
     },
   }
 })
