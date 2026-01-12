@@ -22,7 +22,7 @@
     <CompCard>
       <div class="flex justify-center gap-4">
         <CompBaseButton variant="primary" @click="submitForm">
-          {{ $t('button.apply') }}
+          {{ $t('common.apply') }}
         </CompBaseButton>
         <CompBaseButton variant="secondary" @click="resetForm">
           {{ $t('common.reset') }}

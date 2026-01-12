@@ -53,7 +53,7 @@
         </div>
 
         <CompBaseButton v-if="addBtn" size="sm" class="h-8 min-w-[100px]" @click="add">
-          {{ $t('button.add') }}
+          {{ $t('common.add') }}
         </CompBaseButton>
 
         <CompBaseButton
@@ -73,7 +73,7 @@
           type="primary"
           @click="apply"
         >
-          {{ $t('button.apply') }}
+          {{ $t('common.apply') }}
         </CompBaseButton>
 
         <CompBaseButton
@@ -83,7 +83,7 @@
           type="primary"
           @click="import_function"
         >
-          {{ $t('button.import') }}
+          {{ $t('common.import') }}
         </CompBaseButton>
 
         <CompBaseButton
@@ -93,7 +93,7 @@
           type="primary"
           @click="export_function"
         >
-          {{ $t('button.export') }}
+          {{ $t('common.export') }}
         </CompBaseButton>
 
         <CompBaseButton
@@ -104,7 +104,7 @@
           class="h-8 min-w-[100px]"
           @click="delet"
         >
-          {{ $t('button.delete') }}
+          {{ $t('common.delete') }}
         </CompBaseButton>
       </div>
     </div>
@@ -194,7 +194,7 @@ export default {
   },
   computed: {
     edi() {
-      return this.$t('button.edit')
+      return this.$t('common.edit')
     },
     connectValue() {
       if (this.connect == 1) return this.$t('common.connected')
