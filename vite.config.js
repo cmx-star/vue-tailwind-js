@@ -47,7 +47,7 @@ export default defineConfig(() => {
     },
 
     build: {
-      target: 'es2015', // 保证在旧版平板和手机上的兼容性
+      target: 'modules', // 保证在旧版平板和手机上的兼容性
       outDir: 'dist',
       assetsDir: 'assets',
       sourcemap: false,
